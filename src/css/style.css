@@ -1,4 +1,8 @@
-        @layer components {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
             .btn {
                 @apply inline-block py-3 px-6 font-semibold rounded-md transition-all duration-300 ease-in-out;
             }

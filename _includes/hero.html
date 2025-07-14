@@ -1,0 +1,25 @@
+<section class="relative min-h-screen flex items-center overflow-hidden">
+  <div class="absolute inset-0 bg-dark filter contrast-125 opacity-70 z-0">
+    <img src="/assets/img/frente1.png" alt="Vista aérea de paisaje" class="w-full h-full object-cover">
+    <div class="w-full h-full bg-gradient-to-br from-dark/80 via-accent/30 to-dark/70 animate-gradient bg-[length:200%_200%]"></div>
+  </div>
+  <div class="container mx-auto px-4 sm:px-6 relative z-10 py-16 md:py-0">
+    <div class="text-light max-w-full md:max-w-2xl ml-0 md:ml-8" data-aos="fade-right" data-aos-duration="1000">
+      {% if site.lang == 'es' %}
+      <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight mb-6">Navegando la complejidad—a través de la ciencia, el lenguaje  y ríos salvajes.</h1>
+      <p class="text-base sm:text-lg md:text-xl mb-8">Investigador interdisciplinario en la intersección de IA aplicada, machine learning, lenguaje y sistemas complejos.</p>
+      <div class="flex flex-wrap gap-4"><a href="#" class="btn btn-primary">Ver CV</a><a href="#contact" class="btn btn-secondary">Contacto</a></div>
+      {% else %}
+      <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight mb-6">Navigating complexity-through science, language, and wild rivers.</h1>
+      <p class="text-base sm:text-lg md:text-xl mb-8">Interdisciplinary researcher at the intersection of applied AI, machine learning, language, and complex systems.</p>
+      <div class="flex flex-wrap gap-4"><a href="#" class="btn btn-primary">View CV</a><a href="#contact" class="btn btn-secondary">Contact</a></div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center text-white/70">
+    <span class="text-sm mb-2">Scroll</span>
+    <div class="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
+      <div class="w-1.5 h-3 bg-white/70 rounded-full mt-2 animate-bounce"></div>
+    </div>
+  </div>
+</section>

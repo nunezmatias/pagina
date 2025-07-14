@@ -1,0 +1,37 @@
+<section id="contact" class="py-16 md:py-24 bg-gradient-to-b from-gray-50 to-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <h2 class="section-title" data-aos="fade-up">{% if site.lang == 'es' %}Contacto{% else %}Contact{% endif %}</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 mt-12">
+      <div data-aos="fade-up" data-aos-delay="100">
+        {% if site.lang == 'es' %}
+        <p class="mb-6 md:mb-10 text-gray-600">Si estás trabajando en proyectos en la frontera de la inteligencia artificial, análisis de sistemas complejos, o exploración—me encantaría conversar.</p>
+        {% else %}
+        <p class="mb-6 md:mb-10 text-gray-600">If you're working on projects at the frontier of artificial intelligence, complex systems analysis, or exploration—I'd love to talk.</p>
+        {% endif %}
+        <div class="mt-8 md:mt-10">
+          <h3 class="font-serif text-xl md:text-2xl mb-4 md:mb-6">{% if site.lang == 'es' %}Conéctate{% else %}Connect{% endif %}</h3>
+          <ul class="flex flex-wrap gap-4 md:gap-6">
+            <li><a href="#" class="flex items-center gap-2 text-dark hover:text-accent transition-colors p-3 bg-white rounded-lg shadow-sm hover:shadow-md"><span>LinkedIn</span></a></li>
+            <li><a href="#" class="flex items-center gap-2 text-dark hover:text-accent transition-colors p-3 bg-white rounded-lg shadow-sm hover:shadow-md"><span>GitHub</span></a></li>
+            <li><a href="#" class="flex items-center gap-2 text-dark hover:text-accent transition-colors p-3 bg-white rounded-lg shadow-sm hover:shadow-md"><span>Google Scholar</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <form action="https://formspree.io/f/yourformid" method="POST" class="flex flex-col gap-4 sm:gap-6 bg-white p-6 sm:p-8 rounded-xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
+        <div class="flex flex-col gap-2">
+          <label for="name" class="font-medium">{% if site.lang == 'es' %}Nombre{% else %}Name{% endif %}</label>
+          <input type="text" id="name" name="name" required class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="email" class="font-medium">Email</label>
+          <input type="email" id="email" name="email" required class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="message" class="font-medium">{% if site.lang == 'es' %}Mensaje{% else %}Message{% endif %}</label>
+          <textarea id="message" name="message" required class="p-3 border border-gray-300 rounded-lg min-h-[100px] sm:min-h-[150px] resize-y focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary self-start">{% if site.lang == 'es' %}Enviar mensaje{% else %}Send message{% endif %}</button>
+      </form>
+    </div>
+  </div>
+</section>

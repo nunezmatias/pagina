@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>{{ page.title }} | Matias Núñez</title>
+  <link href="{{ '/assets/css/main.css' | relative_url }}" rel="stylesheet">
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
+<body class="font-sans text-dark bg-light leading-relaxed">
+{{ content }}
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    AOS.init({
+      duration: 800,
+      easing: 'ease-out',
+      once: true,
+      disable: 'mobile'
+    });
+  });
+</script>
+</body>
+</html>
