@@ -1,0 +1,19 @@
+<header class="fixed w-full bg-white/90 backdrop-blur z-50 transition duration-300 shadow-sm" id="header">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <nav class="flex justify-between items-center py-4">
+      <a href="{{ '/' | relative_url }}" class="font-serif text-xl sm:text-2xl font-bold">Matias Núñez</a>
+      <div class="hidden md:flex items-center gap-8">
+        <div class="flex gap-4 lg:gap-8">
+          <a href="#about" class="font-medium hover:text-accent transition-colors">{{ site.data.nav[site.active_lang].about }}</a>
+          <a href="#projects" class="font-medium hover:text-accent transition-colors">{{ site.data.nav[site.active_lang].projects }}</a>
+          <a href="#writing" class="font-medium hover:text-accent transition-colors">{{ site.data.nav[site.active_lang].writing }}</a>
+          <a href="#contact" class="font-medium hover:text-accent transition-colors">{{ site.data.nav[site.active_lang].contact }}</a>
+        </div>
+        <div class="flex items-center gap-2 border border-gray-200 rounded-full p-1">
+          <a href="{{ site.baseurl }}/" class="px-3 py-1 rounded-full text-sm font-medium {% if site.active_lang == 'es' %}bg-accent text-white{% else %}hover:bg-gray-100{% endif %}">ES</a>
+          <a href="{{ site.baseurl }}/en/" class="px-3 py-1 rounded-full text-sm font-medium {% if site.active_lang == 'en' %}bg-accent text-white{% else %}hover:bg-gray-100{% endif %}">EN</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,26 @@
+<section id="projects" class="py-16 md:py-24 bg-gradient-to-b from-white to-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    {% if site.active_lang == 'es' %}
+    <div>
+      <h2 class="section-title" data-aos="fade-up">Proyectos</h2>
+      <p class="mb-8 md:mb-12 max-w-2xl text-gray-600" data-aos="fade-up" data-aos-delay="100">Una selección de mis trabajos en la intersección de ciencia, tecnología y exploración.</p>
+    </div>
+    {% else %}
+    <div>
+      <h2 class="section-title" data-aos="fade-up">Projects</h2>
+      <p class="mb-8 md:mb-12 max-w-2xl text-gray-600" data-aos="fade-up" data-aos-delay="100">A selection of my work at the intersection of science, technology, and exploration.</p>
+    </div>
+    {% endif %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+      {% assign items = site.projects | where:"lang", site.active_lang | sort:"order" %}
+      {% for p in items %}
+        {% include card_project.html project=p %}
+      {% endfor %}
+    </div>
+    <div class="mt-8 md:mt-12 text-center" data-aos="fade-up" data-aos-delay="350">
+      <a href="#" class="btn btn-primary">
+        {% if site.active_lang == 'es' %}Ver todos los proyectos{% else %}View all projects{% endif %}
+      </a>
+    </div>
+  </div>
+</section>

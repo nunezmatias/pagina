@@ -1,0 +1,18 @@
+<div class="card group" data-aos="fade-up" data-aos-delay="{{ forloop.index | times: 50 | plus: 100 }}">
+  <div class="h-36 sm:h-48 bg-accent-light relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-br from-accent to-accent-light opacity-90 group-hover:opacity-70 transition-opacity duration-300"></div>
+    <div class="absolute inset-0 flex items-center justify-center">
+      <img src="{{ include.project.cover }}" alt="{{ include.project.title }}" class="object-cover w-full h-full">
+    </div>
+  </div>
+  <div class="p-4 sm:p-6">
+    <h3 class="font-serif text-lg sm:text-xl mb-2 sm:mb-3 group-hover:text-accent transition-colors duration-300">{{ include.project.title }}</h3>
+    <p class="mb-4 text-gray-600 text-sm sm:text-base">{{ include.project.excerpt }}</p>
+    <a href="{{ include.project.url }}" class="text-accent inline-flex items-center hover:text-accent-light font-medium text-sm sm:text-base">
+      {% if site.active_lang == 'es' %}Ver proyecto{% else %}View project{% endif %}
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      </svg>
+    </a>
+  </div>
+</div>

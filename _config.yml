@@ -1,0 +1,10 @@
+title: "Matias Núñez"
+description: "Investigador y Explorador"
+languages: [es, en]
+default_lang: es
+plugins:
+  - jekyll-feed
+  - jekyll-multiple-languages-plugin
+collections:
+  projects:
+    output: true
