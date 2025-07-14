@@ -1,0 +1,22 @@
+title: "Matias Núñez"
+description: "Investigador y Explorador"
+languages: [es, en]
+default_lang: es
+plugins:
+  - jekyll-feed
+  - jekyll-multiple-languages-plugin
+collections:
+  projects:
+    output: true
+exclude:
+  - node_modules
+  - Gemfile
+  - Gemfile.lock
+  - package.json
+  - package-lock.json
+  - postcss.config.js
+  - tailwind.config.js
+  - src
+  - test.html
+  - 'poe-preview (3).html'
+  - commit_test.txt

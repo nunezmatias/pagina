@@ -1,0 +1,25 @@
+<section id="about" class="py-16 md:py-24">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <h2 class="section-title" data-aos="fade-up">{% if site.lang == 'es' %}Sobre Mí{% else %}About Me{% endif %}</h2>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-16 mt-12">
+      <div class="lg:pr-8" data-aos="fade-up" data-aos-delay="100">
+        {% if site.lang == 'es' %}
+        <p class="mb-4">Soy un físico e investigador interdisciplinario que trabaja en la intersección de la IA aplicada, el aprendizaje automático, el lenguaje y los sistemas complejos. Mi trabajo abarca una amplia gama de dominios, desde la física del estado sólido y la ciencia de materiales hasta el procesamiento del lenguaje natural, las tecnologías de accesibilidad y la analítica de sostenibilidad.</p>
+        <p class="mb-4">Desarrollo y aplico sistemas inteligentes basados en modelos generativos, embeddings y arquitecturas multiagente. Mi objetivo no es solo construir sistemas que funcionen, sino crear herramientas que nos ayuden a comprender los patrones subyacentes de la naturaleza, el lenguaje y la sociedad. Estoy particularmente interesado en proyectos que involucren interfaces cognitivas, predicción de series temporales, reconstrucción lingüística y el uso de IA en escenarios que requieren tanto matices como fundamento en el mundo real.</p>
+        <p class="mb-4">Mi pensamiento está moldeado tanto por el rigor científico como por la profundidad conceptual. Disfruto navegando entre la abstracción y la aplicación, entre la lógica matemática de una red neuronal y la complejidad incorporada de la comunicación humana.</p>
+        <p class="mb-4">Cuando no estoy trabajando en estos problemas o inmerso en la lectura, practico deportes extremos como kayak en aguas bravas (clase V), kitesurf y snowboard. En kayak, he participado en expediciones a ríos remotos donde la exploración se convierte en un diálogo con lo desconocido. Estas experiencias me han enseñado a leer sistemas dinámicos en movimiento, actuar bajo incertidumbre y moverme con claridad a través de entornos caóticos. Abordo los desafíos intelectuales con el mismo espíritu.</p>
+        {% else %}
+        <p class="mb-4">I'm a physicist and interdisciplinary researcher working at the intersection of applied AI, machine learning, language, and complex systems. My work spans a range of domains--from solid-state physics and materials science to natural language processing, accessibility technologies, and sustainability analytics.</p>
+        <p class="mb-4">I develop and apply intelligent systems based on generative models, embeddings, and multi-agent architectures. My goal is not just to build systems that work, but to create tools that help us understand the underlying patterns of nature, language, and society. I'm particularly interested in projects that involve cognitive interfaces, time-series prediction, linguistic reconstruction (including historical corpora like Old English), and the use of AI in scenarios that require both nuance and real-world grounding--such as communication systems for people with ALS.</p>
+        <p class="mb-4">My thinking is shaped by both scientific rigor and conceptual depth. I enjoy navigating between abstraction and application, between the mathematical logic of a neural network and the embodied complexity of human communication. This dual lens informs the way I explore knowledge and design technology--with an emphasis on precision, context-awareness, and ethical alignment.</p>
+        <p class="mb-4">When I'm not working on these problems or immersed in reading, I practice extreme sports like whitewater kayaking (class V), kitesurfing, and snowboarding. In kayaking, I've taken part in expeditions to remote rivers--some of them previously unpaddled--where exploration becomes a dialogue with the unknown. These experiences have taught me how to read dynamic systems in motion, act under uncertainty, and move with clarity through chaotic environments. I approach intellectual challenges in the same spirit.</p>
+        {% endif %}
+      </div>
+      <div class="relative rounded-xl overflow-hidden shadow-xl h-auto max-h-[480px]" data-aos="fade-left" data-aos-delay="200">
+        <img src="/assets/img/kayak-waterfall.jpg" alt="waterfall" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-dark/50 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 glass p-4 text-white">{% if site.lang == 'es' %}Expedición en kayak - Cascada de clase V{% else %}Kayak expedition - Class V waterfall{% endif %}</div>
+      </div>
+    </div>
+  </div>
+</section>
