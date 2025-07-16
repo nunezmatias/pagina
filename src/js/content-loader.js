@@ -8,24 +8,20 @@ class ContentLoader {
     }
 
     async init() {
-        // Escuchar cambios de idioma
-        this.setupLanguageListener();
-        
         // Cargar contenido
         await this.loadAllContent();
         
         // Renderizar contenido inicial
         this.renderAllContent();
+        
+        // Escuchar cambios de idioma
+        this.setupLanguageListener();
     }
 
     setupLanguageListener() {
-        // Observar cambios en el atributo x-data del body
+        // Observar cambios en el idioma
         const observer = new MutationObserver(() => {
-            const bodyData = document.body.getAttribute('x-data');
-            if (bodyData && bodyData.includes('language')) {
-                // Re-renderizar contenido cuando cambie el idioma
-                setTimeout(() => this.renderAllContent(), 100);
-            }
+            setTimeout(() => this.renderAllContent(), 100);
         });
         
         observer.observe(document.body, { attributes: true });
@@ -44,10 +40,11 @@ class ContentLoader {
 
     async loadProjects() {
         const projectFiles = [
-            'chatbot-ela.md',
+            'chatbot-ela-static.md',
             'linguistic-reconstruction.md',
             'un-data-clustering.md',
-            'remote-sensing.md'
+            'remote-sensing.md',
+            'chatbot-ela.md'
         ];
 
         for (const file of projectFiles) {
@@ -67,7 +64,10 @@ class ContentLoader {
 
     async loadArticles() {
         const articleFiles = [
-            'ai-epistemological-lens.md'
+            'ai-epistemological-lens.md',
+            'felix.md',
+            'rivers-complex-systems.md',
+            'language-cognitive-tech.md'
         ];
 
         for (const file of articleFiles) {
@@ -148,16 +148,15 @@ class ContentLoader {
     renderProjects() {
         if (this.projects.length === 0) return;
 
-        const projectsContainer = document.querySelector('#projects .grid');
+        const projectsContainer = document.querySelector('#projects-container');
         if (!projectsContainer) return;
 
-        // Limpiar proyectos dinámicos existentes
-        const dynamicProjects = projectsContainer.querySelectorAll('[data-dynamic="true"]');
-        dynamicProjects.forEach(project => project.remove());
+        // Limpiar proyectos existentes
+        projectsContainer.innerHTML = '';
 
         // Agregar nuevos proyectos
         this.projects.forEach((project, index) => {
-            const projectCard = this.createProjectCard(project, index + 4); // +4 para los estáticos
+            const projectCard = this.createProjectCard(project, index);
             projectsContainer.appendChild(projectCard);
         });
     }
@@ -165,16 +164,15 @@ class ContentLoader {
     renderArticles() {
         if (this.articles.length === 0) return;
 
-        const articlesContainer = document.querySelector('#writing .grid');
+        const articlesContainer = document.querySelector('#writing-container');
         if (!articlesContainer) return;
 
-        // Limpiar artículos dinámicos existentes
-        const dynamicArticles = articlesContainer.querySelectorAll('[data-dynamic="true"]');
-        dynamicArticles.forEach(article => article.remove());
+        // Limpiar artículos existentes
+        articlesContainer.innerHTML = '';
 
         // Agregar nuevos artículos
         this.articles.forEach((article, index) => {
-            const articleCard = this.createArticleCard(article, index + 3); // +3 para los estáticos
+            const articleCard = this.createArticleCard(article, index);
             articlesContainer.appendChild(articleCard);
         });
     }
@@ -189,6 +187,9 @@ class ContentLoader {
         const colorClass = this.getColorClass(project.color || 'accent');
         const iconSvg = this.getIconSvg(project.icon || 'default');
 
+        // Usar excerpt del frontmatter si existe, sino extraer del contenido
+        const description = this.getLocalizedText(project.excerpt, project.excerptEn) || this.extractExcerpt(project.rawContent);
+
         card.innerHTML = `
             <div class="h-48 ${colorClass} relative overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-accent to-accent-light opacity-90 group-hover:opacity-70 transition-opacity duration-300"></div>
@@ -201,7 +202,7 @@ class ContentLoader {
                     ${this.getLocalizedText(project.title, project.titleEn)}
                 </h3>
                 <p class="mb-4 text-gray-600">
-                    ${this.extractExcerpt(project.content)}
+                    ${description}
                 </p>
                 <a href="#" class="text-accent inline-flex items-center hover:text-accent-light font-medium" onclick="showContentModal('${this.escapeHtml(project.title)}', \`${this.escapeHtml(project.content)}\`)">
                     <span>${this.currentLanguage === 'es' ? 'Ver proyecto' : 'View project'}</span>
@@ -225,6 +226,9 @@ class ContentLoader {
         const colorClass = this.getColorClass(article.color || 'accent');
         const iconSvg = this.getIconSvg('article');
 
+        // Usar excerpt del frontmatter si existe, sino extraer del contenido
+        const description = this.getLocalizedText(article.excerpt, article.excerptEn) || this.extractExcerpt(article.rawContent);
+
         card.innerHTML = `
             <div class="h-56 ${colorClass} relative overflow-hidden">
                 <div class="absolute inset-0 bg-gradient-to-br from-accent to-accent-light opacity-80 group-hover:opacity-70 transition-all duration-300"></div>
@@ -232,12 +236,12 @@ class ContentLoader {
                     ${iconSvg}
                 </div>
             </div>
-            <div class="p-6 flex-grow flex flex-col h-64">
+            <div class="p-6 flex-grow flex flex-col">
                 <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300">
                     ${this.getLocalizedText(article.title, article.titleEn)}
                 </h3>
                 <p class="mb-4 text-gray-600 flex-grow">
-                    ${this.getLocalizedText(article.excerpt, article.excerptEn) || this.extractExcerpt(article.content)}
+                    ${description}
                 </p>
                 <a href="#" class="text-accent inline-flex items-center hover:text-accent-light font-medium mt-auto" onclick="showContentModal('${this.escapeHtml(article.title)}', \`${this.escapeHtml(article.content)}\`)">
                     <span>${this.currentLanguage === 'es' ? 'Leer más' : 'Read more'}</span>
@@ -277,9 +281,31 @@ class ContentLoader {
         return icons[iconType] || icons['default'];
     }
 
-    extractExcerpt(content) {
-        const text = content.replace(/<[^>]*>/g, '').replace(/\n/g, ' ');
-        return text.substring(0, 150) + '...';
+    extractExcerpt(rawContent) {
+        // Remover frontmatter si existe
+        let content = rawContent.replace(/^---\n[\s\S]*?\n---\n/, '');
+        
+        // Remover el título principal
+        content = content.replace(/^#[^#].*$/m, '');
+        
+        // Remover markdown y limpiar
+        content = content
+            .replace(/^##[^#].*$/gm, '') // Remover subtítulos
+            .replace(/\*\*(.*?)\*\*/g, '$1') // Remover bold
+            .replace(/\*(.*?)\*/g, '$1') // Remover italic
+            .replace(/`(.*?)`/g, '$1') // Remover code
+            .replace(/!\[.*?\]\(.*?\)/g, '') // Remover imágenes
+            .replace(/\[.*?\]\(.*?\)/g, '') // Remover links
+            .replace(/^[-*+]\s+/gm, '') // Remover bullets
+            .replace(/\n+/g, ' ') // Reemplazar saltos de línea con espacios
+            .trim();
+        
+        // Tomar los primeros 120 caracteres de texto limpio
+        if (content.length > 120) {
+            return content.substring(0, 120) + '...';
+        }
+        
+        return content || 'Contenido disponible en el artículo completo...';
     }
 
     escapeHtml(text) {
