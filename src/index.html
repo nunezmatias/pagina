@@ -1,18 +1,136 @@
-<!DOCTYPE html><html lang="es"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+<!DOCTYPE html>
+<html lang="es">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Matias  Núñez | Investigador y Explorador</title>
-    <script src="js/tailwind-config.js"></script>
+    <title>Matias Núñez | Investigador y Explorador</title>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- Alpine.js para interactividad -->
-    <script defer="" src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
     <!-- Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:wght@700&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap">
+    
     <!-- AOS para animaciones de scroll -->
-    <link rel="stylesheet" href="css/style.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Configuración de Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a1921',
+                        light: '#f5f5f5',
+                        accent: '#1a5a7a',
+                        'accent-light': '#3a8bb2',
+                        secondary: '#2d4b40',
+                        tertiary: '#c8a87d',
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                    animation: {
+                        'gradient': 'gradient 8s ease infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': {
+                                'background-position': '0% 50%'
+                            },
+                            '50%': {
+                                'background-position': '100% 50%'
+                            },
+                        }
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Estilos personalizados -->
+    <style>
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease-in-out;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #1a5a7a, #3a8bb2);
+            color: #f5f5f5;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 10px 15px -3px rgba(26, 90, 122, 0.3);
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #f5f5f5;
+            border: 2px solid #f5f5f5;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.75rem;
+        }
+
+        .section-title {
+            font-family: "Playfair Display", Georgia, serif;
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 0.25rem;
+            width: 33.333333%;
+            background: #3a8bb2;
+            border-radius: 9999px;
+        }
+
+        .bg-size-200 {
+            background-size: 200% 200%;
+        }
+    </style>
 </head>
 <body class="font-sans text-dark bg-light leading-relaxed" x-data="{ language: 'es' }">
     <!-- Header -->
@@ -58,12 +176,15 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="relative h-screen flex items-center overflow-hidden">
+    <section class="relative min-h-screen flex items-center overflow-hidden">
         <!-- Background Image with Gradient Overlay -->
         <div class="absolute inset-0 bg-dark filter contrast-125 opacity-80 z-0">
-          <img src="./frente1.png" alt="Vista aérea de paisaje" class="w-full h-full object-cover">
-            <div class="w-full h-full bg-gradient-to-br from-dark/80 via-accent/30 to-dark/70 animate-gradient bg-size-200"></div>
-        </dv>
+            <img src="./assets/images/front_imagen.jpg" alt="Vista aérea de paisaje"
+                class="w-full h-full object-cover">
+            <div
+                class="w-full h-full bg-gradient-to-br from-dark/80 via-accent/30 to-dark/70 animate-gradient bg-size-200">
+            </div>
+        </div>
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
             <div class="text-light max-w-2xl ml-0 md:ml-8" data-aos="fade-right" data-aos-duration="1000">
@@ -85,7 +206,7 @@
                 <template x-if="language === 'en'">
                     <div>
                         <h1 class="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight mb-6">
-                            Navigating complexity-through science, language,  and wild rivers.
+                            Navigating complexity-through science, language, and wild rivers.
                         </h1>
                         <p class="text-lg md:text-xl mb-8">
                             Interdisciplinary researcher at the intersection of applied AI, machine learning, language, and complex systems.
@@ -160,15 +281,13 @@
                         </div>
                     </template>
                 </div>
-                <div class="relative rounded-xl overflow-hidden shadow-xl h-auto max-h-[1280px]" data-aos="fade-left" data-aos-delay="200">
-                    <!-- Imagen del kayak en la cascada --> 
-                    <img src="./kayak-waterfall.jpg" alt="Kayaking waterfall" class="w-full h-full object-cover">
-    
-                    <!-- Overlay with gradient -->
+                <div class="relative rounded-xl overflow-hidden shadow-xl h-auto" data-aos="fade-left"
+                    data-aos-delay="200">
+                    <img src="./assets/images/kayak-waterfall.jpg" alt="Kayaking waterfall"
+                        class="w-full h-auto object-contain">
                     <div class="absolute inset-0 bg-gradient-to-t from-dark/50 to-transparent"></div>
-    
-                    <!-- Caption with glass effect -->
-                    <div class="absolute33 bottom-0 left-0 right-0 glass p-4 text-white" x-text="language === 'es' ? 'Expedición en kayak - Cascada de clase V' : 'Kayak expedition - Class V waterfall'">
+                    <div class="absolute bottom-0 left-0 right-0 glass p-4 text-white"
+                        x-text="language === 'es' ? 'Expedición en kayak - Cascada de clase V' : 'Kayak expedition - Class V waterfall'">
                     </div>
                 </div>
             </div>
@@ -200,7 +319,6 @@
                 <!-- Project Card 1 -->
                 <div class="card group" data-aos="fade-up" data-aos-delay="150">
                     <div class="h-48 bg-accent-light relative overflow-hidden">
-                        <!-- Imagen de proyecto: Chatbot for ALS communication -->
                         <div class="absolute inset-0 bg-gradient-to-br from-accent to-accent-light opacity-90 group-hover:opacity-70 transition-opacity duration-300"></div>
                         <div class="absolute inset-0 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -209,10 +327,8 @@
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'Chatbot para Comunicación ELA' : 'Chatbot for ALS Communication'">
-                        </h3>
-                        <p class="mb-4 text-gray-600" x-text="language === 'es' ? 'Sistema de comunicación asistiva basado en IA para personas con ELA, integrando reconocimiento de gestos mínimos y generación de lenguaje natural.' : 'AI-based assistive communication system for people with ALS, integrating minimal gesture recognition and natural language generation.'">
-                        </p>
+                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'Chatbot para Comunicación ELA' : 'Chatbot for ALS Communication'"></h3>
+                        <p class="mb-4 text-gray-600" x-text="language === 'es' ? 'Sistema de comunicación asistiva basado en IA para personas con ELA, integrando reconocimiento de gestos mínimos y generación de lenguaje natural.' : 'AI-based assistive communication system for people with ALS, integrating minimal gesture recognition and natural language generation.'"></p>
                         <a href="#" class="text-accent inline-flex items-center hover:text-accent-light font-medium">
                             <span x-text="language === 'es' ? 'Ver proyecto' : 'View project'"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -225,7 +341,6 @@
                 <!-- Project Card 2 -->
                 <div class="card group" data-aos="fade-up" data-aos-delay="200">
                     <div class="h-48 bg-secondary relative overflow-hidden">
-                        <!-- Imagen de proyecto: Linguistic reconstruction -->
                         <div class="absolute inset-0 bg-gradient-to-br from-secondary to-accent-light/70 opacity-90 group-hover:opacity-70 transition-opacity duration-300"></div>
                         <div class="absolute inset-0 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -234,10 +349,8 @@
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'Reconstrucción Lingüística con Embeddings' : 'Linguistic Reconstruction with Embeddings'">
-                        </h3>
-                        <p class="mb-4 text-gray-600" x-text="language === 'es' ? 'Aplicación de modelos de embeddings para la reconstrucción y análisis de corpus lingüísticos históricos como el inglés antiguo.' : 'Application of embedding models for the reconstruction and analysis of historical linguistic corpora such as Old English.'">
-                        </p>
+                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'Reconstrucción Lingüística con Embeddings' : 'Linguistic Reconstruction with Embeddings'"></h3>
+                        <p class="mb-4 text-gray-600" x-text="language === 'es' ? 'Aplicación de modelos de embeddings para la reconstrucción y análisis de corpus lingüísticos históricos como el inglés antiguo.' : 'Application of embedding models for the reconstruction and analysis of historical linguistic corpora such as Old English.'"></p>
                         <a href="#" class="text-accent inline-flex items-center hover:text-accent-light font-medium">
                             <span x-text="language === 'es' ? 'Ver proyecto' : 'View project'"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -250,7 +363,6 @@
                 <!-- Project Card 3 -->
                 <div class="card group" data-aos="fade-up" data-aos-delay="250">
                     <div class="h-48 bg-tertiary relative overflow-hidden">
-                        <!-- Imagen de proyecto: UN data analysis -->
                         <div class="absolute inset-0 bg-gradient-to-br from-tertiary to-secondary/70 opacity-90 group-hover:opacity-70 transition-opacity duration-300"></div>
                         <div class="absolute inset-0 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -259,10 +371,8 @@
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'Clustering de Datos de la ONU' : 'UN Data Clustering'">
-                        </h3>
-                        <p class="mb-4 text-gray-600" x-text="language === 'es' ? 'Técnicas de reducción de dimensionalidad y clustering aplicadas a datos de Naciones Unidas para identificar patrones en indicadores de desarrollo sostenible.' : 'Dimensionality reduction and clustering techniques applied to United Nations data to identify patterns in sustainable development indicators.'">
-                        </p>
+                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'Clustering de Datos de la ONU' : 'UN Data Clustering'"></h3>
+                        <p class="mb-4 text-gray-600" x-text="language === 'es' ? 'Técnicas de reducción de dimensionalidad y clustering aplicadas a datos de Naciones Unidas para identificar patrones en indicadores de desarrollo sostenible.' : 'Dimensionality reduction and clustering techniques applied to United Nations data to identify patterns in sustainable development indicators.'"></p>
                         <a href="#" class="text-accent inline-flex items-center hover:text-accent-light font-medium">
                             <span x-text="language === 'es' ? 'Ver proyecto' : 'View project'"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -275,7 +385,6 @@
                 <!-- Project Card 4 -->
                 <div class="card group" data-aos="fade-up" data-aos-delay="300">
                     <div class="h-48 bg-dark relative overflow-hidden">
-                        <!-- Imagen de proyecto: Remote sensing -->
                         <div class="absolute inset-0 bg-gradient-to-br from-dark to-accent/50 opacity-90 group-hover:opacity-70 transition-opacity duration-300"></div>
                         <div class="absolute inset-0 flex items-center justify-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -284,10 +393,8 @@
                         </div>
                     </div>
                     <div class="p-6">
-                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'Análisis de Teledetección' : 'Remote Sensing Analysis'">
-                        </h3>
-                        <p class="mb-4 text-gray-600" x-text="language === 'es' ? 'Análisis basado en física para interpretación de datos de teledetección, con aplicaciones en monitoreo ambiental y gestión de recursos naturales.' : 'Physics-based analysis for remote sensing data interpretation, with applications in environmental monitoring and natural resource management.'">
-                        </p>
+                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'Análisis de Teledetección' : 'Remote Sensing Analysis'"></h3>
+                        <p class="mb-4 text-gray-600" x-text="language === 'es' ? 'Análisis basado en física para interpretación de datos de teledetección, con aplicaciones en monitoreo ambiental y gestión de recursos naturales.' : 'Physics-based analysis for remote sensing data interpretation, with applications in environmental monitoring and natural resource management.'"></p>
                         <a href="#" class="text-accent inline-flex items-center hover:text-accent-light font-medium">
                             <span x-text="language === 'es' ? 'Ver proyecto' : 'View project'"></span>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -332,7 +439,6 @@
                 <!-- Article Card 1 -->
                 <div class="flex flex-col bg-white rounded-xl overflow-hidden border border-gray-100 shadow-md transition transform hover:-translate-y-2 hover:shadow-xl group" data-aos="fade-up" data-aos-delay="150">
                     <div class="h-56 bg-accent relative overflow-hidden">
-                        <!-- Imagen para artículo sobre IA -->
                         <div class="absolute inset-0 bg-gradient-to-br from-accent to-accent-light opacity-80 group-hover:opacity-70 transition-all duration-300"></div>
                         <div class="absolute inset-0 flex items-center justify-center text-white/90">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -341,77 +447,66 @@
                         </div>
                     </div>
                     <div class="p-6 flex-grow flex flex-col h-64">
-                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'La inteligencia artificial como lente epistemológica' : 'Artificial Intelligence as an Epistemological Lens'">
-                        </h3>
-                        <p class="mb-4 text-gray-600 flex-grow" x-text="language === 'es' ? 'Reflexiones sobre cómo los modelos de IA nos permiten entender y cuestionar nuestros propios procesos cognitivos.' : 'Reflections on how AI models allow us to understand and question our own cognitive processes.'">
-                        </p>
-                        <div class="mt-auto flex items-center justify-between">
-                            <div class="text-gray-500 text-sm" x-text="language === 'es' ? 'Publicado el 15 de marzo de 2025' : 'Published March 15, 2025'">
-                            </div>
-                            <a href="#" class="text-accent hover:text-accent-light">
-                                <span x-text="language === 'es' ? 'Leer' : 'Read'"></span> →
-                            </a>
-                        </div>
+                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'La inteligencia artificial como lente epistemológica' : 'Artificial Intelligence as an Epistemological Lens'"></h3>
+                        <p class="mb-4 text-gray-600 flex-grow" x-text="language === 'es' ? 'Reflexiones sobre cómo los modelos de IA nos ayudan a entender no solo el mundo, sino también nuestros propios procesos de conocimiento.' : 'Reflections on how AI models help us understand not just the world, but also our own processes of knowledge.'"></p>
+                        <a href="#" class="text-accent inline-flex items-center hover:text-accent-light font-medium mt-auto">
+                            <span x-text="language === 'es' ? 'Leer más' : 'Read more'"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
                 
                 <!-- Article Card 2 -->
                 <div class="flex flex-col bg-white rounded-xl overflow-hidden border border-gray-100 shadow-md transition transform hover:-translate-y-2 hover:shadow-xl group" data-aos="fade-up" data-aos-delay="200">
                     <div class="h-56 bg-secondary relative overflow-hidden">
-                        <!-- Imagen para artículo sobre kayak -->
-                        <div class="absolute inset-0 bg-gradient-to-br from-secondary to-accent-light/70 opacity-80 group-hover:opacity-70 transition-all duration-300"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-secondary to-tertiary opacity-80 group-hover:opacity-70 transition-all duration-300"></div>
                         <div class="absolute inset-0 flex items-center justify-center text-white/90">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
                     </div>
                     <div class="p-6 flex-grow flex flex-col h-64">
-                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'Notas de campo: Río Futaleufú' : 'Field Notes: Futaleufú River'">
-                        </h3>
-                        <p class="mb-4 text-gray-600 flex-grow" x-text="language === 'es' ? 'Bitácora de la expedición a uno de los ríos más técnicos de Patagonia, y las lecciones sobre toma de decisiones bajo incertidumbre.' : 'Log of the expedition to one of Patagonia's most technical rivers, and lessons on decision-making under uncertainty.'">
-                        </p>
-                        <div class="mt-auto flex items-center justify-between">
-                            <div class="text-gray-500 text-sm" x-text="language === 'es' ? 'Publicado el 8 de enero de 2025' : 'Published January 8, 2025'">
-                            </div>
-                            <a href="#" class="text-accent hover:text-accent-light">
-                                <span x-text="language === 'es' ? 'Leer' : 'Read'"></span> →
-                            </a>
-                        </div>
+                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'Ríos como sistemas complejos' : 'Rivers as Complex Systems'"></h3>
+                        <p class="mb-4 text-gray-600 flex-grow" x-text="language === 'es' ? 'Notas de campo sobre la dinámica de fluidos en ríos de clase V y sus paralelos con sistemas adaptativos complejos.' : 'Field notes on fluid dynamics in Class V rivers and their parallels with complex adaptive systems.'"></p>
+                        <a href="#" class="text-accent inline-flex items-center hover:text-accent-light font-medium mt-auto">
+                            <span x-text="language === 'es' ? 'Leer más' : 'Read more'"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
                 
                 <!-- Article Card 3 -->
                 <div class="flex flex-col bg-white rounded-xl overflow-hidden border border-gray-100 shadow-md transition transform hover:-translate-y-2 hover:shadow-xl group" data-aos="fade-up" data-aos-delay="250">
                     <div class="h-56 bg-tertiary relative overflow-hidden">
-                        <!-- Imagen para artículo sobre sistemas complejos -->
-                        <div class="absolute inset-0 bg-gradient-to-br from-tertiary to-secondary/70 opacity-80 group-hover:opacity-70 transition-all duration-300"></div>
+                        <div class="absolute inset-0 bg-gradient-to-br from-tertiary to-accent opacity-80 group-hover:opacity-70 transition-all duration-300"></div>
                         <div class="absolute inset-0 flex items-center justify-center text-white/90">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
                             </svg>
                         </div>
                     </div>
                     <div class="p-6 flex-grow flex flex-col h-64">
-                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'Sistemas complejos y lenguaje emergente' : 'Complex Systems and Emergent Language'">
-                        </h3>
-                        <p class="mb-4 text-gray-600 flex-grow" x-text="language === 'es' ? 'Análisis de las propiedades emergentes en sistemas lingüísticos complejos y sus paralelismos con fenómenos físicos.' : 'Analysis of emergent properties in complex linguistic systems and their parallels with physical phenomena.'">
-                        </p>
-                        <div class="mt-auto flex items-center justify-between">
-                            <div class="text-gray-500 text-sm" x-text="language === 'es' ? 'Publicado el 29 de noviembre de 2024' : 'Published November 29, 2024'">
-                            </div>
-                            <a href="#" class="text-accent hover:text-accent-light">
-                                <span x-text="language === 'es' ? 'Leer' : 'Read'"></span> →
-                            </a>
-                        </div>
+                        <h3 class="font-serif text-xl mb-3 group-hover:text-accent transition-colors duration-300" x-text="language === 'es' ? 'El lenguaje como tecnología cognitiva' : 'Language as Cognitive Technology'"></h3>
+                        <p class="mb-4 text-gray-600 flex-grow" x-text="language === 'es' ? 'Explorando cómo el lenguaje no solo describe la realidad, sino que la construye, especialmente en el contexto de la IA generativa.' : 'Exploring how language not only describes reality, but constructs it, especially in the context of generative AI.'"></p>
+                        <a href="#" class="text-accent inline-flex items-center hover:text-accent-light font-medium mt-auto">
+                            <span x-text="language === 'es' ? 'Leer más' : 'Read more'"></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform transition-transform duration-300 group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
             </div>
             
-            <!-- More Articles Button -->
+            <!-- View All Writing Button -->
             <div class="mt-12 text-center" data-aos="fade-up" data-aos-delay="300">
                 <a href="#" class="btn btn-primary">
-                    <span x-text="language === 'es' ? 'Ver más artículos' : 'View more articles'"></span>
+                    <span x-text="language === 'es' ? 'Ver todos los escritos' : 'View all writing'"></span>
                 </a>
             </div>
         </div>
@@ -426,7 +521,7 @@
             <template x-if="language === 'en'">
                 <h2 class="section-title" data-aos="fade-up">Contact</h2>
             </template>
-            
+
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-12">
                 <div data-aos="fade-up" data-aos-delay="100">
                     <template x-if="language === 'es'">
@@ -434,13 +529,13 @@
                             Si estás trabajando en proyectos en la frontera de la inteligencia artificial, análisis de sistemas complejos, o exploración—me encantaría conversar.
                         </p>
                     </template>
-                    
+
                     <template x-if="language === 'en'">
                         <p class="mb-10 text-gray-600">
                             If you're working on projects at the frontier of artificial intelligence, complex systems analysis, or exploration—I'd love to talk.
                         </p>
                     </template>
-                    
+
                     <div class="mt-10">
                         <h3 class="font-serif text-2xl mb-6" x-text="language === 'es' ? 'Conéctate' : 'Connect'"></h3>
                         <ul class="flex gap-6">
@@ -460,35 +555,26 @@
                                     <span>GitHub</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="#" class="flex items-center gap-2 text-dark hover:text-accent transition-colors p-3 bg-white rounded-lg shadow-sm hover:shadow-md">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path d="M10.5 15l4.5-2.5-4.5-2.5v5z"></path>
-                                        <path d="M20 12a8 8 0 11-16 0 8 8 0 0116 0zm2 0c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"></path>
-                                    </svg>
-                                    <span>Google Scholar</span>
-                                </a>
-                            </li>
                         </ul>
                     </div>
                 </div>
-                
+
                 <form class="flex flex-col gap-6 bg-white p-8 rounded-xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex flex-col gap-2">
                         <label for="name" class="font-medium" x-text="language === 'es' ? 'Nombre' : 'Name'"></label>
-                        <input type="text" id="name" name="name" required="" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300">
+                        <input type="text" id="name" name="name" required class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300">
                     </div>
-                    
+
                     <div class="flex flex-col gap-2">
                         <label for="email" class="font-medium" x-text="language === 'es' ? 'Email' : 'Email'"></label>
-                        <input type="email" id="email" name="email" required="" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300">
+                        <input type="email" id="email" name="email" required class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300">
                     </div>
-                    
+
                     <div class="flex flex-col gap-2">
                         <label for="message" class="font-medium" x-text="language === 'es' ? 'Mensaje' : 'Message'"></label>
-                        <textarea id="message" name="message" required="" class="p-3 border border-gray-300 rounded-lg min-h-[150px] resize-y focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300"></textarea>
+                        <textarea id="message" name="message" required class="p-3 border border-gray-300 rounded-lg min-h-[150px] resize-y focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300"></textarea>
                     </div>
-                    
+
                     <button type="submit" class="btn btn-primary self-start">
                         <span x-text="language === 'es' ? 'Enviar mensaje' : 'Send message'"></span>
                     </button>
@@ -501,11 +587,38 @@
     <footer class="py-12 bg-dark text-light">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <p>© 2025 Mateo Núñez. <span x-text="language === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'"></span></p>
-                <p class="mt-4 md:mt-0 text-gray-400"><span x-text="language === 'es' ? 'Sitio desarrollado con' : 'Site developed with'"></span> Next.js</p>
+                <p>© 2025 Matias Núñez. <span x-text="language === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'"></span></p>
+                <p class="mt-4 md:mt-0 text-gray-400"><span x-text="language === 'es' ? 'Sitio desarrollado con' : 'Site developed with'"></span> Vite & Tailwind CSS</p>
             </div>
         </div>
     </footer>
 
-    <script src="js/app.js"></script>
-</body></html>
+    <!-- JavaScript para inicializar AOS -->
+    <script>
+        // Inicializar AOS cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 100
+            });
+        });
+
+        // Smooth scroll para los enlaces de navegación
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
