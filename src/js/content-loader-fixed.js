@@ -285,7 +285,7 @@ class SimpleContentLoader {
                 <p class="mb-4 text-gray-600 flex-grow text-sm leading-relaxed">
                     ${excerpt}
                 </p>
-                <button class="text-accent inline-flex items-center hover:text-accent-light font-medium mt-auto" onclick="openFullContent('${item.filename}', '${type}', '${this.currentLanguage}')">
+                <button class="text-accent inline-flex items-center hover:text-accent-light font-medium mt-auto" onclick="openFullContent('${item.filename}', '${type}', contentLoader.currentLanguage)">
                     <span>${buttonText}</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
@@ -348,23 +348,9 @@ class SimpleContentLoader {
     }
 }
 
-// Variable global para el loader
-let contentLoader;
-
-// Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Iniciando SimpleContentLoader...');
-    setTimeout(() => {
-        contentLoader = new SimpleContentLoader();
-    }, 100);
-});
-
 // Función global para abrir contenido completo en página nueva
 async function openFullContent(filename, type, language) {
     try {
-        // Usar el idioma actual del contentLoader si está disponible
-        const currentLanguage = contentLoader ? contentLoader.currentLanguage : language;
-        
         // Cargar el contenido completo del archivo
         const folder = type === 'project' ? 'projects' : 'writing';
         const response = await fetch(`./content/${folder}/${filename}`);
@@ -375,19 +361,16 @@ async function openFullContent(filename, type, language) {
         
         const content = await response.text();
         
-        // Parsear el markdown con el idioma correcto
-        const parsedContent = parseFullMarkdown(content, currentLanguage);
+        // Parsear el markdown
+        const parsedContent = parseFullMarkdown(content, language);
         
-        // Crear página completa con el idioma correcto
-        createFullContentPage(parsedContent, currentLanguage);
+        // Crear página completa
+        createFullContentPage(parsedContent, language);
         
     } catch (error) {
         console.error('Error loading full content:', error);
         // Fallback a modal si hay error
-        const errorText = contentLoader && contentLoader.currentLanguage === 'es' 
-            ? 'No se pudo cargar el contenido completo.' 
-            : 'Could not load full content.';
-        showContentModal('Error', errorText);
+        showContentModal('Error', 'No se pudo cargar el contenido completo.');
     }
 }
 
@@ -414,15 +397,23 @@ function parseFullMarkdown(content, language) {
     }
 
     // Extraer contenido sin frontmatter
-    const markdownContent = content.replace(/^---\n[\s\S]*?\n---\n/, '');
+    let markdownContent = content.replace(/^---\n[\s\S]*?\n---\n/, '');
+    
+    // Traducir contenido si el idioma es inglés
+    if (language === 'en') {
+        markdownContent = translateMarkdownContent(markdownContent);
+    }
     
     // Convertir markdown a HTML con soporte completo
     const htmlContent = markdownToFullHtml(markdownContent);
     
     // Obtener título según idioma
-    const title = language === 'en' && frontmatter.titleEn 
-        ? frontmatter.titleEn 
-        : frontmatter.title || 'Contenido';
+    let title;
+    if (language === 'en') {
+        title = frontmatter.titleEn || frontmatter.title || 'Content';
+    } else {
+        title = frontmatter.title || 'Contenido';
+    }
     
     return {
         title,
@@ -485,16 +476,11 @@ function createFullContentPage(parsedContent, language) {
     const fullPage = document.createElement('div');
     fullPage.className = 'fixed inset-0 bg-white z-50 overflow-y-auto';
     
-    // Textos según idioma
     const backText = language === 'es' ? 'Volver' : 'Back';
-    const aboutText = language === 'es' ? 'Sobre Mí' : 'About Me';
-    const projectsText = language === 'es' ? 'Proyectos' : 'Projects';
-    const writingText = language === 'es' ? 'Escritos' : 'Writing';
-    const contactText = language === 'es' ? 'Contacto' : 'Contact';
     
     fullPage.innerHTML = `
         <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-            <!-- Header Navigation Completo -->
+            <!-- Header Navigation Complete -->
             <header class="sticky top-0 bg-white/90 backdrop-blur-sm border-b border-gray-200 z-10">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6">
                     <nav class="flex justify-between items-center py-4">
@@ -507,16 +493,16 @@ function createFullContentPage(parsedContent, language) {
                         <div class="hidden md:flex items-center gap-6">
                             <div class="flex gap-6">
                                 <button onclick="closePageAndGoTo('#about')" class="font-medium hover:text-accent transition-colors text-gray-700">
-                                    ${aboutText}
+                                    ${language === 'es' ? 'Sobre Mí' : 'About Me'}
                                 </button>
                                 <button onclick="closePageAndGoTo('#projects')" class="font-medium hover:text-accent transition-colors text-gray-700">
-                                    ${projectsText}
+                                    ${language === 'es' ? 'Proyectos' : 'Projects'}
                                 </button>
                                 <button onclick="closePageAndGoTo('#writing')" class="font-medium hover:text-accent transition-colors text-gray-700">
-                                    ${writingText}
+                                    ${language === 'es' ? 'Escritos' : 'Writing'}
                                 </button>
                                 <button onclick="closePageAndGoTo('#contact')" class="font-medium hover:text-accent transition-colors text-gray-700">
-                                    ${contactText}
+                                    ${language === 'es' ? 'Contacto' : 'Contact'}
                                 </button>
                             </div>
                             
@@ -605,78 +591,6 @@ function createFullContentPage(parsedContent, language) {
     fullPage.scrollTop = 0;
 }
 
-// Funciones para la navegación en página completa
-function closePageAndGoTo(targetId) {
-    // Cerrar la página completa
-    const fullPage = document.querySelector('.fixed.inset-0.bg-white.z-50');
-    if (fullPage) {
-        fullPage.remove();
-    }
-    
-    // Hacer scroll a la sección objetivo
-    setTimeout(() => {
-        const target = document.querySelector(targetId);
-        if (target) {
-            const headerHeight = document.querySelector('#header')?.offsetHeight || 80;
-            const targetPosition = target.offsetTop - headerHeight - 20;
-            
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
-    }, 100);
-}
-
-// Función para cambiar idioma en página de contenido SIN cerrar
-function changeContentLanguage(newLanguage) {
-    // Cambiar idioma en la página principal
-    if (contentLoader) {
-        contentLoader.currentLanguage = newLanguage;
-        contentLoader.updateContent();
-    }
-    
-    // Obtener información del contenido actual para recargarlo en el nuevo idioma
-    const fullPage = document.querySelector('.fixed.inset-0.bg-white.z-50');
-    const currentTitle = fullPage?.querySelector('h1')?.textContent;
-    
-    if (fullPage && currentTitle && contentLoader) {
-        // Buscar el archivo correspondiente al título actual
-        let targetItem = null;
-        let type = '';
-        
-        // Buscar en proyectos
-        for (const project of contentLoader.projects) {
-            if (project.title.es === currentTitle || 
-                project.title.en === currentTitle) {
-                targetItem = project;
-                type = 'project';
-                break;
-            }
-        }
-        
-        // Buscar en artículos si no se encontró en proyectos
-        if (!targetItem) {
-            for (const article of contentLoader.articles) {
-                if (article.title.es === currentTitle || 
-                    article.title.en === currentTitle) {
-                    targetItem = article;
-                    type = 'article';
-                    break;
-                }
-            }
-        }
-        
-        // Recargar el contenido en el nuevo idioma
-        if (targetItem && type) {
-            fullPage.remove();
-            setTimeout(() => {
-                openFullContent(targetItem.filename, type, newLanguage);
-            }, 100);
-        }
-    }
-}
-
 // Función de fallback para modal pequeño
 function showContentModal(title, content) {
     const modal = document.createElement('div');
@@ -704,4 +618,148 @@ function showContentModal(title, content) {
     });
 
     document.body.appendChild(modal);
+}
+
+// Variable global para el loader
+let contentLoader;
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Iniciando SimpleContentLoader...');
+    setTimeout(() => {
+        contentLoader = new SimpleContentLoader();
+    }, 100);
+});
+
+// Functions for full page navigation
+function closePageAndGoTo(targetId) {
+    const fullPage = document.querySelector('.fixed.inset-0.bg-white.z-50');
+    if (fullPage) {
+        fullPage.remove();
+    }
+    
+    setTimeout(() => {
+        const target = document.querySelector(targetId);
+        if (target) {
+            const headerHeight = document.querySelector('#header')?.offsetHeight || 80;
+            const targetPosition = target.offsetTop - headerHeight - 20;
+            
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+        }
+    }, 100);
+}
+
+function changeContentLanguage(newLanguage) {
+    if (contentLoader) {
+        contentLoader.currentLanguage = newLanguage;
+    }
+    
+    const fullPage = document.querySelector('.fixed.inset-0.bg-white.z-50');
+    const currentTitle = fullPage?.querySelector('h1')?.textContent;
+    
+    if (fullPage && currentTitle && contentLoader) {
+        let targetItem = null;
+        let type = '';
+        
+        for (const project of contentLoader.projects) {
+            if (project.title.es === currentTitle || project.title.en === currentTitle) {
+                targetItem = project;
+                type = 'project';
+                break;
+            }
+        }
+        
+        if (!targetItem) {
+            for (const article of contentLoader.articles) {
+                if (article.title.es === currentTitle || article.title.en === currentTitle) {
+                    targetItem = article;
+                    type = 'article';
+                    break;
+                }
+            }
+        }
+        
+        if (targetItem && type) {
+            fullPage.remove();
+            setTimeout(() => {
+                openFullContent(targetItem.filename, type, newLanguage);
+            }, 50);
+        }
+    }
+}
+
+// Function to translate markdown content to English
+function translateMarkdownContent(markdownContent) {
+    const translations = {
+        // Common headings
+        'Descripción del Proyecto': 'Project Description',
+        'Fundamentos Físicos': 'Physical Foundations',
+        'Metodologías Desarrolladas': 'Developed Methodologies',
+        'Tecnologías y Plataformas': 'Technologies and Platforms',
+        'Aplicaciones Desarrolladas': 'Developed Applications',
+        'Resultados e Impacto': 'Results and Impact',
+        'El momento de la decisión': 'The moment of decision',
+        'La física del caos': 'The physics of chaos',
+        'Reflexiones finales': 'Final reflections',
+        
+        // Common phrases
+        'Sistema de comunicación asistiva basado en IA': 'AI-based assistive communication system',
+        'para personas con ELA': 'for people with ALS',
+        'integrando reconocimiento de gestos mínimos': 'integrating minimal gesture recognition',
+        'y generación de lenguaje natural': 'and natural language generation',
+        'Aplicación de modelos de embeddings': 'Application of embedding models',
+        'para la reconstrucción y análisis': 'for reconstruction and analysis',
+        'de corpus lingüísticos históricos': 'of historical linguistic corpora',
+        'como el inglés antiguo': 'such as Old English',
+        'Técnicas de reducción de dimensionalidad': 'Dimensionality reduction techniques',
+        'y clustering aplicadas a datos': 'and clustering applied to data',
+        'de Naciones Unidas': 'from the United Nations',
+        'para identificar patrones': 'to identify patterns',
+        'en indicadores de desarrollo sostenible': 'in sustainable development indicators',
+        'Análisis basado en física': 'Physics-based analysis',
+        'para interpretación de datos de teledetección': 'for remote sensing data interpretation',
+        'con aplicaciones en monitoreo ambiental': 'with applications in environmental monitoring',
+        'y gestión de recursos naturales': 'and natural resource management',
+        'Reflexiones sobre cómo los modelos de IA': 'Reflections on how AI models',
+        'nos ayudan a entender no solo el mundo': 'help us understand not only the world',
+        'sino también nuestros propios procesos': 'but also our own processes',
+        'de conocimiento': 'of knowledge',
+        'Reflexiones desde el río': 'Reflections from the river',
+        'sobre la toma de decisiones': 'on decision-making',
+        'bajo incertidumbre extrema': 'under extreme uncertainty',
+        'y las lecciones que los rápidos': 'and the lessons that rapids',
+        'de clase V nos enseñan': 'Class V teach us',
+        'sobre la vida': 'about life',
+        'Notas de campo sobre la dinámica': 'Field notes on the dynamics',
+        'de fluidos en ríos': 'of fluids in rivers',
+        'y sus paralelos con sistemas': 'and their parallels with systems',
+        'adaptativos complejos': 'complex adaptive',
+        
+        // Common words
+        'desarrollo': 'development',
+        'algoritmos': 'algorithms',
+        'avanzados': 'advanced',
+        'procesamiento': 'processing',
+        'interpretación': 'interpretation',
+        'información': 'information',
+        'precisa': 'precise',
+        'procesos': 'processes',
+        'ambientales': 'environmental',
+        'vegetación': 'vegetation',
+        'temperatura': 'temperature',
+        'diferentes': 'different',
+        'materiales': 'materials'
+    };
+    
+    let translatedContent = markdownContent;
+    
+    for (const [spanish, english] of Object.entries(translations)) {
+        const regex = new RegExp(spanish.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+        translatedContent = translatedContent.replace(regex, english);
+    }
+    
+    return translatedContent;
 }
