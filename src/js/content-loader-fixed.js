@@ -348,9 +348,23 @@ class SimpleContentLoader {
     }
 }
 
+// Variable global para el loader
+let contentLoader;
+
+// Inicializar cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Iniciando SimpleContentLoader...');
+    setTimeout(() => {
+        contentLoader = new SimpleContentLoader();
+    }, 100);
+});
+
 // Función global para abrir contenido completo en página nueva
 async function openFullContent(filename, type, language) {
     try {
+        // Usar el idioma actual del contentLoader si está disponible
+        const currentLanguage = contentLoader ? contentLoader.currentLanguage : language;
+        
         // Cargar el contenido completo del archivo
         const folder = type === 'project' ? 'projects' : 'writing';
         const response = await fetch(`./content/${folder}/${filename}`);
@@ -361,16 +375,19 @@ async function openFullContent(filename, type, language) {
         
         const content = await response.text();
         
-        // Parsear el markdown
-        const parsedContent = parseFullMarkdown(content, language);
+        // Parsear el markdown con el idioma correcto
+        const parsedContent = parseFullMarkdown(content, currentLanguage);
         
-        // Crear página completa
-        createFullContentPage(parsedContent, language);
+        // Crear página completa con el idioma correcto
+        createFullContentPage(parsedContent, currentLanguage);
         
     } catch (error) {
         console.error('Error loading full content:', error);
         // Fallback a modal si hay error
-        showContentModal('Error', 'No se pudo cargar el contenido completo.');
+        const errorText = contentLoader && contentLoader.currentLanguage === 'es' 
+            ? 'No se pudo cargar el contenido completo.' 
+            : 'Could not load full content.';
+        showContentModal('Error', errorText);
     }
 }
 
@@ -468,7 +485,12 @@ function createFullContentPage(parsedContent, language) {
     const fullPage = document.createElement('div');
     fullPage.className = 'fixed inset-0 bg-white z-50 overflow-y-auto';
     
+    // Textos según idioma
     const backText = language === 'es' ? 'Volver' : 'Back';
+    const aboutText = language === 'es' ? 'Sobre Mí' : 'About Me';
+    const projectsText = language === 'es' ? 'Proyectos' : 'Projects';
+    const writingText = language === 'es' ? 'Escritos' : 'Writing';
+    const contactText = language === 'es' ? 'Contacto' : 'Contact';
     
     fullPage.innerHTML = `
         <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
@@ -485,16 +507,16 @@ function createFullContentPage(parsedContent, language) {
                         <div class="hidden md:flex items-center gap-6">
                             <div class="flex gap-6">
                                 <button onclick="closePageAndGoTo('#about')" class="font-medium hover:text-accent transition-colors text-gray-700">
-                                    ${language === 'es' ? 'Sobre Mí' : 'About Me'}
+                                    ${aboutText}
                                 </button>
                                 <button onclick="closePageAndGoTo('#projects')" class="font-medium hover:text-accent transition-colors text-gray-700">
-                                    ${language === 'es' ? 'Proyectos' : 'Projects'}
+                                    ${projectsText}
                                 </button>
                                 <button onclick="closePageAndGoTo('#writing')" class="font-medium hover:text-accent transition-colors text-gray-700">
-                                    ${language === 'es' ? 'Escritos' : 'Writing'}
+                                    ${writingText}
                                 </button>
                                 <button onclick="closePageAndGoTo('#contact')" class="font-medium hover:text-accent transition-colors text-gray-700">
-                                    ${language === 'es' ? 'Contacto' : 'Contact'}
+                                    ${contactText}
                                 </button>
                             </div>
                             
@@ -583,46 +605,7 @@ function createFullContentPage(parsedContent, language) {
     fullPage.scrollTop = 0;
 }
 
-// Función de fallback para modal pequeño
-function showContentModal(title, content) {
-    const modal = document.createElement('div');
-    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-    modal.innerHTML = `
-        <div class="bg-white rounded-xl max-w-2xl max-h-[80vh] overflow-y-auto relative">
-            <div class="sticky top-0 bg-white border-b p-6 flex justify-between items-center">
-                <h2 class="text-2xl font-serif font-bold text-gray-900">${title}</h2>
-                <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700 p-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="p-6">
-                <div class="prose max-w-none">${content}</div>
-            </div>
-        </div>
-    `;
-
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    });
-
-    document.body.appendChild(modal);
-}
-
-// Variable global para el loader
-let contentLoader;
-
-// Inicializar cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Iniciando SimpleContentLoader...');
-    setTimeout(() => {
-        contentLoader = new SimpleContentLoader();
-    }, 100);
-});// Funcione
-s para la navegación en página completa
+// Funciones para la navegación en página completa
 function closePageAndGoTo(targetId) {
     // Cerrar la página completa
     const fullPage = document.querySelector('.fixed.inset-0.bg-white.z-50');
@@ -692,4 +675,33 @@ function changeContentLanguage(newLanguage) {
             }, 100);
         }
     }
+}
+
+// Función de fallback para modal pequeño
+function showContentModal(title, content) {
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+    modal.innerHTML = `
+        <div class="bg-white rounded-xl max-w-2xl max-h-[80vh] overflow-y-auto relative">
+            <div class="sticky top-0 bg-white border-b p-6 flex justify-between items-center">
+                <h2 class="text-2xl font-serif font-bold text-gray-900">${title}</h2>
+                <button onclick="this.closest('.fixed').remove()" class="text-gray-500 hover:text-gray-700 p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6">
+                <div class="prose max-w-none">${content}</div>
+            </div>
+        </div>
+    `;
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+
+    document.body.appendChild(modal);
 }
