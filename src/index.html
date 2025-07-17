@@ -162,27 +162,103 @@
         }
 
         #projects-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+            column-count: auto;
+            column-width: 300px;
+            column-gap: 1.5rem;
+            padding: 0 1rem;
         }
 
         #writing-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+            column-count: auto;
+            column-width: 300px;
+            column-gap: 1.5rem;
+            padding: 0 1rem;
+        }
+
+        .pinterest-card {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform-origin: center;
+            position: relative;
+        }
+
+        .pinterest-card:hover {
+            transform: scale(1.05) translateY(-10px);
+            z-index: 10;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Efecto en tarjetas vecinas */
+        #projects-container:hover .pinterest-card:not(:hover),
+        #writing-container:hover .pinterest-card:not(:hover) {
+            transform: scale(0.95);
+            opacity: 0.7;
+            filter: blur(1px);
+        }
+
+        /* Diferentes alturas basadas en contenido */
+        .pinterest-card.size-small { min-height: 250px; }
+        .pinterest-card.size-medium { min-height: 350px; }
+        .pinterest-card.size-large { min-height: 450px; }
+        .pinterest-card.size-xlarge { min-height: 550px; }
+
+        /* Overlay de texto que aparece al hover */
+        .pinterest-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+            padding: 2rem 1.5rem 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .pinterest-card:hover .pinterest-overlay {
+            transform: translateY(0);
+        }
+
+        /* Texto flotante en la parte superior */
+        .pinterest-title {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .pinterest-card:hover .pinterest-title {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Mobile-specific improvements */
         @media (max-width: 640px) {
             #projects-container {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+                column-count: 1;
+                column-width: auto;
+                padding: 0 0.5rem;
             }
 
             #writing-container {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+                column-count: 1;
+                column-width: auto;
+                padding: 0 0.5rem;
+            }
+
+            .pinterest-card {
+                margin-bottom: 1rem;
             }
 
             .section-title {
@@ -193,6 +269,53 @@
             .section-title::after {
                 left: 50%;
                 transform: translateX(-50%);
+            }
+
+            /* Efectos más sutiles en móvil */
+            .pinterest-card:hover {
+                transform: scale(1.02) translateY(-5px);
+            }
+
+            #projects-container:hover .pinterest-card:not(:hover),
+            #writing-container:hover .pinterest-card:not(:hover) {
+                transform: scale(0.98);
+                opacity: 0.8;
+                filter: none;
+            }
+        }
+
+        /* Tablet improvements */
+        @media (min-width: 641px) and (max-width: 1024px) {
+            #projects-container {
+                column-count: 2;
+                column-width: auto;
+            }
+
+            #writing-container {
+                column-count: 2;
+                column-width: auto;
+            }
+        }
+
+        /* Desktop improvements */
+        @media (min-width: 1025px) {
+            #projects-container {
+                column-count: 3;
+            }
+
+            #writing-container {
+                column-count: 3;
+            }
+        }
+
+        /* Extra large screens */
+        @media (min-width: 1400px) {
+            #projects-container {
+                column-count: 4;
+            }
+
+            #writing-container {
+                column-count: 4;
             }
         }
 

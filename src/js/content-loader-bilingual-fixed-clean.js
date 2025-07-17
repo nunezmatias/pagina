@@ -228,6 +228,115 @@ class BilingualContentLoader {
     render() {
         this.renderProjects();
         this.renderArticles();
+        
+        // Agregar efectos Pinterest después del render
+        setTimeout(() => {
+            this.addPinterestEffects();
+        }, 100);
+    }
+
+    // Función para agregar efectos dinámicos después del render
+    addPinterestEffects() {
+        // Animaciones de entrada escalonadas
+        const cards = document.querySelectorAll('.pinterest-card');
+        cards.forEach((card, index) => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(50px)';
+            card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            
+            setTimeout(() => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, index * 100);
+        });
+
+        // Efecto de ondas al hacer hover
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', (e) => {
+                this.createRippleEffect(e.currentTarget);
+                this.highlightNeighbors(e.currentTarget);
+            });
+
+            card.addEventListener('mouseleave', (e) => {
+                this.removeHighlightNeighbors();
+            });
+        });
+
+        // Parallax sutil en scroll
+        this.addParallaxEffect();
+    }
+
+    // Efecto de ondas al hacer hover
+    createRippleEffect(card) {
+        const ripple = document.createElement('div');
+        ripple.className = 'absolute inset-0 pointer-events-none';
+        ripple.innerHTML = `
+            <div class="absolute inset-0 bg-white/10 rounded-xl animate-ping"></div>
+        `;
+        
+        card.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    }
+
+    // Destacar tarjetas vecinas
+    highlightNeighbors(hoveredCard) {
+        const allCards = document.querySelectorAll('.pinterest-card');
+        const hoveredIndex = Array.from(allCards).indexOf(hoveredCard);
+        
+        allCards.forEach((card, index) => {
+            if (Math.abs(index - hoveredIndex) <= 1 && card !== hoveredCard) {
+                card.style.transform = 'scale(1.02)';
+                card.style.filter = 'brightness(1.1)';
+            }
+        });
+    }
+
+    // Remover destacado de vecinas
+    removeHighlightNeighbors() {
+        const allCards = document.querySelectorAll('.pinterest-card');
+        allCards.forEach(card => {
+            if (!card.matches(':hover')) {
+                card.style.transform = '';
+                card.style.filter = '';
+            }
+        });
+    }
+
+    // Efecto parallax sutil
+    addParallaxEffect() {
+        let ticking = false;
+        
+        const updateParallax = () => {
+            const cards = document.querySelectorAll('.pinterest-card');
+            const scrollTop = window.pageYOffset;
+            
+            cards.forEach((card, index) => {
+                const rect = card.getBoundingClientRect();
+                const speed = 0.1 + (index % 3) * 0.05; // Velocidades diferentes
+                const yPos = -(scrollTop * speed);
+                
+                if (rect.bottom >= 0 && rect.top <= window.innerHeight) {
+                    const bgElement = card.querySelector('.absolute.inset-0');
+                    if (bgElement) {
+                        bgElement.style.transform = `translateY(${yPos}px)`;
+                    }
+                }
+            });
+            
+            ticking = false;
+        };
+        
+        const requestTick = () => {
+            if (!ticking) {
+                requestAnimationFrame(updateParallax);
+                ticking = true;
+            }
+        };
+        
+        window.addEventListener('scroll', requestTick);
     }
 
     renderProjects() {
@@ -252,53 +361,97 @@ class BilingualContentLoader {
 
     createCard(item, type) {
         const card = document.createElement('div');
-        card.className = 'bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col card';
-
+        
         const currentContent = item[this.currentLanguage];
         const title = currentContent.title || 'Titulo';
         const excerpt = currentContent.excerpt || this.extractExcerpt(currentContent.rawContent);
+        const fullContent = currentContent.rawContent || '';
 
-        const icon = this.getIconForContent(item.icon || 'default');
+        // Determinar altura basada en contenido
+        const cardSize = this.getCardSize(fullContent, excerpt);
         const bgGradient = this.getGradientForCategory(item.category, type);
+        const icon = this.getIconForContent(item.icon || 'default');
 
         const buttonText = type === 'project' 
             ? (this.currentLanguage === 'es' ? 'Ver proyecto' : 'View project')
-            : (this.currentLanguage === 'es' ? 'Leer mas' : 'Read more');
+            : (this.currentLanguage === 'es' ? 'Leer más' : 'Read more');
+
+        card.className = `pinterest-card ${cardSize} bg-white rounded-xl overflow-hidden shadow-lg relative`;
 
         card.innerHTML = `
-            <div class="h-48 ${bgGradient} relative overflow-hidden group">
-                <div class="absolute inset-0 opacity-90 group-hover:opacity-70 transition-all duration-500"></div>
-                <div class="absolute inset-0 flex items-center justify-center transform group-hover:scale-110 transition-transform duration-500">
+            <!-- Fondo con gradiente y efectos -->
+            <div class="absolute inset-0 ${bgGradient}">
+                <div class="absolute inset-0 bg-black/20"></div>
+                <div class="absolute inset-0 flex items-center justify-center opacity-30">
                     ${icon}
                 </div>
-                <div class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div class="bg-white/20 backdrop-blur-sm rounded-full px-2 py-1 text-xs text-white font-medium">
-                        ${item.category}
+                <!-- Patrón decorativo -->
+                <div class="absolute inset-0 opacity-10">
+                    <div class="absolute top-4 right-4 w-20 h-20 border border-white/30 rounded-full"></div>
+                    <div class="absolute bottom-8 left-6 w-12 h-12 border border-white/20 rounded-full"></div>
+                    <div class="absolute top-1/2 left-8 w-6 h-6 bg-white/20 rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- Título flotante (aparece al hover) -->
+            <div class="pinterest-title">
+                <div class="flex items-center justify-between">
+                    <span class="text-gray-800 font-semibold">${title}</span>
+                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">${item.category}</span>
+                </div>
+            </div>
+
+            <!-- Overlay de información (aparece al hover desde abajo) -->
+            <div class="pinterest-overlay">
+                <div class="space-y-3">
+                    <h3 class="font-serif text-lg font-bold text-white leading-tight">
+                        ${title}
+                    </h3>
+                    <p class="text-white/90 text-sm leading-relaxed line-clamp-3">
+                        ${excerpt}
+                    </p>
+                    <div class="flex items-center justify-between pt-2">
+                        <button class="text-white inline-flex items-center hover:text-white/80 font-medium transition-all duration-300 transform hover:translate-x-1" onclick="openBilingualContent('${item.baseFilename}', '${type}', bilingualLoader.currentLanguage)">
+                            <span>${buttonText}</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </button>
+                        <div class="flex items-center space-x-2">
+                            <div class="w-2 h-2 bg-white/60 rounded-full animate-pulse"></div>
+                            <div class="w-2 h-2 bg-white/40 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+                            <div class="w-2 h-2 bg-white/20 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="p-6 flex-grow flex flex-col card-content">
-                <div class="flex justify-between items-start mb-3">
-                    <h3 class="font-serif text-xl text-gray-900 group-hover:text-accent transition-colors duration-500 flex-grow">
-                        ${title}
-                    </h3>
-                    <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-2">
-                        <div class="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
-                    </div>
+
+            <!-- Indicador de categoría (siempre visible) -->
+            <div class="absolute top-3 left-3 z-10">
+                <div class="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-gray-700 shadow-sm">
+                    ${type === 'project' ? '🔬' : '✍️'} ${item.category}
                 </div>
-                <p class="mb-4 text-gray-600 flex-grow text-sm leading-relaxed transition-colors duration-500">
-                    ${excerpt}
-                </p>
-                <button class="text-accent inline-flex items-center hover:text-accent-light font-medium mt-auto transition-all duration-500 transform hover:translate-x-2" onclick="openBilingualContent('${item.baseFilename}', '${type}', bilingualLoader.currentLanguage)">
-                    <span>${buttonText}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                    </svg>
-                </button>
             </div>
         `;
 
         return card;
+    }
+
+    // Nueva función para determinar el tamaño de la tarjeta basado en contenido
+    getCardSize(content, excerpt) {
+        const contentLength = content.length;
+        const excerptLength = excerpt.length;
+        
+        // Algoritmo para determinar altura basada en contenido
+        if (contentLength > 3000 || excerptLength > 200) {
+            return 'size-xlarge';
+        } else if (contentLength > 2000 || excerptLength > 150) {
+            return 'size-large';
+        } else if (contentLength > 1000 || excerptLength > 100) {
+            return 'size-medium';
+        } else {
+            return 'size-small';
+        }
     }
 
     getGradientForCategory(category, type) {
@@ -729,4 +882,4 @@ function changeBilingualLanguage(newLanguage, baseFilename, type) {
     } else {
         bilingualLoader.updateContent();
     }
-}
+}  
