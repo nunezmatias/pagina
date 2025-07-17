@@ -738,6 +738,36 @@ function translateMarkdownContent(markdownContent) {
         'y sus paralelos con sistemas': 'and their parallels with systems',
         'adaptativos complejos': 'complex adaptive',
         
+        // Additional headings
+        'Radiación Electromagnética': 'Electromagnetic Radiation',
+        'Corrección Atmosférica': 'Atmospheric Correction',
+        'Sensores Satelitales': 'Satellite Sensors',
+        'Monitoreo de Deforestación': 'Deforestation Monitoring',
+        'Agricultura de Precisión': 'Precision Agriculture',
+        
+        // More phrases
+        'Espectro visible': 'Visible spectrum',
+        'vegetación y cuerpos de agua': 'vegetation and water bodies',
+        'Infrarrojo cercano': 'Near infrared',
+        'Biomasa y humedad del suelo': 'Biomass and soil moisture',
+        'Infrarrojo térmico': 'Thermal infrared',
+        'temperatura superficial': 'surface temperature',
+        'Absorción selectiva': 'Selective absorption',
+        'por diferentes materiales': 'by different materials',
+        'Dispersión de Rayleigh': 'Rayleigh scattering',
+        'en la atmósfera': 'in the atmosphere',
+        'Dispersión de Mie': 'Mie scattering',
+        'por aerosoles y nubes': 'by aerosols and clouds',
+        'Resolución temporal': 'Temporal resolution',
+        'Resolución espacial': 'Spatial resolution',
+        'Cobertura global diaria': 'Daily global coverage',
+        'Procesamiento en la nube': 'Cloud processing',
+        'Detección automática': 'Automatic detection',
+        'Precisión general': 'Overall accuracy',
+        'Tiempo de procesamiento': 'Processing time',
+        'Monitoreo forestal': 'Forest monitoring',
+        'Sistema de alerta': 'Alert system',
+        
         // Common words
         'desarrollo': 'development',
         'algoritmos': 'algorithms',
@@ -751,7 +781,37 @@ function translateMarkdownContent(markdownContent) {
         'vegetación': 'vegetation',
         'temperatura': 'temperature',
         'diferentes': 'different',
-        'materiales': 'materials'
+        'materiales': 'materials',
+        'aplicaciones': 'applications',
+        'monitoreo': 'monitoring',
+        'gestión': 'management',
+        'recursos': 'resources',
+        'naturales': 'natural',
+        'detección': 'detection',
+        'análisis': 'analysis',
+        'datos': 'data',
+        'satelitales': 'satellite',
+        'principios': 'principles',
+        'fundamentales': 'fundamental',
+        'extraer': 'extract',
+        'atmosférica': 'atmospheric',
+        'humedad': 'humidity',
+        'superficial': 'surface',
+        'usando': 'using',
+        'mediante': 'through',
+        'basado': 'based',
+        'aplicado': 'applied',
+        'utilizado': 'used',
+        'para': 'for',
+        'con': 'with',
+        'por': 'by',
+        'sobre': 'about',
+        'desde': 'from',
+        'hasta': 'to',
+        'entre': 'between',
+        'durante': 'during',
+        'después': 'after',
+        'antes': 'before'
     };
     
     let translatedContent = markdownContent;
@@ -762,4 +822,30 @@ function translateMarkdownContent(markdownContent) {
     }
     
     return translatedContent;
+}/
+/ Function to format paragraphs with uniform length and proper indentation
+function formatParagraphs(htmlContent) {
+    // Enhanced paragraph formatting with better typography
+    return htmlContent.replace(/<p class="mb-4 text-gray-700 leading-relaxed">(.*?)<\/p>/g, (match, content) => {
+        // Clean the content and split into sentences
+        const sentences = content.split(/(?<=[.!?])\s+/);
+        let formattedContent = '';
+        let currentLine = '';
+        const maxLineLength = 80; // Characters per line
+        
+        sentences.forEach(sentence => {
+            if ((currentLine + sentence).length > maxLineLength && currentLine.length > 0) {
+                formattedContent += currentLine.trim() + '<br>';
+                currentLine = '&nbsp;&nbsp;&nbsp;&nbsp;' + sentence + ' ';
+            } else {
+                currentLine += sentence + ' ';
+            }
+        });
+        
+        if (currentLine.trim()) {
+            formattedContent += currentLine.trim();
+        }
+        
+        return `<p class="mb-6 text-gray-700 leading-relaxed text-lg text-justify" style="text-indent: 1.5em; line-height: 1.8; hyphens: auto;">${formattedContent}</p>`;
+    });
 }
