@@ -1,4 +1,4 @@
-// Sistema de carga de contenido BILINGÜE - Archivos separados ES/EN
+// Sistema de carga de contenido BILINGUE - Archivos separados ES/EN
 class BilingualContentLoader {
     constructor() {
         this.projects = [];
@@ -8,7 +8,7 @@ class BilingualContentLoader {
     }
 
     async init() {
-        console.log('Iniciando carga bilingüe...');
+        console.log('Iniciando carga bilingue...');
         
         this.clearContainers();
         await this.loadContent();
@@ -47,25 +47,18 @@ class BilingualContentLoader {
     }
 
     async loadProjectsFromFiles() {
-        // Auto-detect all available bilingual projects
         const availableProjects = await this.detectBilingualFiles('./content/projects/');
         
-        // Icon and category mapping for known projects
         const projectConfig = {
             'remote-sensing': { icon: 'satellite', category: 'Physics' },
             'chatbot-ela-static': { icon: 'chat', category: 'AI' },
             'chatbot-ela': { icon: 'chat', category: 'AI' },
             'linguistic-reconstruction': { icon: 'language', category: 'Linguistics' },
-            'un-data-clustering': { icon: 'chart', category: 'Data Science' },
-            'felix': { icon: 'water', category: 'Adventure' },
-            'ai-epistemological-lens': { icon: 'brain', category: 'Philosophy' },
-            'language-cognitive-tech': { icon: 'brain', category: 'Technology' },
-            'rivers-complex-systems': { icon: 'water', category: 'Science' }
+            'un-data-clustering': { icon: 'chart', category: 'Data Science' }
         };
 
         for (const baseFilename of availableProjects) {
             try {
-                // Cargar ambas versiones (ES y EN)
                 const esResponse = await fetch(`./content/projects/${baseFilename}_ES.md`);
                 const enResponse = await fetch(`./content/projects/${baseFilename}_EN.md`);
                 
@@ -93,20 +86,18 @@ class BilingualContentLoader {
     }
 
     async loadArticlesFromFiles() {
-        // Auto-detect all available bilingual articles
         const availableArticles = await this.detectBilingualFiles('./content/writing/');
         
-        // Icon and category mapping for known articles
         const articleConfig = {
             'felix': { icon: 'water', category: 'Adventure' },
             'ai-epistemological-lens': { icon: 'brain', category: 'Philosophy' },
             'language-cognitive-tech': { icon: 'brain', category: 'Technology' },
-            'rivers-complex-systems': { icon: 'water', category: 'Science' }
+            'rivers-complex-systems': { icon: 'water', category: 'Science' },
+            'rivers2-complex-systems': { icon: 'water', category: 'Science' }
         };
 
         for (const baseFilename of availableArticles) {
             try {
-                // Intentar cargar ambas versiones
                 const esResponse = await fetch(`./content/writing/${baseFilename}_ES.md`);
                 const enResponse = await fetch(`./content/writing/${baseFilename}_EN.md`);
                 
@@ -134,27 +125,25 @@ class BilingualContentLoader {
     }
 
     async detectBilingualFiles(folderPath) {
-        console.log(`🔍 Scanning for bilingual files in: ${folderPath}`);
+        console.log(`Scanning for bilingual files in: ${folderPath}`);
         
-        // Method 1: Try to fetch the generated directory listing (most efficient)
         try {
             const directoryListResponse = await fetch(`${folderPath}directory-listing.json`);
             if (directoryListResponse.ok) {
                 const directoryData = await directoryListResponse.json();
                 const bilingualFiles = directoryData.bilingualFiles || [];
                 
-                console.log(`📁 Found ${bilingualFiles.length} bilingual files via directory listing:`);
+                console.log(`Found ${bilingualFiles.length} bilingual files via directory listing:`);
                 bilingualFiles.forEach(file => {
-                    console.log(`   ✅ ${file} (ES & EN)`);
+                    console.log(`   Found: ${file} (ES & EN)`);
                 });
                 
                 return bilingualFiles;
             }
         } catch (error) {
-            console.log(`⚠️  Directory listing not available for ${folderPath}, using fallback discovery`);
+            console.log(`Directory listing not available for ${folderPath}, using fallback`);
         }
 
-        // Method 2: Fallback - Known files as a reliable starting point
         const knownFiles = {
             './content/projects/': [
                 'remote-sensing', 'chatbot-ela-static', 'chatbot-ela', 
@@ -162,50 +151,29 @@ class BilingualContentLoader {
             ],
             './content/writing/': [
                 'felix', 'ai-epistemological-lens', 
-                'language-cognitive-tech', 'rivers-complex-systems'
+                'language-cognitive-tech', 'rivers-complex-systems', 'rivers2-complex-systems'
             ]
         };
         
         const discoveredFiles = new Set();
         const known = knownFiles[folderPath] || [];
         
-        // Verify known files still exist
         for (const basename of known) {
             try {
-                const [esResponse, enResponse] = await Promise.all([
-                    fetch(`${folderPath}${basename}_ES.md`),
-                    fetch(`${folderPath}${basename}_EN.md`)
-                ]);
+                const esResponse = await fetch(`${folderPath}${basename}_ES.md`);
+                const enResponse = await fetch(`${folderPath}${basename}_EN.md`);
                 
                 if (esResponse.ok && enResponse.ok) {
                     discoveredFiles.add(basename);
-                    console.log(`✅ Verified bilingual content: ${basename}`);
-                } else {
-                    console.log(`⚠️  Missing files for: ${basename}`);
+                    console.log(`Verified bilingual content: ${basename}`);
                 }
             } catch (error) {
-                console.log(`❌ Error checking: ${basename}`);
+                console.log(`Error checking: ${basename}`);
             }
         }
         
-        console.log(`📊 Total verified files in ${folderPath}: ${discoveredFiles.size}`);
+        console.log(`Total verified files in ${folderPath}: ${discoveredFiles.size}`);
         return Array.from(discoveredFiles);
-    }
-
-    extractBilingualBasenames(fileList) {
-        const basenames = new Set();
-        
-        fileList.forEach(filename => {
-            if (filename.endsWith('_ES.md')) {
-                const basename = filename.replace('_ES.md', '');
-                // Check if corresponding EN file exists
-                if (fileList.includes(`${basename}_EN.md`)) {
-                    basenames.add(basename);
-                }
-            }
-        });
-        
-        return Array.from(basenames);
     }
 
     parseMarkdown(content) {
@@ -291,16 +259,15 @@ class BilingualContentLoader {
         const card = document.createElement('div');
         card.className = 'bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col';
 
-        // Obtener contenido en el idioma actual
         const currentContent = item[this.currentLanguage];
-        const title = currentContent.title || 'Título';
+        const title = currentContent.title || 'Titulo';
         const excerpt = currentContent.excerpt || this.extractExcerpt(currentContent.rawContent);
 
         const icon = this.getIconForContent(item.icon || 'default');
         const bgColor = type === 'project' ? 'bg-accent-light' : 'bg-accent';
         const buttonText = type === 'project' 
             ? (this.currentLanguage === 'es' ? 'Ver proyecto' : 'View project')
-            : (this.currentLanguage === 'es' ? 'Leer más' : 'Read more');
+            : (this.currentLanguage === 'es' ? 'Leer mas' : 'Read more');
 
         card.innerHTML = `
             <div class="h-48 ${bgColor} relative overflow-hidden">
@@ -367,10 +334,10 @@ class BilingualContentLoader {
     }
 }
 
-// Variable global para el loader bilingüe
+// Variable global para el loader bilingue
 let bilingualLoader;
 
-// Inicializar cuando el DOM esté listo
+// Inicializar cuando el DOM este listo
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Iniciando BilingualContentLoader...');
     setTimeout(() => {
@@ -378,7 +345,150 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 100);
 });
 
-// Función para abrir contenido bilingüe
+// Function to open CV
+async function openCV(language) {
+    try {
+        const suffix = language === 'es' ? '_ES' : '_EN';
+        const filename = `cv${suffix}.md`;
+        
+        const response = await fetch(`./content/${filename}`);
+        
+        if (!response.ok) {
+            throw new Error(`Error loading ${filename}`);
+        }
+        
+        const content = await response.text();
+        const parsedContent = parseBilingualMarkdown(content);
+        
+        createCVPage(parsedContent, language);
+        
+    } catch (error) {
+        console.error('Error loading CV:', error);
+        alert('Error cargando CV / Error loading CV');
+    }
+}
+
+// Function to create CV page
+function createCVPage(parsedContent, language) {
+    const fullPage = document.createElement('div');
+    fullPage.className = 'fixed inset-0 bg-white z-50 overflow-y-auto';
+    
+    const backText = language === 'es' ? 'Volver' : 'Back';
+    const aboutText = language === 'es' ? 'Sobre Mi' : 'About Me';
+    const projectsText = language === 'es' ? 'Proyectos' : 'Projects';
+    const writingText = language === 'es' ? 'Escritos' : 'Writing';
+    const contactText = language === 'es' ? 'Contacto' : 'Contact';
+    
+    fullPage.innerHTML = `
+        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+            <header class="sticky top-0 bg-white/90 backdrop-blur-sm border-b border-gray-200 z-10">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6">
+                    <nav class="flex justify-between items-center py-4">
+                        <a href="#" onclick="this.closest('.fixed').remove()" class="font-serif text-xl sm:text-2xl font-bold text-gray-900 hover:text-accent transition-colors">
+                            Matias Nunez
+                        </a>
+                        
+                        <div class="hidden md:flex items-center gap-6">
+                            <div class="flex gap-6">
+                                <button onclick="closeBilingualPageAndGoTo('#about')" class="font-medium hover:text-accent transition-colors text-gray-700">
+                                    ${aboutText}
+                                </button>
+                                <button onclick="closeBilingualPageAndGoTo('#projects')" class="font-medium hover:text-accent transition-colors text-gray-700">
+                                    ${projectsText}
+                                </button>
+                                <button onclick="closeBilingualPageAndGoTo('#writing')" class="font-medium hover:text-accent transition-colors text-gray-700">
+                                    ${writingText}
+                                </button>
+                                <button onclick="closeBilingualPageAndGoTo('#contact')" class="font-medium hover:text-accent transition-colors text-gray-700">
+                                    ${contactText}
+                                </button>
+                            </div>
+                            
+                            <div class="flex items-center gap-2 border border-gray-200 rounded-full p-1">
+                                <button onclick="changeCVLanguage('es')" class="${language === 'es' ? 'bg-accent text-white' : 'hover:bg-gray-100'} px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
+                                    ES
+                                </button>
+                                <button onclick="changeCVLanguage('en')" class="${language === 'en' ? 'bg-accent text-white' : 'hover:bg-gray-100'} px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
+                                    EN
+                                </button>
+                            </div>
+                            
+                            <button onclick="this.closest('.fixed').remove()" class="inline-flex items-center text-accent hover:text-accent-light font-medium transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                                </svg>
+                                ${backText}
+                            </button>
+                        </div>
+                        
+                        <button onclick="this.closest('.fixed').remove()" class="md:hidden inline-flex items-center text-accent hover:text-accent-light font-medium transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                            </svg>
+                            ${backText}
+                        </button>
+                    </nav>
+                </div>
+            </header>
+            
+            <article class="max-w-4xl mx-auto px-6 py-12">
+                <div class="prose prose-lg prose-gray max-w-none cv-content">
+                    ${parsedContent.content}
+                </div>
+                
+                <footer class="mt-16 pt-8 border-t border-gray-200 text-center">
+                    <button onclick="this.closest('.fixed').remove()" class="btn btn-primary">
+                        ${backText}
+                    </button>
+                </footer>
+            </article>
+        </div>
+    `;
+    
+    document.body.appendChild(fullPage);
+    fullPage.scrollTop = 0;
+}
+
+// Function to change CV language
+function changeCVLanguage(newLanguage) {
+    if (bilingualLoader) {
+        bilingualLoader.currentLanguage = newLanguage;
+    }
+    
+    const fullPage = document.querySelector('.fixed.inset-0.bg-white.z-50');
+    if (fullPage && fullPage.querySelector('.cv-content')) {
+        const article = fullPage.querySelector('article');
+        if (article) {
+            article.style.opacity = '0.5';
+            article.style.transition = 'opacity 0.3s ease';
+        }
+        
+        setTimeout(async () => {
+            try {
+                const suffix = newLanguage === 'es' ? '_ES' : '_EN';
+                const filename = `cv${suffix}.md`;
+                
+                const response = await fetch(`./content/${filename}`);
+                if (!response.ok) {
+                    throw new Error(`Error loading ${filename}`);
+                }
+                
+                const content = await response.text();
+                const parsedContent = parseBilingualMarkdown(content);
+                
+                fullPage.remove();
+                createCVPage(parsedContent, newLanguage);
+                
+            } catch (error) {
+                console.error('Error switching CV language:', error);
+                fullPage.remove();
+                alert('Error cambiando idioma del CV / Error switching CV language');
+            }
+        }, 150);
+    }
+}
+
+// Function to open bilingual content
 async function openBilingualContent(baseFilename, type, language) {
     try {
         const folder = type === 'project' ? 'projects' : 'writing';
@@ -424,7 +534,6 @@ function parseBilingualMarkdown(content) {
 
     const markdownContent = content.replace(/^---\n[\s\S]*?\n---\n/, '');
     
-    // Convertir markdown a HTML con formateo mejorado
     const htmlContent = markdownContent
         .replace(/^# (.*$)/gm, '<h1 class="text-4xl font-serif font-bold mb-6 mt-8 text-gray-900">$1</h1>')
         .replace(/^## (.*$)/gm, '<h2 class="text-3xl font-serif font-semibold mb-4 mt-8 text-gray-800">$1</h2>')
@@ -460,7 +569,7 @@ function createBilingualContentPage(parsedContent, language, baseFilename, type)
     fullPage.className = 'fixed inset-0 bg-white z-50 overflow-y-auto';
     
     const backText = language === 'es' ? 'Volver' : 'Back';
-    const aboutText = language === 'es' ? 'Sobre Mí' : 'About Me';
+    const aboutText = language === 'es' ? 'Sobre Mi' : 'About Me';
     const projectsText = language === 'es' ? 'Proyectos' : 'Projects';
     const writingText = language === 'es' ? 'Escritos' : 'Writing';
     const contactText = language === 'es' ? 'Contacto' : 'Contact';
@@ -471,7 +580,7 @@ function createBilingualContentPage(parsedContent, language, baseFilename, type)
                 <div class="max-w-7xl mx-auto px-4 sm:px-6">
                     <nav class="flex justify-between items-center py-4">
                         <a href="#" onclick="this.closest('.fixed').remove()" class="font-serif text-xl sm:text-2xl font-bold text-gray-900 hover:text-accent transition-colors">
-                            Matias Núñez
+                            Matias Nunez
                         </a>
                         
                         <div class="hidden md:flex items-center gap-6">
@@ -555,23 +664,18 @@ function closeBilingualPageAndGoTo(targetId) {
 }
 
 function changeBilingualLanguage(newLanguage, baseFilename, type) {
-    // Update the global language setting
     if (bilingualLoader) {
         bilingualLoader.currentLanguage = newLanguage;
     }
     
-    // Check if we're currently viewing a content page
     const fullPage = document.querySelector('.fixed.inset-0.bg-white.z-50');
     if (fullPage) {
-        // We're in a content page, so smoothly transition to the new language
         const article = fullPage.querySelector('article');
         if (article) {
-            // Add a smooth transition effect
             article.style.opacity = '0.5';
             article.style.transition = 'opacity 0.3s ease';
         }
         
-        // Load the new language content and replace the current page
         setTimeout(async () => {
             try {
                 const folder = type === 'project' ? 'projects' : 'writing';
@@ -586,169 +690,16 @@ function changeBilingualLanguage(newLanguage, baseFilename, type) {
                 const content = await response.text();
                 const parsedContent = parseBilingualMarkdown(content);
                 
-                // Remove the old page and create the new one
                 fullPage.remove();
                 createBilingualContentPage(parsedContent, newLanguage, baseFilename, type);
                 
             } catch (error) {
                 console.error('Error switching language:', error);
-                // Fallback: remove page and show alert
                 fullPage.remove();
                 alert('Error cambiando idioma / Error switching language');
             }
         }, 150);
     } else {
-        // We're on the main page, just update the content
         bilingualLoader.updateContent();
-    }
-}
-//
- Función específica para abrir el CV
-async function openCV(language) {
-    try {
-        const suffix = language === 'es' ? '_ES' : '_EN';
-        const filename = `cv${suffix}.md`;
-        
-        const response = await fetch(`./content/${filename}`);
-        
-        if (!response.ok) {
-            throw new Error(`Error loading ${filename}`);
-        }
-        
-        const content = await response.text();
-        const parsedContent = parseBilingualMarkdown(content);
-        
-        createCVPage(parsedContent, language);
-        
-    } catch (error) {
-        console.error('Error loading CV:', error);
-        alert('Error cargando CV / Error loading CV');
-    }
-}
-
-// Función para crear la página del CV
-function createCVPage(parsedContent, language) {
-    const fullPage = document.createElement('div');
-    fullPage.className = 'fixed inset-0 bg-white z-50 overflow-y-auto';
-    
-    const backText = language === 'es' ? 'Volver' : 'Back';
-    const aboutText = language === 'es' ? 'Sobre Mí' : 'About Me';
-    const projectsText = language === 'es' ? 'Proyectos' : 'Projects';
-    const writingText = language === 'es' ? 'Escritos' : 'Writing';
-    const contactText = language === 'es' ? 'Contacto' : 'Contact';
-    
-    fullPage.innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-            <header class="sticky top-0 bg-white/90 backdrop-blur-sm border-b border-gray-200 z-10">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6">
-                    <nav class="flex justify-between items-center py-4">
-                        <a href="#" onclick="this.closest('.fixed').remove()" class="font-serif text-xl sm:text-2xl font-bold text-gray-900 hover:text-accent transition-colors">
-                            Matias Núñez
-                        </a>
-                        
-                        <div class="hidden md:flex items-center gap-6">
-                            <div class="flex gap-6">
-                                <button onclick="closeBilingualPageAndGoTo('#about')" class="font-medium hover:text-accent transition-colors text-gray-700">
-                                    ${aboutText}
-                                </button>
-                                <button onclick="closeBilingualPageAndGoTo('#projects')" class="font-medium hover:text-accent transition-colors text-gray-700">
-                                    ${projectsText}
-                                </button>
-                                <button onclick="closeBilingualPageAndGoTo('#writing')" class="font-medium hover:text-accent transition-colors text-gray-700">
-                                    ${writingText}
-                                </button>
-                                <button onclick="closeBilingualPageAndGoTo('#contact')" class="font-medium hover:text-accent transition-colors text-gray-700">
-                                    ${contactText}
-                                </button>
-                            </div>
-                            
-                            <div class="flex items-center gap-2 border border-gray-200 rounded-full p-1">
-                                <button onclick="changeCVLanguage('es')" class="${language === 'es' ? 'bg-accent text-white' : 'hover:bg-gray-100'} px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
-                                    ES
-                                </button>
-                                <button onclick="changeCVLanguage('en')" class="${language === 'en' ? 'bg-accent text-white' : 'hover:bg-gray-100'} px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
-                                    EN
-                                </button>
-                            </div>
-                            
-                            <button onclick="this.closest('.fixed').remove()" class="inline-flex items-center text-accent hover:text-accent-light font-medium transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                                </svg>
-                                ${backText}
-                            </button>
-                        </div>
-                        
-                        <button onclick="this.closest('.fixed').remove()" class="md:hidden inline-flex items-center text-accent hover:text-accent-light font-medium transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                            </svg>
-                            ${backText}
-                        </button>
-                    </nav>
-                </div>
-            </header>
-            
-            <article class="max-w-4xl mx-auto px-6 py-12">
-                <div class="prose prose-lg prose-gray max-w-none cv-content">
-                    ${parsedContent.content}
-                </div>
-                
-                <footer class="mt-16 pt-8 border-t border-gray-200 text-center">
-                    <button onclick="this.closest('.fixed').remove()" class="btn btn-primary">
-                        ${backText}
-                    </button>
-                </footer>
-            </article>
-        </div>
-    `;
-    
-    document.body.appendChild(fullPage);
-    fullPage.scrollTop = 0;
-}
-
-// Función para cambiar idioma del CV
-function changeCVLanguage(newLanguage) {
-    // Update the global language setting
-    if (bilingualLoader) {
-        bilingualLoader.currentLanguage = newLanguage;
-    }
-    
-    // Check if we're currently viewing the CV page
-    const fullPage = document.querySelector('.fixed.inset-0.bg-white.z-50');
-    if (fullPage && fullPage.querySelector('.cv-content')) {
-        // We're in the CV page, so smoothly transition to the new language
-        const article = fullPage.querySelector('article');
-        if (article) {
-            // Add a smooth transition effect
-            article.style.opacity = '0.5';
-            article.style.transition = 'opacity 0.3s ease';
-        }
-        
-        // Load the new language CV and replace the current page
-        setTimeout(async () => {
-            try {
-                const suffix = newLanguage === 'es' ? '_ES' : '_EN';
-                const filename = `cv${suffix}.md`;
-                
-                const response = await fetch(`./content/${filename}`);
-                if (!response.ok) {
-                    throw new Error(`Error loading ${filename}`);
-                }
-                
-                const content = await response.text();
-                const parsedContent = parseBilingualMarkdown(content);
-                
-                // Remove the old page and create the new one
-                fullPage.remove();
-                createCVPage(parsedContent, newLanguage);
-                
-            } catch (error) {
-                console.error('Error switching CV language:', error);
-                // Fallback: remove page and show alert
-                fullPage.remove();
-                alert('Error cambiando idioma del CV / Error switching CV language');
-            }
-        }, 150);
     }
 }
