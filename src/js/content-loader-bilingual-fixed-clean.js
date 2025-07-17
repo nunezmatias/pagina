@@ -305,38 +305,10 @@ class BilingualContentLoader {
         });
     }
 
-    // Efecto parallax sutil
+    // Efecto parallax sutil - deshabilitado para evitar interferencia con iconos
     addParallaxEffect() {
-        let ticking = false;
-        
-        const updateParallax = () => {
-            const cards = document.querySelectorAll('.pinterest-card');
-            const scrollTop = window.pageYOffset;
-            
-            cards.forEach((card, index) => {
-                const rect = card.getBoundingClientRect();
-                const speed = 0.1 + (index % 3) * 0.05; // Velocidades diferentes
-                const yPos = -(scrollTop * speed);
-                
-                if (rect.bottom >= 0 && rect.top <= window.innerHeight) {
-                    const bgElement = card.querySelector('.absolute.inset-0');
-                    if (bgElement) {
-                        bgElement.style.transform = `translateY(${yPos}px)`;
-                    }
-                }
-            });
-            
-            ticking = false;
-        };
-        
-        const requestTick = () => {
-            if (!ticking) {
-                requestAnimationFrame(updateParallax);
-                ticking = true;
-            }
-        };
-        
-        window.addEventListener('scroll', requestTick);
+        // Parallax deshabilitado para mantener iconos siempre visibles
+        console.log('Parallax effect disabled to maintain icon visibility');
     }
 
     renderProjects() {
@@ -379,57 +351,43 @@ class BilingualContentLoader {
         card.className = `pinterest-card ${cardSize} bg-white rounded-xl overflow-hidden shadow-lg relative`;
 
         card.innerHTML = `
-            <!-- Fondo con gradiente y efectos -->
-            <div class="absolute inset-0 ${bgGradient}">
-                <div class="absolute inset-0 bg-black/20"></div>
-                <div class="absolute inset-0 flex items-center justify-center opacity-30">
-                    ${icon}
-                </div>
-                <!-- Patrón decorativo -->
-                <div class="absolute inset-0 opacity-10">
-                    <div class="absolute top-4 right-4 w-20 h-20 border border-white/30 rounded-full"></div>
-                    <div class="absolute bottom-8 left-6 w-12 h-12 border border-white/20 rounded-full"></div>
-                    <div class="absolute top-1/2 left-8 w-6 h-6 bg-white/20 rounded-full"></div>
-                </div>
-            </div>
-
-            <!-- Título flotante (aparece al hover) -->
-            <div class="pinterest-title">
-                <div class="flex items-center justify-between">
-                    <span class="text-gray-800 font-semibold">${title}</span>
-                    <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">${item.category}</span>
-                </div>
-            </div>
-
-            <!-- Overlay de información (aparece al hover desde abajo) -->
-            <div class="pinterest-overlay">
-                <div class="space-y-3">
-                    <h3 class="font-serif text-lg font-bold text-white leading-tight">
-                        ${title}
-                    </h3>
-                    <p class="text-white/90 text-sm leading-relaxed line-clamp-3">
-                        ${excerpt}
-                    </p>
-                    <div class="flex items-center justify-between pt-2">
-                        <button class="text-white inline-flex items-center hover:text-white/80 font-medium transition-all duration-300 transform hover:translate-x-1" onclick="openBilingualContent('${item.baseFilename}', '${type}', bilingualLoader.currentLanguage)">
-                            <span>${buttonText}</span>
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                        </button>
-                        <div class="flex items-center space-x-2">
-                            <div class="w-2 h-2 bg-white/60 rounded-full animate-pulse"></div>
-                            <div class="w-2 h-2 bg-white/40 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
-                            <div class="w-2 h-2 bg-white/20 rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
-                        </div>
+            <!-- Sección superior: Gradiente + Icono + Categoría -->
+            <div class="h-40 ${bgGradient} relative overflow-hidden">
+                <!-- Icono SVG centrado - siempre visible -->
+                <div class="absolute inset-0 flex items-center justify-center z-10">
+                    <div class="transform transition-transform duration-300 group-hover:scale-105">
+                        ${icon}
                     </div>
                 </div>
+                
+                <!-- Categoría en esquina superior derecha -->
+                <div class="absolute top-3 right-3">
+                    <span class="text-xs text-white bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full font-medium">
+                        ${item.category}
+                    </span>
+                </div>
             </div>
 
-            <!-- Indicador de categoría (siempre visible) -->
-            <div class="absolute top-3 left-3 z-10">
-                <div class="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-gray-700 shadow-sm">
-                    ${type === 'project' ? '🔬' : '✍️'} ${item.category}
+            <!-- Sección inferior: Contenido en fondo blanco -->
+            <div class="bg-white p-5 flex-1 flex flex-col">
+                <!-- Título -->
+                <h3 class="font-serif text-xl font-bold text-gray-900 mb-3 leading-tight">
+                    ${title}
+                </h3>
+                
+                <!-- Descripción -->
+                <p class="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
+                    ${excerpt}
+                </p>
+                
+                <!-- Botón de acción -->
+                <div class="mt-auto">
+                    <button class="text-accent inline-flex items-center hover:text-accent-light font-medium transition-all duration-300 group" onclick="openBilingualContent('${item.baseFilename}', '${type}', bilingualLoader.currentLanguage)">
+                        <span>${buttonText}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                        </svg>
+                    </button>
                 </div>
             </div>
         `;
