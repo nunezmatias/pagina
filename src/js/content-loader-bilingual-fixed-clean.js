@@ -237,28 +237,36 @@ class BilingualContentLoader {
 
     // Función para agregar efectos dinámicos después del render
     addPinterestEffects() {
-        // Animaciones de entrada escalonadas
+        // Animaciones de entrada simples desde los costados (como texto arriba)
         const cards = document.querySelectorAll('.pinterest-card');
         cards.forEach((card, index) => {
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(50px)';
-            card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+            // Alternar entrada desde izquierda y derecha (simple como el texto)
+            const fromLeft = index % 2 === 0;
+            const direction = fromLeft ? 'translateX(-60px)' : 'translateX(60px)';
             
+            // Estado inicial simple
+            card.style.opacity = '0';
+            card.style.transform = direction;
+            card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)'; // 🎛️ Transición suave
+            
+            // Animación de entrada escalonada
             setTimeout(() => {
                 card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, index * 100);
+                card.style.transform = 'translateX(0)';
+            }, index * 120); // 🎛️ PARÁMETRO: Delay entre tarjetas (120ms)
         });
 
-        // Efecto de ondas al hacer hover
+        // Efectos hover más dramáticos
         cards.forEach(card => {
             card.addEventListener('mouseenter', (e) => {
                 this.createRippleEffect(e.currentTarget);
                 this.highlightNeighbors(e.currentTarget);
+                this.addHoverGlow(e.currentTarget); // 🎛️ NUEVO: Efecto de brillo
             });
 
             card.addEventListener('mouseleave', (e) => {
                 this.removeHighlightNeighbors();
+                this.removeHoverGlow(e.currentTarget);
             });
         });
 
@@ -309,6 +317,23 @@ class BilingualContentLoader {
     addParallaxEffect() {
         // Parallax deshabilitado para mantener iconos siempre visibles
         console.log('Parallax effect disabled to maintain icon visibility');
+    }
+
+    // Agregar efecto de brillo al hover
+    addHoverGlow(card) {
+        const glowElement = document.createElement('div');
+        glowElement.className = 'hover-glow absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl blur opacity-75 animate-pulse';
+        glowElement.style.zIndex = '-1';
+        card.style.position = 'relative';
+        card.insertBefore(glowElement, card.firstChild);
+    }
+
+    // Remover efecto de brillo
+    removeHoverGlow(card) {
+        const glowElement = card.querySelector('.hover-glow');
+        if (glowElement) {
+            glowElement.remove();
+        }
     }
 
     renderProjects() {
@@ -840,4 +865,4 @@ function changeBilingualLanguage(newLanguage, baseFilename, type) {
     } else {
         bilingualLoader.updateContent();
     }
-}  
+}
