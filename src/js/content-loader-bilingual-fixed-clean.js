@@ -237,23 +237,22 @@ class BilingualContentLoader {
 
     // Función para agregar efectos dinámicos después del render
     addPinterestEffects() {
-        // Animaciones de entrada simples desde los costados (como texto arriba)
+        // Animaciones de entrada EXACTAMENTE como el texto de arriba (AOS fade-right/fade-left)
         const cards = document.querySelectorAll('.pinterest-card');
         cards.forEach((card, index) => {
-            // Alternar entrada desde izquierda y derecha (simple como el texto)
+            // Alternar fade-right y fade-left como el texto superior
             const fromLeft = index % 2 === 0;
-            const direction = fromLeft ? 'translateX(-60px)' : 'translateX(60px)';
             
-            // Estado inicial simple
+            // Estado inicial exactamente como AOS
             card.style.opacity = '0';
-            card.style.transform = direction;
-            card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)'; // 🎛️ Transición suave
+            card.style.transform = fromLeft ? 'translate3d(-100px, 0, 0)' : 'translate3d(100px, 0, 0)';
+            card.style.transition = 'opacity 0.8s ease, transform 0.8s ease'; // 🎛️ Igual que AOS
             
-            // Animación de entrada escalonada
+            // Animación de entrada escalonada (igual que el texto de arriba)
             setTimeout(() => {
                 card.style.opacity = '1';
-                card.style.transform = 'translateX(0)';
-            }, index * 120); // 🎛️ PARÁMETRO: Delay entre tarjetas (120ms)
+                card.style.transform = 'translate3d(0, 0, 0)';
+            }, index * 100); // 🎛️ PARÁMETRO: Delay entre tarjetas (100ms)
         });
 
         // Efectos hover más dramáticos
@@ -393,8 +392,8 @@ class BilingualContentLoader {
                 </div>
             </div>
 
-            <!-- Sección inferior: Contenido en fondo blanco -->
-            <div class="bg-white p-5 flex-1 flex flex-col">
+            <!-- Sección inferior: Contenido en fondo gris metálico elegante -->
+            <div class="bg-gradient-to-br from-gray-100 via-slate-50 to-gray-200 p-5 flex-1 flex flex-col">
                 <!-- Título -->
                 <h3 class="font-serif text-xl font-bold text-gray-900 mb-3 leading-tight">
                     ${title}
@@ -548,7 +547,7 @@ function createCVPage(parsedContent, language) {
                 <div class="max-w-7xl mx-auto px-4 sm:px-6">
                     <nav class="flex justify-between items-center py-4">
                         <a href="#" onclick="this.closest('.fixed').remove()" class="font-serif text-xl sm:text-2xl font-bold text-gray-900 hover:text-accent transition-colors">
-                            Matias Nunez
+                            Matías Núñez
                         </a>
                         
                         <div class="hidden md:flex items-center gap-6">
@@ -743,7 +742,7 @@ function createBilingualContentPage(parsedContent, language, baseFilename, type)
                 <div class="max-w-7xl mx-auto px-4 sm:px-6">
                     <nav class="flex justify-between items-center py-4">
                         <a href="#" onclick="this.closest('.fixed').remove()" class="font-serif text-xl sm:text-2xl font-bold text-gray-900 hover:text-accent transition-colors">
-                            Matias Nunez
+                            Matías Núñez
                         </a>
                         
                         <div class="hidden md:flex items-center gap-6">
