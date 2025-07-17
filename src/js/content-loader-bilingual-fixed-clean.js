@@ -542,7 +542,7 @@ function createCVPage(parsedContent, language) {
     const contactText = language === 'es' ? 'Contacto' : 'Contact';
     
     fullPage.innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-slate-900 dark:to-slate-800">
             <header class="sticky top-0 bg-white/90 backdrop-blur-sm border-b border-gray-200 z-10">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6">
                     <nav class="flex justify-between items-center py-4">
@@ -737,7 +737,7 @@ function createBilingualContentPage(parsedContent, language, baseFilename, type)
     const contactText = language === 'es' ? 'Contacto' : 'Contact';
     
     fullPage.innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
+        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-slate-900 dark:to-slate-800">
             <header class="sticky top-0 bg-white/90 backdrop-blur-sm border-b border-gray-200 z-10">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6">
                     <nav class="flex justify-between items-center py-4">

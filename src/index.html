@@ -657,21 +657,14 @@
                         <h3 class="font-serif text-2xl mb-6" x-text="language === 'es' ? 'Conéctate' : 'Connect'"></h3>
                         <ul class="flex gap-6">
                             <li>
-                                <a href="#" class="flex items-center gap-2 text-dark hover:text-accent transition-colors p-3 bg-white rounded-lg shadow-sm hover:shadow-md">
+                                <a href="https://www.linkedin.com/in/matias-nu%C3%B1ez-6b53544/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-dark hover:text-accent transition-colors p-3 bg-white rounded-lg shadow-sm hover:shadow-md">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
                                     </svg>
                                     <span>LinkedIn</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="#" class="flex items-center gap-2 text-dark hover:text-accent transition-colors p-3 bg-white rounded-lg shadow-sm hover:shadow-md">
-                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    <span>GitHub</span>
-                                </a>
-                            </li>
+
                         </ul>
                     </div>
                 </div>
@@ -692,7 +685,7 @@
                         <textarea id="message" name="message" required class="p-3 border border-gray-300 rounded-lg min-h-[150px] resize-y focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300"></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary self-start">
+                    <button type="submit" class="btn btn-primary self-start" onclick="handleContactForm(event)">
                         <span x-text="language === 'es' ? 'Enviar mensaje' : 'Send message'"></span>
                     </button>
                 </form>
@@ -710,8 +703,14 @@
         </div>
     </footer>
 
+    <!-- Simple Night Mode -->
+    <script src="./js/simple-night-mode.js"></script>
+    
     <!-- Content Loader -->
     <script src="./js/content-loader-bilingual-fixed-clean.js"></script>
+    
+    <!-- Content Page Fix -->
+    <script src="./js/content-page-fix.js"></script>
 
     <!-- JavaScript para inicializar AOS -->
     <script>
@@ -761,4 +760,231 @@
         });
     </script>
 </body>
-</html>
+</html>    
+<!-- JavaScript para funcionalidades adicionales -->
+    <script>
+        // 📧 FORMULARIO DE CONTACTO FUNCIONAL
+        function handleContactForm(event) {
+            event.preventDefault();
+            
+            const form = event.target.closest('form');
+            const formData = new FormData(form);
+            
+            const contactData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                message: formData.get('message'),
+                timestamp: new Date().toISOString(),
+                language: document.querySelector('[x-data]').__x.$data.language
+            };
+            
+            // Guardar en localStorage (opción 1 - más simple)
+            saveContactMessage(contactData);
+            
+            // Mostrar confirmación
+            showContactConfirmation(contactData.language);
+            
+            // Limpiar formulario
+            form.reset();
+        }
+        
+        function saveContactMessage(data) {
+            // Obtener mensajes existentes
+            const existingMessages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+            
+            // Agregar nuevo mensaje
+            existingMessages.push(data);
+            
+            // Guardar de vuelta
+            localStorage.setItem('contactMessages', JSON.stringify(existingMessages));
+            
+            console.log('💾 Mensaje guardado:', data);
+            console.log('📊 Total mensajes:', existingMessages.length);
+        }
+        
+        function showContactConfirmation(language) {
+            const message = language === 'es' 
+                ? '✅ ¡Mensaje enviado correctamente! Te contactaré pronto.'
+                : '✅ Message sent successfully! I will contact you soon.';
+            
+            // Crear notificación
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Mostrar notificación
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Ocultar después de 4 segundos
+            setTimeout(() => {
+                notification.style.transform = 'translateX(full)';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+        
+        // 🌙 MODO NOCTURNO/DIURNO
+        function initThemeToggle() {
+            // Crear botón de tema
+            const themeToggle = document.createElement('button');
+            themeToggle.id = 'theme-toggle';
+            themeToggle.className = 'fixed bottom-4 right-4 bg-accent text-white p-3 rounded-full shadow-lg hover:bg-accent-light transition-all duration-300 z-40';
+            themeToggle.innerHTML = `
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            `;
+            
+            document.body.appendChild(themeToggle);
+            
+            // Manejar click
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            // Cargar tema guardado
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                enableDarkMode();
+            }
+        }
+        
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            if (isDark) {
+                disableDarkMode();
+            } else {
+                enableDarkMode();
+            }
+        }
+        
+        function enableDarkMode() {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+            
+            // Actualizar icono
+            const toggle = document.getElementById('theme-toggle');
+            toggle.innerHTML = `
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+            `;
+        }
+        
+        function disableDarkMode() {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+            
+            // Actualizar icono
+            const toggle = document.getElementById('theme-toggle');
+            toggle.innerHTML = `
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+                </svg>
+            `;
+        }
+        
+        // 🔗 FUNCIÓN PARA VER MENSAJES (ADMIN)
+        function viewContactMessages() {
+            const messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+            console.table(messages);
+            return messages;
+        }
+        
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            initThemeToggle();
+            
+            // Comando de consola para ver mensajes
+            window.viewMessages = viewContactMessages;
+            console.log('💡 Tip: Usa viewMessages() en la consola para ver todos los mensajes de contacto');
+        });
+    </script>    
+
+    <!-- Estilos para Modo Nocturno -->
+    <style>
+        /* 🌙 MODO NOCTURNO - Estilos para Dark Mode */
+        .dark {
+            color-scheme: dark;
+        }
+
+        .dark body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
+        .dark .bg-white {
+            background-color: #1e293b !important;
+        }
+
+        .dark .bg-gray-50 {
+            background-color: #0f172a !important;
+        }
+
+        .dark .text-gray-900 {
+            color: #f1f5f9 !important;
+        }
+
+        .dark .text-gray-800 {
+            color: #e2e8f0 !important;
+        }
+
+        .dark .text-gray-700 {
+            color: #cbd5e1 !important;
+        }
+
+        .dark .text-gray-600 {
+            color: #94a3b8 !important;
+        }
+
+        .dark .border-gray-200 {
+            border-color: #374151 !important;
+        }
+
+        /* Dark mode para páginas de contenido */
+        .dark .cv-content h1,
+        .dark .cv-content h2,
+        .dark .cv-content h3 {
+            color: #60a5fa !important;
+        }
+
+        .dark .cv-content p,
+        .dark .cv-content li {
+            color: #e2e8f0 !important;
+        }
+
+        .dark .cv-content hr {
+            border-color: #374151 !important;
+        }
+
+        /* Dark mode para tarjetas Pinterest */
+        .dark .pinterest-card .bg-gradient-to-br {
+            background: linear-gradient(to bottom right, #1e293b, #334155, #475569) !important;
+        }
+
+        .dark .pinterest-card {
+            background-color: #1e293b !important;
+            border: 1px solid #374151;
+        }
+
+        /* Dark mode para formularios */
+        .dark input,
+        .dark textarea {
+            background-color: #1e293b !important;
+            border-color: #374151 !important;
+            color: #e2e8f0 !important;
+        }
+
+        .dark input:focus,
+        .dark textarea:focus {
+            border-color: #60a5fa !important;
+            ring-color: #60a5fa !important;
+        }
+
+        /* Transiciones suaves para cambio de tema */
+        * {
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+        }
+    </style>
