@@ -173,11 +173,12 @@ class SimpleNightMode {
                 backdrop-filter: blur(8px);
             }
 
-            /* ARREGLAR: Texto del header visible */
+            /* ARREGLAR: Texto del header visible en todas las resoluciones */
             .night-mode header a,
             .night-mode header button,
             .night-mode nav a,
-            .night-mode nav button {
+            .night-mode nav button,
+            .night-mode .font-medium {
                 color: #63b3ed !important;
             }
 
@@ -187,6 +188,25 @@ class SimpleNightMode {
 
             .night-mode header .font-medium:hover {
                 color: #93c5fd !important;
+            }
+
+            /* ARREGLAR: Botones de idioma visibles en night mode */
+            .night-mode .border-gray-200 {
+                border-color: #4a5568 !important;
+            }
+
+            .night-mode .bg-accent {
+                background-color: #63b3ed !important;
+            }
+
+            .night-mode .hover\\:bg-gray-100:hover {
+                background-color: rgba(99, 179, 237, 0.1) !important;
+            }
+
+            /* ARREGLAR: Mobile menu en night mode */
+            .night-mode .lg\\:hidden button,
+            .night-mode .md\\:hidden button {
+                color: #63b3ed !important;
             }
 
             /* Secciones blancas -> gris oscuro */
