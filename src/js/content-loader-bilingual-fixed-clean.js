@@ -1,4 +1,4 @@
-// Sistema de carga de contenido BILINGUE - Archivos separados ES/EN
+// Sistema de carga de contenido BILINGUE - Version limpia y funcional
 class BilingualContentLoader {
     constructor() {
         this.projects = [];
@@ -133,11 +133,7 @@ class BilingualContentLoader {
                 const directoryData = await directoryListResponse.json();
                 const bilingualFiles = directoryData.bilingualFiles || [];
                 
-                console.log(`Found ${bilingualFiles.length} bilingual files via directory listing:`);
-                bilingualFiles.forEach(file => {
-                    console.log(`   Found: ${file} (ES & EN)`);
-                });
-                
+                console.log(`Found ${bilingualFiles.length} bilingual files via directory listing`);
                 return bilingualFiles;
             }
         } catch (error) {
@@ -172,7 +168,6 @@ class BilingualContentLoader {
             }
         }
         
-        console.log(`Total verified files in ${folderPath}: ${discoveredFiles.size}`);
         return Array.from(discoveredFiles);
     }
 
@@ -257,7 +252,7 @@ class BilingualContentLoader {
 
     createCard(item, type) {
         const card = document.createElement('div');
-        card.className = 'bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col';
+        card.className = 'bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col card';
 
         const currentContent = item[this.currentLanguage];
         const title = currentContent.title || 'Titulo';
@@ -265,6 +260,7 @@ class BilingualContentLoader {
 
         const icon = this.getIconForContent(item.icon || 'default');
         const bgGradient = this.getGradientForCategory(item.category, type);
+
         const buttonText = type === 'project' 
             ? (this.currentLanguage === 'es' ? 'Ver proyecto' : 'View project')
             : (this.currentLanguage === 'es' ? 'Leer mas' : 'Read more');
@@ -283,19 +279,19 @@ class BilingualContentLoader {
             </div>
             <div class="p-6 flex-grow flex flex-col card-content">
                 <div class="flex justify-between items-start mb-3">
-                    <h3 class="font-serif text-xl text-gray-900 group-hover:text-white transition-colors duration-500 flex-grow">
+                    <h3 class="font-serif text-xl text-gray-900 group-hover:text-accent transition-colors duration-500 flex-grow">
                         ${title}
                     </h3>
                     <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 ml-2">
-                        <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                        <div class="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
                     </div>
                 </div>
-                <p class="mb-4 text-gray-600 group-hover:text-gray-100 flex-grow text-sm leading-relaxed transition-colors duration-500">
+                <p class="mb-4 text-gray-600 flex-grow text-sm leading-relaxed transition-colors duration-500">
                     ${excerpt}
                 </p>
-                <button class="text-accent group-hover:text-white inline-flex items-center hover:text-accent-light font-medium mt-auto transition-all duration-500 transform group-hover:translate-x-2" onclick="openBilingualContent('${item.baseFilename}', '${type}', bilingualLoader.currentLanguage)">
+                <button class="text-accent inline-flex items-center hover:text-accent-light font-medium mt-auto transition-all duration-500 transform hover:translate-x-2" onclick="openBilingualContent('${item.baseFilename}', '${type}', bilingualLoader.currentLanguage)">
                     <span>${buttonText}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transform hover:translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
                     </svg>
                 </button>
@@ -303,6 +299,27 @@ class BilingualContentLoader {
         `;
 
         return card;
+    }
+
+    getGradientForCategory(category, type) {
+        const gradients = {
+            // Projects
+            'Physics': 'bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700',
+            'AI': 'bg-gradient-to-br from-emerald-500 via-teal-600 to-cyan-700',
+            'Linguistics': 'bg-gradient-to-br from-rose-500 via-pink-600 to-purple-700',
+            'Data Science': 'bg-gradient-to-br from-orange-500 via-red-600 to-pink-700',
+            
+            // Writing
+            'Adventure': 'bg-gradient-to-br from-green-500 via-emerald-600 to-teal-700',
+            'Philosophy': 'bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-700',
+            'Technology': 'bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-700',
+            'Science': 'bg-gradient-to-br from-amber-500 via-orange-600 to-red-700',
+            
+            // Default
+            'General': 'bg-gradient-to-br from-gray-500 via-slate-600 to-gray-700'
+        };
+        
+        return gradients[category] || gradients['General'];
     }
 
     extractExcerpt(content) {
@@ -711,73 +728,5 @@ function changeBilingualLanguage(newLanguage, baseFilename, type) {
         }, 150);
     } else {
         bilingualLoader.updateContent();
-    }
-}   
- // Function to get gradient for category
-    // Function to get gradient for category
-    getGradientForCategory(category, type) {
-        const gradients = {
-            // Projects
-            'Physics': 'bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700',
-            'AI': 'bg-gradient-to-br from-emerald-500 via-teal-600 to-cyan-700',
-            'Linguistics': 'bg-gradient-to-br from-rose-500 via-pink-600 to-purple-700',
-            'Data Science': 'bg-gradient-to-br from-orange-500 via-red-600 to-pink-700',
-            
-            // Writing
-            'Adventure': 'bg-gradient-to-br from-green-500 via-emerald-600 to-teal-700',
-            'Philosophy': 'bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-700',
-            'Technology': 'bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-700',
-            'Science': 'bg-gradient-to-br from-amber-500 via-orange-600 to-red-700',
-            
-            // Default
-            'General': 'bg-gradient-to-br from-gray-500 via-slate-600 to-gray-700'
-        };
-        
-        return gradients[category] || gradients['General'];
-    }
-
-    // Add interactive features to cards
-    addInteractiveFeatures() {
-        // Add click sound effect (optional)
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('.card')) {
-                const card = e.target.closest('.card');
-                card.style.transform = 'scale(0.98)';
-                setTimeout(() => {
-                    card.style.transform = '';
-                }, 100);
-            }
-        });
-
-        // Add keyboard navigation
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab') {
-                const cards = document.querySelectorAll('.card button');
-                cards.forEach(card => {
-                    card.addEventListener('focus', () => {
-                        card.closest('.card').classList.add('ring-2', 'ring-accent', 'ring-opacity-50');
-                    });
-                    card.addEventListener('blur', () => {
-                        card.closest('.card').classList.remove('ring-2', 'ring-accent', 'ring-opacity-50');
-                    });
-                });
-            }
-        });
-    }
-
-    // Enhanced render with interactive features
-    render() {
-        this.renderProjects();
-        this.renderArticles();
-        this.addInteractiveFeatures();
-        
-        // Add staggered animation to existing cards
-        setTimeout(() => {
-            const cards = document.querySelectorAll('.card');
-            cards.forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.1}s`;
-                card.classList.add('animate-fadeInUp');
-            });
-        }, 100);
     }
 }
