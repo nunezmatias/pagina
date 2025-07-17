@@ -134,27 +134,78 @@ class BilingualContentLoader {
     }
 
     async detectBilingualFiles(folderPath) {
+        console.log(`🔍 Scanning for bilingual files in: ${folderPath}`);
+        
+        // Method 1: Try to fetch the generated directory listing (most efficient)
         try {
-            // Since we can't list directory contents directly in browser,
-            // we'll try to fetch a known list or use a fallback approach
-            const knownFiles = {
-                './content/projects/': [
-                    'remote-sensing', 'chatbot-ela-static', 'chatbot-ela', 
-                    'linguistic-reconstruction', 'un-data-clustering'
-                ],
-                './content/writing/': [
-                    'felix', 'ai-epistemological-lens', 
-                    'language-cognitive-tech', 'rivers-complex-systems'
-                ]
-            };
-            
-            // For now, return the known files, but this could be enhanced
-            // to dynamically discover files if needed
-            return knownFiles[folderPath] || [];
+            const directoryListResponse = await fetch(`${folderPath}directory-listing.json`);
+            if (directoryListResponse.ok) {
+                const directoryData = await directoryListResponse.json();
+                const bilingualFiles = directoryData.bilingualFiles || [];
+                
+                console.log(`📁 Found ${bilingualFiles.length} bilingual files via directory listing:`);
+                bilingualFiles.forEach(file => {
+                    console.log(`   ✅ ${file} (ES & EN)`);
+                });
+                
+                return bilingualFiles;
+            }
         } catch (error) {
-            console.error('Error detecting bilingual files:', error);
-            return [];
+            console.log(`⚠️  Directory listing not available for ${folderPath}, using fallback discovery`);
         }
+
+        // Method 2: Fallback - Known files as a reliable starting point
+        const knownFiles = {
+            './content/projects/': [
+                'remote-sensing', 'chatbot-ela-static', 'chatbot-ela', 
+                'linguistic-reconstruction', 'un-data-clustering'
+            ],
+            './content/writing/': [
+                'felix', 'ai-epistemological-lens', 
+                'language-cognitive-tech', 'rivers-complex-systems'
+            ]
+        };
+        
+        const discoveredFiles = new Set();
+        const known = knownFiles[folderPath] || [];
+        
+        // Verify known files still exist
+        for (const basename of known) {
+            try {
+                const [esResponse, enResponse] = await Promise.all([
+                    fetch(`${folderPath}${basename}_ES.md`),
+                    fetch(`${folderPath}${basename}_EN.md`)
+                ]);
+                
+                if (esResponse.ok && enResponse.ok) {
+                    discoveredFiles.add(basename);
+                    console.log(`✅ Verified bilingual content: ${basename}`);
+                } else {
+                    console.log(`⚠️  Missing files for: ${basename}`);
+                }
+            } catch (error) {
+                console.log(`❌ Error checking: ${basename}`);
+            }
+        }
+        
+        console.log(`📊 Total verified files in ${folderPath}: ${discoveredFiles.size}`);
+        return Array.from(discoveredFiles);
+    }
+
+    extractBilingualBasenames(fileList) {
+        const basenames = new Set();
+        
+        fileList.forEach(filename => {
+            if (filename.endsWith('_ES.md')) {
+                const basename = filename.replace('_ES.md', '');
+                // Check if corresponding EN file exists
+                if (fileList.includes(`${basename}_EN.md`)) {
+                    basenames.add(basename);
+                }
+            }
+        });
+        
+        return Array.from(basenames);
     }
 
     parseMarkdown(content) {

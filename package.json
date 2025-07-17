@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "deploy": "npm run build && gh-pages -d dist",
     "start": "npm run dev",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "scan-content": "node generate-directory-listing.js"
   },
   "keywords": ["portfolio", "researcher", "ai", "physics", "machine-learning"],
   "author": "Matias Núñez",

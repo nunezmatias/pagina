@@ -56,9 +56,61 @@ portfolio-matias/
 - **Vercel**: Deploy automático desde GitHub  
 - **GitHub Pages**: Gratis con GitHub Actions
 
+## 📝 Gestión de Contenido Bilingüe
+
+### Agregar Nuevo Contenido
+
+El sitio usa un sistema automático de detección de contenido bilingüe. Para agregar nuevo contenido:
+
+#### 1. Crear archivos markdown
+```bash
+# Para proyectos
+src/content/projects/mi-nuevo-proyecto_ES.md
+src/content/projects/mi-nuevo-proyecto_EN.md
+
+# Para artículos/escritos
+src/content/writing/mi-nuevo-articulo_ES.md
+src/content/writing/mi-nuevo-articulo_EN.md
+```
+
+#### 2. Formato de archivos
+Cada archivo debe tener frontmatter:
+```markdown
+---
+title: "Título del Proyecto"
+date: "2024-01-15"
+category: "AI"
+tags: ["AI", "Machine Learning"]
+excerpt: "Descripción breve del proyecto..."
+---
+
+# Contenido del proyecto
+
+Tu contenido aquí...
+```
+
+#### 3. Actualizar sistema
+```bash
+npm run scan-content
+```
+
+#### 4. Ver cambios
+Refresca la página - el nuevo contenido aparecerá automáticamente.
+
+### Contenido Actual
+- **Proyectos**: 5 pares bilingües (remote-sensing, chatbot-ela-static, etc.)
+- **Escritos**: 5 pares bilingües (felix, ai-epistemological-lens, etc.)
+
+### Comandos Útiles
+```bash
+npm run scan-content    # Escanear nuevo contenido
+npm run dev            # Servidor de desarrollo
+npm run build          # Build para producción
+```
+
 ## 📝 Modificaciones Comunes
 
-### Cambiar contenido
+### Cambiar contenido estático
 - Edita `src/index.html`
 - Las imágenes van en `src/assets/images/`
 
