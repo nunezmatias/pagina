@@ -162,16 +162,16 @@
         }
 
         #projects-container {
-            column-count: auto;
-            column-width: 300px;
-            column-gap: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
             padding: 0 1rem;
         }
 
         #writing-container {
-            column-count: auto;
-            column-width: 300px;
-            column-gap: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
             padding: 0 1rem;
         }
 
@@ -345,6 +345,52 @@
                 grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             }
         }
+
+        /* Animación sutil para las ondas del separador */
+        @keyframes wave-flow {
+            0%, 100% { 
+                transform: translateX(0) scaleY(1); 
+            }
+            50% { 
+                transform: translateX(-10px) scaleY(1.05); 
+            }
+        }
+
+        .wave-separator svg path:first-child {
+            animation: wave-flow 8s ease-in-out infinite;
+        }
+
+        .wave-separator svg path:last-child {
+            animation: wave-flow 10s ease-in-out infinite reverse;
+        }
+
+        /* Fade-out del scroll indicator */
+        .scroll-indicator {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Subrayado animado para títulos */
+        .section-title-animated {
+            position: relative;
+            font-family: 'Playfair Display', serif;
+            font-weight: bold;
+        }
+
+        .underline-animated {
+            display: block;
+            height: 5px;
+            width: 34%;
+            background: #5FF4C2;
+            border-radius: 6px;
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            transition: width 0.35s cubic-bezier(.4,0,.2,1);
+        }
+
+        .section-title-animated:hover .underline-animated {
+            width: 60%;
+        }
     </style>
 </head>
 <body class="font-sans text-dark bg-light leading-relaxed" x-data="{ language: 'es' }">
@@ -445,7 +491,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="relative min-h-screen overflow-hidden flex lg:grid lg:grid-cols-12 items-start">
+    <section class="relative min-h-screen overflow-hidden lg:grid lg:grid-cols-12 items-center">
         <!-- Background Image with Gradient Overlay -->
         <div class="absolute inset-0 bg-dark filter contrast-125 opacity-80 z-0">
             <img src="./assets/images/front_imagen.jpg" alt="Vista aérea de paisaje"
@@ -458,34 +504,34 @@
 
         
         <!-- Texto (col 8-12) -->
-        <div class="relative z-20 px-4 sm:px-6 pt-24 col-span-5 col-start-8 text-[#F1F6F8] text-right max-w-sm ml-auto" data-aos="fade-left" data-aos-duration="1000">
-            <template x-if="language === 'es'">
-                <div>
-                    <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl leading-tight mb-6">
-                        Navegando la complejidad—<br>
-                        a través del lenguaje, la ciencia y ríos salvajes.
-                    </h1>
-                    <p class="text-lg lg:text-xl">
-                        Investigador interdisciplinario en la intersección de IA aplicada, machine learning, lenguaje y sistemas complejos.
-                    </p>
-                </div>
-            </template>
-            
-            <template x-if="language === 'en'">
-                <div>
-                    <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl leading-tight mb-6">
-                        Navigating complexity—<br>
-                        through science, language, and wild rivers.
-                    </h1>
-                    <p class="text-lg lg:text-xl">
-                        Interdisciplinary researcher at the intersection of applied AI, machine learning, language, and complex systems.
-                    </p>
-                </div>
-            </template>
+        <div class="relative z-20 col-span-4 col-start-8 lg:pl-8 xl:pl-12 px-4 lg:px-0 text-[#F1F6F8] pt-24 lg:pt-0" data-aos="fade-left" data-aos-delay="100">
+            <div class="max-w-lg">
+                <template x-if="language === 'es'">
+                    <div class="space-y-4 lg:space-y-6">
+                        <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                            Navegando la complejidad
+                        </h1>
+                        <p class="font-sans text-base sm:text-lg md:text-xl tracking-tight text-[#F1F6F8]">
+                            — a través de la ciencia, la IA y el flujo de la naturaleza.
+                        </p>
+                    </div>
+                </template>
+                
+                <template x-if="language === 'en'">
+                    <div class="space-y-4 lg:space-y-6">
+                        <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                            Navigating complexity
+                        </h1>
+                        <p class="font-sans text-base sm:text-lg md:text-xl tracking-tight text-[#F1F6F8]">
+                            — through science, AI, and the flow of nature.
+                        </p>
+                    </div>
+                </template>
+            </div>
         </div>
         
         <!-- Animated Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center text-white/70">
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center text-white/70 scroll-indicator">
             <span class="text-sm mb-2">Scroll</span>
             <div class="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
                 <div class="w-1.5 h-3 bg-white/70 rounded-full mt-2 animate-bounce"></div>
@@ -493,33 +539,51 @@
         </div>
     </section>
 
+    <!-- Separador ondulado para transición suave -->
+    <div class="relative h-32 lg:h-40 -mt-1 overflow-hidden wave-separator">
+        <!-- Gradiente principal mejorado -->
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#eaf2f7] to-white"></div>
+        
+        <!-- Gradiente adicional con más presencia oceánica -->
+        <div class="absolute inset-0 bg-gradient-to-b from-accent/15 via-white/70 to-white"></div>
+        
+        <!-- SVG ondulado con curva suave simulando ola -->
+        <div class="absolute bottom-0 left-0 right-0 h-12">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-full">
+                <path d="M0,60 C300,120 900,0 1200,60 L1200,120 L0,120 Z" 
+                      fill="white" 
+                      fill-opacity="0.8"/>
+                <path d="M0,80 C400,140 800,20 1200,80 L1200,120 L0,120 Z" 
+                      fill="white" 
+                      fill-opacity="0.6"/>
+            </svg>
+        </div>
+    </div>
+    
     <!-- About Section -->
-    <section id="about" class="py-24">
+    <section id="about" class="bg-gradient-to-b from-[#e9f2f7] via-[#f5fafd] to-[#f8fafb] pt-20 sm:pt-24 lg:pt-32 pb-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
-            <template x-if="language === 'es'">
-                <h2 class="section-title" data-aos="fade-up">Sobre Mí</h2>
-            </template>
-            <template x-if="language === 'en'">
-                <h2 class="section-title" data-aos="fade-up">About Me</h2>
-            </template>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mt-12">
-                <div class="lg:pr-8" data-aos="fade-up" data-aos-delay="100">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+                <div class="lg:pr-8 bg-white rounded-xl shadow-lg p-8" data-aos="fade-up" data-aos-delay="100">
                     <template x-if="language === 'es'">
                         <div>
-                            <p class="mb-4">
+                            <h2 class="section-title-animated font-serif text-4xl lg:text-5xl mb-4">
+                                Sobre Mí
+                                <span class="underline-animated"></span>
+                            </h2>
+                            <p class="mb-4 text-[17px] leading-relaxed">
                                 Soy un físico e investigador interdisciplinario que trabaja en la intersección de la IA aplicada, el aprendizaje automático, el lenguaje y los sistemas complejos. Mi trabajo abarca una amplia gama de dominios, desde la física del estado sólido y la ciencia de materiales hasta el procesamiento del lenguaje natural, las tecnologías de accesibilidad y la analítica de sostenibilidad.
                             </p>
                             
-                            <p class="mb-4">
+                            <p class="mb-4 text-[17px] leading-relaxed">
                                 Desarrollo y aplico sistemas inteligentes basados en modelos generativos, embeddings y arquitecturas multiagente. Mi objetivo no es solo construir sistemas que funcionen, sino crear herramientas que nos ayuden a comprender los patrones subyacentes de la naturaleza, el lenguaje y la sociedad. Estoy particularmente interesado en proyectos que involucren interfaces cognitivas, predicción de series temporales, reconstrucción lingüística y el uso de IA en escenarios que requieren tanto matices como fundamento en el mundo real.
                             </p>
                             
-                            <p class="mb-4">
+                            <p class="mb-4 text-[17px] leading-relaxed">
                                 Mi pensamiento está moldeado tanto por el rigor científico como por la profundidad conceptual. Disfruto navegando entre la abstracción y la aplicación, entre la lógica matemática de una red neuronal y la complejidad incorporada de la comunicación humana.
                             </p>
                             
-                            <p class="mb-4">
+                            <p class="mb-4 text-[17px] leading-relaxed">
                                 Cuando no estoy trabajando en estos problemas o inmerso en la lectura, practico deportes extremos como kayak en aguas bravas (clase V), kitesurf y snowboard. En kayak, he participado en expediciones a ríos remotos donde la exploración se convierte en un diálogo con lo desconocido. Estas experiencias me han enseñado a leer sistemas dinámicos en movimiento, actuar bajo incertidumbre y moverme con claridad a través de entornos caóticos. Abordo los desafíos intelectuales con el mismo espíritu.
                             </p>
                         </div>
@@ -527,19 +591,23 @@
                     
                     <template x-if="language === 'en'">
                         <div>
-                            <p class="mb-4">
+                            <h2 class="section-title-animated font-serif text-4xl lg:text-5xl mb-4">
+                                About Me
+                                <span class="underline-animated"></span>
+                            </h2>
+                            <p class="mb-4 text-[17px] leading-relaxed">
                                 I'm a physicist and interdisciplinary researcher working at the intersection of applied AI, machine learning, language, and complex systems. My work spans a range of domains--from solid-state physics and materials science to natural language processing, accessibility technologies, and sustainability analytics.
                             </p>
                             
-                            <p class="mb-4">
+                            <p class="mb-4 text-[17px] leading-relaxed">
                                 I develop and apply intelligent systems based on generative models, embeddings, and multi-agent architectures. My goal is not just to build systems that work, but to create tools that help us understand the underlying patterns of nature, language, and society. I'm particularly interested in projects that involve cognitive interfaces, time-series prediction, linguistic reconstruction (including historical corpora like Old English), and the use of AI in scenarios that require both nuance and real-world grounding--such as communication systems for people with ALS.
                             </p>
                             
-                            <p class="mb-4">
+                            <p class="mb-4 text-[17px] leading-relaxed">
                                 My thinking is shaped by both scientific rigor and conceptual depth. I enjoy navigating between abstraction and application, between the mathematical logic of a neural network and the embodied complexity of human communication. This dual lens informs the way I explore knowledge and design technology--with an emphasis on precision, context-awareness, and ethical alignment.
                             </p>
                             
-                            <p class="mb-4">
+                            <p class="mb-4 text-[17px] leading-relaxed">
                                 When I'm not working on these problems or immersed in reading, I practice extreme sports like whitewater kayaking (class V), kitesurfing, and snowboarding. In kayaking, I've taken part in expeditions to remote rivers--some of them previously unpaddled--where exploration becomes a dialogue with the unknown. These experiences have taught me how to read dynamic systems in motion, act under uncertainty, and move with clarity through chaotic environments. I approach intellectual challenges in the same spirit.
                             </p>
                         </div>
@@ -548,7 +616,7 @@
                 <div class="relative rounded-xl overflow-hidden shadow-xl h-auto" data-aos="fade-left"
                     data-aos-delay="200">
                     <img src="./assets/images/kayak-waterfall.jpg" alt="Kayaking waterfall"
-                        class="w-full h-auto object-contain">
+                        class="w-full h-auto object-contain shadow-lg">
                     <div class="absolute inset-0 bg-gradient-to-t from-dark/50 to-transparent"></div>
                     <div class="absolute bottom-0 left-0 right-0 glass p-4 text-white"
                         x-text="language === 'es' ? 'Expedición en kayak - Cascada de clase V' : 'Kayak expedition - Class V waterfall'">
@@ -559,7 +627,7 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="py-24 bg-gradient-to-b from-white to-gray-50">
+    <section id="projects" class="py-24 bg-gradient-to-b from-dark/10 via-white to-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <template x-if="language === 'es'">
                 <div>
@@ -704,7 +772,7 @@
     <script src="./js/simple-night-mode.js"></script>
     
     <!-- Content Loader -->
-    <script src="./js/content-loader-bilingual-fixed-clean.js"></script>
+    <script src="./js/content-loader-bilingual-fixed-clean.js?v=3"></script>
     
     <!-- Content Page Fix -->
     <script src="./js/content-page-fix.js"></script>
@@ -718,6 +786,69 @@
                 once: true,
                 offset: 100
             });
+        });
+
+        // Fade-out del scroll indicator al hacer scroll
+        window.addEventListener('scroll', function() {
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            const heroTagline = document.querySelector('.hero-tagline');
+            const header = document.querySelector('#header');
+            
+            if (scrollIndicator) {
+                const scrollY = window.scrollY;
+                const opacity = Math.max(0, 1 - scrollY / 250);
+                scrollIndicator.style.opacity = opacity;
+            }
+            
+            // Ocultar tagline del hero al hacer scroll >= 200px
+            if (heroTagline) {
+                const scrollY = window.scrollY;
+                if (scrollY >= 200) {
+                    heroTagline.style.opacity = '0';
+                } else {
+                    heroTagline.style.opacity = '1';
+                }
+            }
+            
+            // Cambiar navbar según scroll position
+            if (header) {
+                const scrollY = window.scrollY;
+                const heroHeight = window.innerHeight;
+                const navLinks = header.querySelectorAll('a, button');
+                const logo = header.querySelector('a[href="#"]');
+                
+                if (scrollY > heroHeight * 0.8) {
+                    // Fondo más oscuro para marcar separación sobre fondo claro
+                    header.classList.remove('bg-dark/40', 'text-[#F1F6F8]');
+                    header.classList.add('bg-dark/90', 'shadow-sm', 'text-[#F1F6F8]');
+                    
+                    // Mantener colores claros
+                    navLinks.forEach(link => {
+                        link.classList.add('text-[#F1F6F8]');
+                        link.classList.remove('text-dark');
+                    });
+                    
+                    if (logo) {
+                        logo.classList.add('text-[#F1F6F8]');
+                        logo.classList.remove('text-dark');
+                    }
+                } else {
+                    // Volver a fondo original del hero
+                    header.classList.add('bg-dark/40', 'text-[#F1F6F8]');
+                    header.classList.remove('bg-dark/90', 'shadow-sm', 'text-dark');
+                    
+                    // Volver a colores originales
+                    navLinks.forEach(link => {
+                        link.classList.add('text-[#F1F6F8]');
+                        link.classList.remove('text-dark');
+                    });
+                    
+                    if (logo) {
+                        logo.classList.add('text-[#F1F6F8]');
+                        logo.classList.remove('text-dark');
+                    }
+                }
+            }
         });
 
         // Smooth scroll para los enlaces de navegación
