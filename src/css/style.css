@@ -18,3 +18,14 @@
                 @apply font-serif text-4xl mb-2 relative inline-block after:content-[''] after:absolute after:bottom-0 after:left-0 after:h-1 after:w-1/3 after:bg-accent-light after:rounded-full;
             }
         }
+
+        /* ELIMINAR línea decorativa en modo oscuro */
+        .night-mode .section-title::after,
+        .night-mode h1::after,
+        .night-mode h2::after,
+        .night-mode h3::after {
+            display: none !important;
+            content: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }

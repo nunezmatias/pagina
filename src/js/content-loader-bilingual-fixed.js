@@ -637,11 +637,6 @@ function createBilingualContentPage(parsedContent, language, baseFilename, type)
             </header>
             
             <article class="max-w-4xl mx-auto px-6 py-12">
-                <header class="mb-12 text-center">
-                    <h1 class="text-5xl font-serif font-bold text-gray-900 mb-4">${parsedContent.title}</h1>
-                    <div class="w-24 h-1 bg-accent mx-auto rounded-full"></div>
-                </header>
-                
                 <div class="prose prose-lg prose-gray max-w-none">
                     ${parsedContent.content}
                 </div>

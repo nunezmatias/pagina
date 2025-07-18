@@ -33,12 +33,14 @@ class SimpleNightMode {
             #content-page {
                 background: linear-gradient(to bottom right, #f7fafc, #ffffff) !important;
                 color: #2d3748 !important;
+                transition: all 0.4s ease !important;
             }
 
             #content-page header {
                 background: rgba(255, 255, 255, 0.9) !important;
                 border-color: #e2e8f0 !important;
                 backdrop-filter: blur(8px) !important;
+                transition: all 0.4s ease !important;
             }
 
             #content-page header a,
@@ -46,6 +48,7 @@ class SimpleNightMode {
             #content-page nav a,
             #content-page nav button {
                 color: #2d3748 !important;
+                transition: color 0.4s ease !important;
             }
 
             #content-page h1,
@@ -58,6 +61,11 @@ class SimpleNightMode {
             #content-page .cv-content h2,
             #content-page .cv-content h3 {
                 color: #2d3748 !important;
+                transition: color 0.4s ease !important;
+                border: none !important;
+                outline: none !important;
+                box-shadow: none !important;
+                text-shadow: none !important;
             }
 
             #content-page p,
@@ -67,12 +75,14 @@ class SimpleNightMode {
             #content-page .cv-content p,
             #content-page .cv-content li {
                 color: #4a5568 !important;
+                transition: color 0.4s ease !important;
             }
 
             #content-page strong,
             #content-page .prose strong,
             #content-page .cv-content strong {
                 color: #2d3748 !important;
+                transition: color 0.4s ease !important;
             }
 
             #content-page code,
@@ -80,6 +90,7 @@ class SimpleNightMode {
             #content-page .cv-content code {
                 background-color: #f7fafc !important;
                 color: #2d3748 !important;
+                transition: all 0.4s ease !important;
             }
         `;
     }
@@ -155,9 +166,19 @@ class SimpleNightMode {
         }
 
         styleElement.textContent = `
-            /* Night Mode Styles */
+            /* Night Mode Styles - Transiciones mejoradas */
             .night-mode {
-                transition: all 0.3s ease;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            /* Transiciones suaves para todos los elementos */
+            .night-mode *,
+            .night-mode *::before,
+            .night-mode *::after {
+                transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                           background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                           border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                           box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
             }
 
             /* ===== PÁGINA PRINCIPAL ===== */
@@ -188,6 +209,36 @@ class SimpleNightMode {
 
             .night-mode header .font-medium:hover {
                 color: #93c5fd !important;
+            }
+
+            /* ARREGLAR: Header responsive - elementos visibles en resoluciones menores */
+            @media (max-width: 1024px) {
+                /* Forzar visibilidad de elementos desktop en tablet */
+                .night-mode .hidden.lg\\:flex {
+                    display: flex !important;
+                    flex-wrap: wrap;
+                    gap: 0.5rem;
+                }
+            }
+
+            @media (max-width: 768px) {
+                /* Asegurar que elementos móviles sean visibles */
+                .night-mode .lg\\:hidden {
+                    display: flex !important;
+                    align-items: center;
+                    gap: 1rem;
+                }
+                
+                /* Botones de idioma móviles visibles en night mode */
+                .night-mode .lg\\:hidden .border.border-gray-200 {
+                    border-color: #4a5568 !important;
+                    background-color: rgba(26, 32, 44, 0.8) !important;
+                }
+
+                /* Texto en botones móviles visible */
+                .night-mode .lg\\:hidden button {
+                    color: #63b3ed !important;
+                }
             }
 
             /* ARREGLAR: Botones de idioma visibles en night mode */
@@ -341,12 +392,14 @@ class SimpleNightMode {
             .night-mode #content-page {
                 background: linear-gradient(to bottom right, #1a202c, #2d3748) !important;
                 color: #e2e8f0 !important;
+                transition: all 0.4s ease !important;
             }
 
             .night-mode #content-page header {
                 background: rgba(26, 32, 44, 0.95) !important;
                 border-color: #4a5568 !important;
                 backdrop-filter: blur(8px);
+                transition: all 0.4s ease !important;
             }
 
             .night-mode #content-page header a,
@@ -354,8 +407,16 @@ class SimpleNightMode {
             .night-mode #content-page nav a,
             .night-mode #content-page nav button {
                 color: #63b3ed !important;
+                transition: color 0.4s ease !important;
             }
 
+            /* ARREGLAR: Eliminar todos los recuadros y bordes de títulos */
+            .night-mode h1,
+            .night-mode h2,
+            .night-mode h3,
+            .night-mode h4,
+            .night-mode h5,
+            .night-mode h6,
             .night-mode #content-page h1,
             .night-mode #content-page h2,
             .night-mode #content-page h3,
@@ -364,8 +425,57 @@ class SimpleNightMode {
             .night-mode #content-page .prose h3,
             .night-mode #content-page .cv-content h1,
             .night-mode #content-page .cv-content h2,
-            .night-mode #content-page .cv-content h3 {
+            .night-mode #content-page .cv-content h3,
+            .night-mode .section-title,
+            .night-mode .font-serif {
                 color: #63b3ed !important;
+                transition: color 0.4s ease !important;
+                border: none !important;
+                outline: none !important;
+                box-shadow: none !important;
+                text-shadow: none !important;
+                text-decoration: none !important;
+                background: none !important;
+                background-color: transparent !important;
+                background-image: none !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            
+            /* ELIMINAR COMPLETAMENTE la línea decorativa de .section-title */
+            .night-mode h1::before,
+            .night-mode h1::after,
+            .night-mode h2::before,
+            .night-mode h2::after,
+            .night-mode h3::before,
+            .night-mode h3::after,
+            .night-mode .section-title::before,
+            .night-mode .section-title::after,
+            .night-mode #content-page .section-title::after,
+            .night-mode #content-page h1::after,
+            .night-mode #content-page h2::after,
+            .night-mode #content-page h3::after {
+                content: "" !important;
+                display: none !important;
+                opacity: 0 !important;
+                visibility: hidden !important;
+                width: 0 !important;
+                height: 0 !important;
+                background: transparent !important;
+                background-color: transparent !important;
+                background-image: none !important;
+                border: none !important;
+                outline: none !important;
+                box-shadow: none !important;
+                position: static !important;
+            }
+            
+            /* Forzar eliminación de la línea decorativa con máxima especificidad */
+            html .night-mode .section-title::after,
+            html .night-mode #content-page .section-title::after {
+                content: none !important;
+                display: none !important;
             }
 
             .night-mode #content-page p,
@@ -375,12 +485,14 @@ class SimpleNightMode {
             .night-mode #content-page .cv-content p,
             .night-mode #content-page .cv-content li {
                 color: #cbd5e1 !important;
+                transition: color 0.4s ease !important;
             }
 
             .night-mode #content-page strong,
             .night-mode #content-page .prose strong,
             .night-mode #content-page .cv-content strong {
                 color: #e2e8f0 !important;
+                transition: color 0.4s ease !important;
             }
 
             .night-mode #content-page code,
@@ -388,6 +500,7 @@ class SimpleNightMode {
             .night-mode #content-page .cv-content code {
                 background-color: #4a5568 !important;
                 color: #e2e8f0 !important;
+                transition: all 0.4s ease !important;
             }
 
             .night-mode #content-page hr,

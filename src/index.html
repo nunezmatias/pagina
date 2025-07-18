@@ -349,10 +349,10 @@
 </head>
 <body class="font-sans text-dark bg-light leading-relaxed" x-data="{ language: 'es' }">
     <!-- Header -->
-    <header class="fixed w-full bg-white/90 backdrop-blur z-50 transition duration-300 shadow-sm" id="header" x-data="{ mobileMenuOpen: false }">
+    <header class="fixed inset-x-0 top-0 z-50 backdrop-blur-md bg-dark/40 text-[#F1F6F8] shadow-sm ring-1 ring-dark/20 transition-all duration-300" id="header" x-data="{ mobileMenuOpen: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <nav class="flex justify-between items-center py-4">
-                <a href="#" class="font-serif text-xl sm:text-2xl font-bold">Matías Núñez</a>
+                <a href="#" class="font-serif text-xl sm:text-2xl font-bold text-[#F1F6F8]">Matías Núñez</a>
                 
                 <!-- Desktop Navigation -->
                 <div class="hidden lg:flex items-center gap-8">
@@ -360,19 +360,21 @@
                     <div class="flex gap-8">
                         <template x-if="language === 'es'">
                             <div class="flex gap-8">
-                                <a href="#about" class="font-medium hover:text-accent transition-colors">Sobre Mí</a>
-                                <a href="#projects" class="font-medium hover:text-accent transition-colors">Proyectos</a>
-                                <a href="#writing" class="font-medium hover:text-accent transition-colors">Escritos</a>
-                                <a href="#contact" class="font-medium hover:text-accent transition-colors">Contacto</a>
+                                <a href="#about" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Sobre Mí</a>
+                                <button onclick="openCV('es')" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors cursor-pointer bg-transparent border-none">CV</button>
+                                <a href="#projects" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Proyectos</a>
+                                <a href="#writing" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Escritos</a>
+                                <a href="#contact" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Contacto</a>
                             </div>
                         </template>
                         
                         <template x-if="language === 'en'">
                             <div class="flex gap-8">
-                                <a href="#about" class="font-medium hover:text-accent transition-colors">About Me</a>
-                                <a href="#projects" class="font-medium hover:text-accent transition-colors">Projects</a>
-                                <a href="#writing" class="font-medium hover:text-accent transition-colors">Writing</a>
-                                <a href="#contact" class="font-medium hover:text-accent transition-colors">Contact</a>
+                                <a href="#about" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">About Me</a>
+                                <button onclick="openCV('en')" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors cursor-pointer bg-transparent border-none">CV</button>
+                                <a href="#projects" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Projects</a>
+                                <a href="#writing" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Writing</a>
+                                <a href="#contact" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Contact</a>
                             </div>
                         </template>
                     </div>
@@ -443,7 +445,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center overflow-hidden">
+    <section class="relative min-h-screen overflow-hidden flex lg:grid lg:grid-cols-12 items-start">
         <!-- Background Image with Gradient Overlay -->
         <div class="absolute inset-0 bg-dark filter contrast-125 opacity-80 z-0">
             <img src="./assets/images/front_imagen.jpg" alt="Vista aérea de paisaje"
@@ -453,38 +455,33 @@
             </div>
         </div>
         
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
-            <div class="text-light max-w-4xl mx-auto text-center lg:text-left lg:max-w-2xl lg:ml-8" data-aos="fade-right" data-aos-duration="1000">
-                <template x-if="language === 'es'">
-                    <div>
-                        <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight mb-6">
-                            Navegando la complejidad—a través del lenguaje, la ciencia y ríos salvajes.
-                        </h1>
-                        <p class="text-base sm:text-lg md:text-xl mb-8 max-w-2xl mx-auto lg:mx-0">
-                            Investigador interdisciplinario en la intersección de IA aplicada, machine learning, lenguaje y sistemas complejos.
-                        </p>
-                        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                            <button onclick="openCV('es')" class="btn btn-primary">Ver CV</button>
-                            <a href="#contact" class="btn btn-secondary">Contacto</a>
-                        </div>
-                    </div>
-                </template>
-                
-                <template x-if="language === 'en'">
-                    <div>
-                        <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight mb-6">
-                            Navigating complexity-through science, language, and wild rivers.
-                        </h1>
-                        <p class="text-base sm:text-lg md:text-xl mb-8 max-w-2xl mx-auto lg:mx-0">
-                            Interdisciplinary researcher at the intersection of applied AI, machine learning, language, and complex systems.
-                        </p>
-                        <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                            <button onclick="openCV('en')" class="btn btn-primary">View CV</button>
-                            <a href="#contact" class="btn btn-secondary">Contact</a>
-                        </div>
-                    </div>
-                </template>
-            </div>
+
+        
+        <!-- Texto (col 8-12) -->
+        <div class="relative z-20 px-4 sm:px-6 pt-24 col-span-5 col-start-8 text-[#F1F6F8] text-right max-w-sm ml-auto" data-aos="fade-left" data-aos-duration="1000">
+            <template x-if="language === 'es'">
+                <div>
+                    <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl leading-tight mb-6">
+                        Navegando la complejidad—<br>
+                        a través del lenguaje, la ciencia y ríos salvajes.
+                    </h1>
+                    <p class="text-lg lg:text-xl">
+                        Investigador interdisciplinario en la intersección de IA aplicada, machine learning, lenguaje y sistemas complejos.
+                    </p>
+                </div>
+            </template>
+            
+            <template x-if="language === 'en'">
+                <div>
+                    <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl leading-tight mb-6">
+                        Navigating complexity—<br>
+                        through science, language, and wild rivers.
+                    </h1>
+                    <p class="text-lg lg:text-xl">
+                        Interdisciplinary researcher at the intersection of applied AI, machine learning, language, and complex systems.
+                    </p>
+                </div>
+            </template>
         </div>
         
         <!-- Animated Scroll Indicator -->
