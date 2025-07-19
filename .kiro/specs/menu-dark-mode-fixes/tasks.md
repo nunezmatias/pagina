@@ -5,7 +5,7 @@
   - Implementar transiciones más suaves entre modos
   - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 5.2_
 
-- [ ] 2. Mejorar la consistencia del menú en modo oscuro
+- [x] 2. Mejorar la consistencia del menú en modo oscuro
   - [x] 2.1 Unificar selectores CSS para el menú en ambos modos
     - Revisar y actualizar los selectores CSS para el menú
     - Asegurar que los estilos sean consistentes entre modos

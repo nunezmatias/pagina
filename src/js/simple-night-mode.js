@@ -147,11 +147,13 @@ class SimpleNightMode {
 
     enableNightMode() {
         document.documentElement.classList.add('night-mode');
+        document.documentElement.classList.add('dark'); // Para compatibilidad con Tailwind
         this.applyNightModeStyles();
     }
 
     disableNightMode() {
         document.documentElement.classList.remove('night-mode');
+        document.documentElement.classList.remove('dark'); // Para compatibilidad con Tailwind
         this.removeNightModeStyles();
     }
 
