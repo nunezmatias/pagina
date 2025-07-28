@@ -768,8 +768,7 @@
         </div>
     </footer>
 
-    <!-- Simple Night Mode -->
-    <script src="./js/simple-night-mode.js"></script>
+    <!-- Dark mode eliminado -->
     
     <!-- Content Loader -->
     <script src="./js/content-loader-bilingual-fixed-clean.js?v=3"></script>
@@ -954,65 +953,7 @@
             }, 4000);
         }
         
-        // 🌙 MODO NOCTURNO/DIURNO
-        function initThemeToggle() {
-            // Crear botón de tema
-            const themeToggle = document.createElement('button');
-            themeToggle.id = 'theme-toggle';
-            themeToggle.className = 'fixed bottom-4 right-4 bg-accent text-white p-3 rounded-full shadow-lg hover:bg-accent-light transition-all duration-300 z-40';
-            themeToggle.innerHTML = `
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                </svg>
-            `;
-            
-            document.body.appendChild(themeToggle);
-            
-            // Manejar click
-            themeToggle.addEventListener('click', toggleTheme);
-            
-            // Cargar tema guardado
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            if (savedTheme === 'dark') {
-                enableDarkMode();
-            }
-        }
-        
-        function toggleTheme() {
-            const isDark = document.documentElement.classList.contains('dark');
-            
-            if (isDark) {
-                disableDarkMode();
-            } else {
-                enableDarkMode();
-            }
-        }
-        
-        function enableDarkMode() {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
-            
-            // Actualizar icono
-            const toggle = document.getElementById('theme-toggle');
-            toggle.innerHTML = `
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                </svg>
-            `;
-        }
-        
-        function disableDarkMode() {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
-            
-            // Actualizar icono
-            const toggle = document.getElementById('theme-toggle');
-            toggle.innerHTML = `
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-                </svg>
-            `;
-        }
+        // Dark mode eliminado completamente
         
         // 🔗 FUNCIÓN PARA VER MENSAJES (ADMIN)
         function viewContactMessages() {
@@ -1023,7 +964,7 @@
         
         // Inicializar cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {
-            initThemeToggle();
+            // Dark mode eliminado
             
             // Comando de consola para ver mensajes
             window.viewMessages = viewContactMessages;
@@ -1031,88 +972,4 @@
         });
     </script>    
 
-    <!-- Estilos para Modo Nocturno -->
-    <style>
-        /* 🌙 MODO NOCTURNO - Estilos para Dark Mode */
-        .dark {
-            color-scheme: dark;
-        }
-
-        .dark body {
-            background-color: #0f172a;
-            color: #e2e8f0;
-        }
-
-        .dark .bg-white {
-            background-color: #1e293b !important;
-        }
-
-        .dark .bg-gray-50 {
-            background-color: #0f172a !important;
-        }
-
-        .dark .text-gray-900 {
-            color: #f1f5f9 !important;
-        }
-
-        .dark .text-gray-800 {
-            color: #e2e8f0 !important;
-        }
-
-        .dark .text-gray-700 {
-            color: #cbd5e1 !important;
-        }
-
-        .dark .text-gray-600 {
-            color: #94a3b8 !important;
-        }
-
-        .dark .border-gray-200 {
-            border-color: #374151 !important;
-        }
-
-        /* Dark mode para páginas de contenido */
-        .dark .cv-content h1,
-        .dark .cv-content h2,
-        .dark .cv-content h3 {
-            color: #60a5fa !important;
-        }
-
-        .dark .cv-content p,
-        .dark .cv-content li {
-            color: #e2e8f0 !important;
-        }
-
-        .dark .cv-content hr {
-            border-color: #374151 !important;
-        }
-
-        /* Dark mode para tarjetas Pinterest */
-        .dark .pinterest-card .bg-gradient-to-br {
-            background: linear-gradient(to bottom right, #1e293b, #334155, #475569) !important;
-        }
-
-        .dark .pinterest-card {
-            background-color: #1e293b !important;
-            border: 1px solid #374151;
-        }
-
-        /* Dark mode para formularios */
-        .dark input,
-        .dark textarea {
-            background-color: #1e293b !important;
-            border-color: #374151 !important;
-            color: #e2e8f0 !important;
-        }
-
-        .dark input:focus,
-        .dark textarea:focus {
-            border-color: #60a5fa !important;
-            ring-color: #60a5fa !important;
-        }
-
-        /* Transiciones suaves para cambio de tema */
-        * {
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-        }
-    </style>
+    <!-- Dark mode eliminado completamente -->

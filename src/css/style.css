@@ -19,13 +19,4 @@
             }
         }
 
-        /* ELIMINAR línea decorativa en modo oscuro */
-        .night-mode .section-title::after,
-        .night-mode h1::after,
-        .night-mode h2::after,
-        .night-mode h3::after {
-            display: none !important;
-            content: none !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-        }
+        /* Dark mode eliminado - CSS limpio */
