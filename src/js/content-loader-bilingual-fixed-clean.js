@@ -321,7 +321,7 @@ class BilingualContentLoader {
     // Agregar efecto de brillo al hover
     addHoverGlow(card) {
         const glowElement = document.createElement('div');
-        glowElement.className = 'hover-glow absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-xl blur opacity-75 animate-pulse';
+        glowElement.className = 'hover-glow absolute -inset-1 bg-gradient-to-r from-teal-500 to-green-500 rounded-xl blur opacity-75 animate-pulse';
         glowElement.style.zIndex = '-1';
         card.style.position = 'relative';
         card.insertBefore(glowElement, card.firstChild);
@@ -439,21 +439,21 @@ class BilingualContentLoader {
     getGradientForCategory(category, type) {
         const gradients = {
             // Projects
-            'Physics': 'bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700',
-            'AI': 'bg-gradient-to-br from-emerald-500 via-teal-600 to-cyan-700',
-            'Linguistics': 'bg-gradient-to-br from-rose-500 via-pink-600 to-purple-700',
-            'Data Science': 'bg-gradient-to-br from-orange-500 via-red-600 to-pink-700',
-            
+            'Physics': 'bg-gradient-to-br from-green-700 via-teal-800 to-gray-900',
+            'AI': 'bg-gradient-to-br from-emerald-600 via-teal-700 to-gray-800',
+            'Linguistics': 'bg-gradient-to-br from-emerald-700 via-green-800 to-gray-900',
+            'Data Science': 'bg-gradient-to-br from-green-600 via-emerald-700 to-teal-800',
+
             // Writing
             'Adventure': 'bg-gradient-to-br from-green-500 via-emerald-600 to-teal-700',
-            'Philosophy': 'bg-gradient-to-br from-violet-500 via-purple-600 to-indigo-700',
-            'Technology': 'bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-700',
-            'Science': 'bg-gradient-to-br from-amber-500 via-orange-600 to-red-700',
-            
+            'Philosophy': 'bg-gradient-to-br from-teal-700 via-emerald-800 to-gray-900',
+            'Technology': 'bg-gradient-to-br from-emerald-600 via-teal-700 to-gray-800',
+            'Science': 'bg-gradient-to-br from-green-600 via-emerald-700 to-teal-800',
+
             // Default
             'General': 'bg-gradient-to-br from-gray-500 via-slate-600 to-gray-700'
         };
-        
+
         return gradients[category] || gradients['General'];
     }
 
