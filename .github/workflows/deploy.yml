@@ -3,7 +3,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - pinerest # Change this to your default branch if it's different
+      - main
+      - pinerest
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
