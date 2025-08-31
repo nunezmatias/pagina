@@ -59,8 +59,10 @@ class BilingualContentLoader {
 
         for (const baseFilename of availableProjects) {
             try {
-                const esResponse = await fetch(`./content/projects/${baseFilename}_ES.md`);
-                const enResponse = await fetch(`./content/projects/${baseFilename}_EN.md`);
+                const esFilePath = `./content/projects/${baseFilename}_ES.md`;
+                const enFilePath = `./content/projects/${baseFilename}_EN.md`;
+                const esResponse = await fetch(esFilePath);
+                const enResponse = await fetch(enFilePath);
                 
                 if (esResponse.ok && enResponse.ok) {
                     const esContent = await esResponse.text();
@@ -69,8 +71,8 @@ class BilingualContentLoader {
                     const config = projectConfig[baseFilename] || { icon: 'default', category: 'General' };
                     
                     const project = {
-                        es: this.parseMarkdown(esContent),
-                        en: this.parseMarkdown(enContent),
+                        es: this.parseMarkdown(esContent, esFilePath),
+                        en: this.parseMarkdown(enContent, enFilePath),
                         type: 'project',
                         icon: config.icon,
                         category: config.category,
@@ -98,8 +100,10 @@ class BilingualContentLoader {
 
         for (const baseFilename of availableArticles) {
             try {
-                const esResponse = await fetch(`./content/writing/${baseFilename}_ES.md`);
-                const enResponse = await fetch(`./content/writing/${baseFilename}_EN.md`);
+                const esFilePath = `./content/writing/${baseFilename}_ES.md`;
+                const enFilePath = `./content/writing/${baseFilename}_EN.md`;
+                const esResponse = await fetch(esFilePath);
+                const enResponse = await fetch(enFilePath);
                 
                 if (esResponse.ok && enResponse.ok) {
                     const esContent = await esResponse.text();
@@ -108,8 +112,8 @@ class BilingualContentLoader {
                     const config = articleConfig[baseFilename] || { icon: 'default', category: 'General' };
                     
                     const article = {
-                        es: this.parseMarkdown(esContent),
-                        en: this.parseMarkdown(enContent),
+                        es: this.parseMarkdown(esContent, esFilePath),
+                        en: this.parseMarkdown(enContent, enFilePath),
                         type: 'article',
                         icon: config.icon,
                         category: config.category,
@@ -171,7 +175,7 @@ class BilingualContentLoader {
         return Array.from(discoveredFiles);
     }
 
-    parseMarkdown(content) {
+    parseMarkdown(content, filePath) {
         const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
         const frontmatter = {};
 
@@ -183,7 +187,7 @@ class BilingualContentLoader {
                     const key = line.substring(0, colonIndex).trim();
                     let value = line.substring(colonIndex + 1).trim();
                     if ((value.startsWith('"') && value.endsWith('"')) ||
-                        (value.startsWith("'") && value.endsWith("'"))) {
+                        (value.startsWith('"') && value.endsWith('"'))) {
                         value = value.slice(1, -1);
                     }
                     frontmatter[key] = value;
@@ -192,15 +196,16 @@ class BilingualContentLoader {
         }
 
         const markdownContent = content.replace(/^---\n[\s\S]*?\n---\n/, '');
+        const basePath = filePath.substring(0, filePath.lastIndexOf('/'));
 
         return {
             ...frontmatter,
-            content: this.markdownToHtml(markdownContent),
+            content: this.markdownToHtml(markdownContent, basePath),
             rawContent: markdownContent
         };
     }
 
-    markdownToHtml(markdown) {
+    markdownToHtml(markdown, basePath) {
         return markdown
             .replace(/^# (.*$)/gm, '<h1 class="text-4xl font-serif font-bold mb-6 mt-8 text-gray-900">$1</h1>')
             .replace(/^## (.*$)/gm, '<h2 class="text-3xl font-serif font-semibold mb-4 mt-8 text-gray-800">$1</h2>')
@@ -209,12 +214,34 @@ class BilingualContentLoader {
             .replace(/\*(.*?)\*/g, '<em class="italic text-gray-700">$1</em>')
             .replace(/`(.*?)`/g, '<code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono">$1</code>')
             .replace(/^[-*+] (.*$)/gm, '<li class="mb-2 text-gray-700 ml-4">$1</li>')
+            .replace(/\[embed:([^\]]+)\]/g, (match, content) => {
+                const parts = content.split(',').map(part => part.trim());
+                const url = parts[0];
+                let width = '100%';
+                let height = '800px';
+
+                for (let i = 1; i < parts.length; i++) {
+                    const attr = parts[i].split('=');
+                    if (attr.length === 2) {
+                        const key = attr[0].trim();
+                        const value = attr[1].trim();
+                        if (key === 'width') {
+                            width = value;
+                        } else if (key === 'height') {
+                            height = value;
+                        }
+                    }
+                }
+
+                const src = url.startsWith('http') ? url : `${basePath}/${url}`;
+                return `<iframe src="${src}" width="${width}" height="${height}" frameborder="0" allowfullscreen></iframe>`;
+            })
             .split('\n\n')
             .map(paragraph => {
                 const trimmed = paragraph.trim();
                 if (!trimmed) return '';
                 
-                if (trimmed.includes('<h') || trimmed.includes('<li')) {
+                if (trimmed.includes('<h') || trimmed.includes('<li') || trimmed.includes('<iframe')) {
                     return trimmed.includes('<li') ? 
                         `<ul class="list-disc list-inside mb-6 space-y-2">${trimmed}</ul>` : 
                         trimmed;
