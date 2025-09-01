@@ -1,0 +1,25 @@
+{
+  "directory": "src/content/writing",
+  "timestamp": "2025-07-17T04:48:23.997Z",
+  "totalFiles": 11,
+  "bilingualFiles": [
+    "ai-epistemological-lens",
+    "felix",
+    "language-cognitive-tech",
+    "rivers-complex-systems",
+    "rivers2-complex-systems"
+  ],
+  "allFiles": [
+    "ai-epistemological-lens_EN.md",
+    "ai-epistemological-lens_ES.md",
+    "directory-listing.json",
+    "felix_EN.md",
+    "felix_ES.md",
+    "language-cognitive-tech_EN.md",
+    "language-cognitive-tech_ES.md",
+    "rivers-complex-systems_EN.md",
+    "rivers-complex-systems_ES.md",
+    "rivers2-complex-systems_EN.md",
+    "rivers2-complex-systems_ES.md"
+  ]
+}
