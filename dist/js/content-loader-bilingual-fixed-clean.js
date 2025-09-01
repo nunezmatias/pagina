@@ -200,9 +200,9 @@ class BilingualContentLoader {
         
         // Lista actualizada de archivos conocidos
         const knownFiles = [
-            'remote-sensing', 'chatbot-ela-static', 'chatbot-ela', 
-            'linguistic-reconstruction', 'un-data-clustering',
-            'quantum-computing', 'blockchain-analytics'
+            'blockchain-analytics', 'chatbot-ela-static', 'chatbot-ela', 
+            'linguistic-reconstruction', 'quantum-computing', 'remote-sensing', 
+            'un-data-clustering'
         ];
         
         const discoveredFiles = [];
@@ -249,9 +249,9 @@ class BilingualContentLoader {
 
         const knownFiles = {
             './content/projects/': [
-                'remote-sensing', 'chatbot-ela-static', 'chatbot-ela', 
-                'linguistic-reconstruction', 'un-data-clustering',
-                'quantum-computing', 'blockchain-analytics'
+                'blockchain-analytics', 'chatbot-ela-static', 'chatbot-ela', 
+                'linguistic-reconstruction', 'quantum-computing', 'remote-sensing', 
+                'un-data-clustering'
             ],
             './content/writing/': [
                 'felix', 'ai-epistemological-lens', 

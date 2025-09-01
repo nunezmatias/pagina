@@ -1,16 +1,20 @@
 {
   "directory": "src/content/projects",
-  "timestamp": "2025-07-17T04:48:23.994Z",
-  "totalFiles": 16,
+  "timestamp": "2025-01-09T12:00:00.000Z",
+  "totalFiles": 20,
   "bilingualFiles": [
+    "blockchain-analytics",
     "chatbot-ela-static",
     "chatbot-ela",
     "linguistic-reconstruction",
+    "quantum-computing",
     "remote-sensing",
     "un-data-clustering"
   ],
   "allFiles": [
     "ai-epistemological-lens_EN.md",
+    "blockchain-analytics_EN.md",
+    "blockchain-analytics_ES.md",
     "chatbot-ela-static_EN.md",
     "chatbot-ela-static_ES.md",
     "chatbot-ela_EN.md",
@@ -20,6 +24,8 @@
     "language-cognitive-tech_EN.md",
     "linguistic-reconstruction_EN.md",
     "linguistic-reconstruction_ES.md",
+    "quantum-computing_EN.md",
+    "quantum-computing_ES.md",
     "remote-sensing-bilingual.md",
     "remote-sensing_EN.md",
     "remote-sensing_ES.md",
