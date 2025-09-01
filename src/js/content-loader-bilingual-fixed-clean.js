@@ -47,7 +47,7 @@ class BilingualContentLoader {
     }
 
     async loadProjectsFromFiles() {
-        const availableProjects = await this.detectBilingualFiles('./content/projects/');
+        const availableProjects = await this.detectBilingualFiles('/pagina/content/projects/'); // Changed path
         
         const projectConfig = {
             'remote-sensing': { icon: 'satellite', category: 'Physics' },
@@ -59,8 +59,8 @@ class BilingualContentLoader {
 
         for (const baseFilename of availableProjects) {
             try {
-                const esFilePath = `./content/projects/${baseFilename}_ES.md`;
-                const enFilePath = `./content/projects/${baseFilename}_EN.md`;
+                const esFilePath = '/pagina/content/projects/${baseFilename}_ES.md'; // Changed path
+                const enFilePath = '/pagina/content/projects/${baseFilename}_EN.md'; // Changed path
                 const esResponse = await fetch(esFilePath);
                 const enResponse = await fetch(enFilePath);
                 
@@ -88,7 +88,7 @@ class BilingualContentLoader {
     }
 
     async loadArticlesFromFiles() {
-        const availableArticles = await this.detectBilingualFiles('./content/writing/');
+        const availableArticles = await this.detectBilingualFiles('/pagina/content/writing/'); // Changed path
         
         const articleConfig = {
             'felix': { icon: 'water', category: 'Adventure' },
@@ -100,8 +100,8 @@ class BilingualContentLoader {
 
         for (const baseFilename of availableArticles) {
             try {
-                const esFilePath = `./content/writing/${baseFilename}_ES.md`;
-                const enFilePath = `./content/writing/${baseFilename}_EN.md`;
+                const esFilePath = '/pagina/content/writing/${baseFilename}_ES.md'; // Changed path
+                const enFilePath = '/pagina/content/writing/${baseFilename}_EN.md'; // Changed path
                 const esResponse = await fetch(esFilePath);
                 const enResponse = await fetch(enFilePath);
                 
