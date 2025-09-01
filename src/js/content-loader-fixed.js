@@ -16,7 +16,9 @@ class SimpleContentLoader {
     }
 
     async init() {
-        console.log('Iniciando carga simple...');
+        console.log('🚀 Iniciando carga simple...');
+        console.log('🌍 Entorno detectado:', window.location.hostname);
+        console.log('📁 Base path:', this.basePath);
         
         // Limpiar contenedores primero
         this.clearContainers();
@@ -24,11 +26,16 @@ class SimpleContentLoader {
         // Cargar contenido
         await this.loadContent();
         
+        console.log('📊 Proyectos cargados:', this.projects.length);
+        console.log('📝 Artículos cargados:', this.articles.length);
+        
         // Renderizar
         this.render();
         
         // Configurar eventos de idioma
         this.setupLanguageEvents();
+        
+        console.log('✅ Inicialización completa');
     }
 
     clearContainers() {
@@ -81,10 +88,15 @@ class SimpleContentLoader {
         for (const projectInfo of projectFiles) {
             try {
                 // Cargar ambos idiomas
-                const esResponse = await fetch(`${this.basePath}/content/projects/${projectInfo.file}_ES.md`);
-                const enResponse = await fetch(`${this.basePath}/content/projects/${projectInfo.file}_EN.md`);
+                const esUrl = `${this.basePath}/content/projects/${projectInfo.file}_ES.md`;
+                const enUrl = `${this.basePath}/content/projects/${projectInfo.file}_EN.md`;
+                
+                console.log('🔍 Intentando cargar:', esUrl);
+                const esResponse = await fetch(esUrl);
+                const enResponse = await fetch(enUrl);
                 
                 if (esResponse.ok && enResponse.ok) {
+                    console.log('✅ Ambos idiomas cargados para:', projectInfo.file);
                     const esContent = await esResponse.text();
                     const enContent = await enResponse.text();
                     
@@ -95,6 +107,7 @@ class SimpleContentLoader {
                     project.filename = projectInfo.file;
                     this.projects.push(project);
                 } else if (esResponse.ok) {
+                    console.log('⚠️ Solo español disponible para:', projectInfo.file);
                     // Fallback solo español
                     const content = await esResponse.text();
                     const project = this.parseMarkdown(content);
@@ -103,6 +116,8 @@ class SimpleContentLoader {
                     project.category = projectInfo.category;
                     project.filename = projectInfo.file;
                     this.projects.push(project);
+                } else {
+                    console.log('❌ No se pudo cargar:', projectInfo.file, 'ES:', esResponse.status, 'EN:', enResponse.status);
                 }
             } catch (error) {
                 console.error(`Error cargando ${projectInfo.file}:`, error);
