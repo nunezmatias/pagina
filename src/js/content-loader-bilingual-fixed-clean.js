@@ -4,7 +4,33 @@ class BilingualContentLoader {
         this.projects = [];
         this.articles = [];
         this.currentLanguage = 'es';
+        this.basePath = this.detectBasePath();
         this.init();
+    }
+
+    // Detectar automáticamente si estamos en GitHub Pages o local
+    detectBasePath() {
+        const hostname = window.location.hostname;
+        const pathname = window.location.pathname;
+        
+        // Si estamos en GitHub Pages
+        if (hostname.includes('github.io')) {
+            // Extraer el nombre del repositorio del pathname
+            const pathParts = pathname.split('/').filter(part => part);
+            if (pathParts.length > 0) {
+                return `/${pathParts[0]}`;
+            }
+        }
+        
+        // Para desarrollo local o servidor personalizado
+        return '';
+    }
+
+    // Construir URL completa basada en el entorno
+    buildContentUrl(relativePath) {
+        // Remover ./ del inicio si existe
+        const cleanPath = relativePath.replace(/^\.\//, '');
+        return `${this.basePath}/${cleanPath}`;
     }
 
     async init() {
@@ -59,8 +85,8 @@ class BilingualContentLoader {
 
         for (const baseFilename of availableProjects) {
             try {
-                const esFilePath = `./content/projects/${baseFilename}_ES.md`;
-                const enFilePath = `./content/projects/${baseFilename}_EN.md`;
+                const esFilePath = this.buildContentUrl(`content/projects/${baseFilename}_ES.md`);
+                const enFilePath = this.buildContentUrl(`content/projects/${baseFilename}_EN.md`);
                 const esResponse = await fetch(esFilePath);
                 const enResponse = await fetch(enFilePath);
                 
@@ -100,8 +126,8 @@ class BilingualContentLoader {
 
         for (const baseFilename of availableArticles) {
             try {
-                const esFilePath = `./content/writing/${baseFilename}_ES.md`;
-                const enFilePath = `./content/writing/${baseFilename}_EN.md`;
+                const esFilePath = this.buildContentUrl(`content/writing/${baseFilename}_ES.md`);
+                const enFilePath = this.buildContentUrl(`content/writing/${baseFilename}_EN.md`);
                 const esResponse = await fetch(esFilePath);
                 const enResponse = await fetch(enFilePath);
                 
@@ -132,7 +158,8 @@ class BilingualContentLoader {
         console.log(`Scanning for bilingual files in: ${folderPath}`);
         
         try {
-            const directoryListResponse = await fetch(`${folderPath}directory-listing.json`);
+            const directoryListUrl = this.buildContentUrl(`${folderPath.replace('./', '')}directory-listing.json`);
+            const directoryListResponse = await fetch(directoryListUrl);
             if (directoryListResponse.ok) {
                 const directoryData = await directoryListResponse.json();
                 const bilingualFiles = directoryData.bilingualFiles || [];
@@ -160,8 +187,8 @@ class BilingualContentLoader {
         
         for (const basename of known) {
             try {
-                const esResponse = await fetch(`${folderPath}${basename}_ES.md`);
-                const enResponse = await fetch(`${folderPath}${basename}_EN.md`);
+                const esResponse = await fetch(this.buildContentUrl(`${folderPath.replace('./', '')}${basename}_ES.md`));
+                const enResponse = await fetch(this.buildContentUrl(`${folderPath.replace('./', '')}${basename}_EN.md`));
                 
                 if (esResponse.ok && enResponse.ok) {
                     discoveredFiles.add(basename);
@@ -540,7 +567,8 @@ async function openCV(language) {
         const suffix = language === 'es' ? '_ES' : '_EN';
         const filename = `cv${suffix}.md`;
         
-        const response = await fetch(`./content/${filename}`);
+        const cvUrl = bilingualLoader.buildContentUrl(`content/${filename}`);
+        const response = await fetch(cvUrl);
         
         if (!response.ok) {
             throw new Error(`Error loading ${filename}`);
@@ -714,7 +742,8 @@ async function openBilingualContent(baseFilename, type, language) {
         const suffix = language === 'es' ? '_ES' : '_EN';
         const filename = `${baseFilename}${suffix}.md`;
         
-        const response = await fetch(`./content/${folder}/${filename}`);
+        const contentUrl = bilingualLoader.buildContentUrl(`content/${folder}/${filename}`);
+        const response = await fetch(contentUrl);
         
         if (!response.ok) {
             throw new Error(`Error loading ${filename}`);
