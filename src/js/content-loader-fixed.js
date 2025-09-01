@@ -4,7 +4,15 @@ class SimpleContentLoader {
         this.projects = [];
         this.articles = [];
         this.currentLanguage = 'es';
+        // Detectar entorno para rutas correctas
+        this.basePath = this.getBasePath();
         this.init();
+    }
+
+    getBasePath() {
+        // Detectar si estamos en GitHub Pages
+        const isGitHubPages = window.location.hostname === 'nunezmatias.github.io';
+        return isGitHubPages ? '/pagina' : '.';
     }
 
     async init() {
@@ -73,8 +81,8 @@ class SimpleContentLoader {
         for (const projectInfo of projectFiles) {
             try {
                 // Cargar ambos idiomas
-                const esResponse = await fetch(`./content/projects/${projectInfo.file}_ES.md`);
-                const enResponse = await fetch(`./content/projects/${projectInfo.file}_EN.md`);
+                const esResponse = await fetch(`${this.basePath}/content/projects/${projectInfo.file}_ES.md`);
+                const enResponse = await fetch(`${this.basePath}/content/projects/${projectInfo.file}_EN.md`);
                 
                 if (esResponse.ok && enResponse.ok) {
                     const esContent = await esResponse.text();
@@ -113,8 +121,8 @@ class SimpleContentLoader {
         for (const articleInfo of articleFiles) {
             try {
                 // Cargar ambos idiomas
-                const esResponse = await fetch(`./content/${articleInfo.file}_ES.md`);
-                const enResponse = await fetch(`./content/${articleInfo.file}_EN.md`);
+                const esResponse = await fetch(`${this.basePath}/content/${articleInfo.file}_ES.md`);
+                const enResponse = await fetch(`${this.basePath}/content/${articleInfo.file}_EN.md`);
                 
                 if (esResponse.ok && enResponse.ok) {
                     const esContent = await esResponse.text();
@@ -408,11 +416,15 @@ async function openFullContent(filename, type, language) {
         const folder = type === 'project' ? 'projects' : '';
         const languageSuffix = language.toUpperCase();
         
+        // Detectar entorno para rutas correctas
+        const isGitHubPages = window.location.hostname === 'nunezmatias.github.io';
+        const basePath = isGitHubPages ? '/pagina' : '.';
+        
         let filePath;
         if (type === 'project') {
-            filePath = `./content/${folder}/${filename}_${languageSuffix}.md`;
+            filePath = `${basePath}/content/${folder}/${filename}_${languageSuffix}.md`;
         } else {
-            filePath = `./content/${filename}_${languageSuffix}.md`;
+            filePath = `${basePath}/content/${filename}_${languageSuffix}.md`;
         }
         
         const response = await fetch(filePath);
