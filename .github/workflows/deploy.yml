@@ -50,3 +50,5 @@ jobs:
         uses: actions/deploy-pages@v3
         with:
           artifact_name: github-pages # Explicitly specify the artifact name
+
+# Added a comment to force re-indexing
