@@ -39,4 +39,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
+          publish_branch: gh-pages # Explicitly set publish branch
           force_orphan: true
+          allow_empty_commit: true # Allow empty commits
