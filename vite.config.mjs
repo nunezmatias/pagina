@@ -23,6 +23,10 @@ export default defineConfig(({ command, mode }) => {
           {
             src: 'content/**/*',
             dest: 'content'
+          },
+          {
+            src: 'js/**/*',
+            dest: 'js'
           }
         ]
       })
