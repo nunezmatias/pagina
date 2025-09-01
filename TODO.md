@@ -56,10 +56,10 @@ El proceso de despliegue está automatizado con GitHub Actions.
     ```
     (Esto ya se ha hecho).
 2.  **Configura GitHub Pages:**
-    *   Ve a la configuración de tu repositorio en GitHub.
-    *   Navega a la sección "Pages".
-    *   Selecciona la rama `gh-pages` como la fuente de tu sitio web.
-    *   Guarda los cambios.
+    *   Go to your repository's settings on GitHub.
+    *   Navigate to the "Pages" section.
+    *   Select the `gh-pages` branch as the source for your website.
+    *   Save the changes.
 
 ### 3.2. Flujo de Trabajo Regular
 
@@ -73,3 +73,26 @@ El proceso de despliegue está automatizado con GitHub Actions.
     git push origin pinerest
     ```
     Esto activará el flujo de trabajo de GitHub Actions, que construirá y desplegará automáticamente tu sitio. Los cambios deberían estar en vivo en unos minutos.
+
+## 4. Solución de Problemas: Contenido Faltante en GitHub Pages
+
+**Problema:** El sitio web carga, pero las tarjetas de contenido no aparecen. En la consola, se ven errores 404 para `directory-listing.json`. Localmente, todo funciona.
+
+**Causa Principal:** Los archivos `directory-listing.json` (necesarios para el auto-descubrimiento de contenido) no se están incluyendo correctamente en el despliegue final de GitHub Pages.
+
+**Plan de Acción (Pasos Clave):**
+
+1.  **Asegurar que `directory-listing.json` se genere y copie correctamente:**
+    *   Modificar `generate-directory-listing.js` para que guarde los JSON en `src/public/content/`.
+    *   Configurar `vite.config.js` para que use `src/public` como directorio público.
+    *   Eliminar el paso `Copy Content to Dist` de `deploy.yml` (Vite lo hará automáticamente).
+
+2.  **Ajustar rutas de carga de contenido:**
+    *   Verificar que `BilingualContentLoader` (en `src/js/content-loader-bilingual-fixed-clean.js`) use las rutas correctas para GitHub Pages (ej. `/pagina/content/projects/`).
+
+**Detalle de Modificaciones:**
+
+*   **`generate-directory-listing.js`:** Cambiar la ruta de salida de los JSON a `src/public/content/`.
+*   **`vite.config.js`:** Añadir `publicDir: 'src/public'` dentro de `defineConfig`.
+*   **`src/js/content-loader-bilingual-fixed-clean.js`:** Asegurar que las llamadas `fetch` a los archivos `.json` y `.md` usen la ruta base correcta (ej. `/pagina/content/projects/`).
+*   **`.github/workflows/deploy.yml`:** Eliminar el paso `Copy Content to Dist`.

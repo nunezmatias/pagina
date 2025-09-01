@@ -89,10 +89,13 @@ class BilingualContentLoader {
 
         for (const baseFilename of availableProjects) {
             try {
+                console.log(`🔄 Processing project: ${baseFilename}`);
                 const esFilePath = this.buildContentUrl(`content/projects/${baseFilename}_ES.md`);
                 const enFilePath = this.buildContentUrl(`content/projects/${baseFilename}_EN.md`);
                 const esResponse = await fetch(esFilePath);
                 const enResponse = await fetch(enFilePath);
+                
+                console.log(`📁 Files status for ${baseFilename}: ES=${esResponse.ok}, EN=${enResponse.ok}`);
                 
                 if (esResponse.ok && enResponse.ok) {
                     const esContent = await esResponse.text();
@@ -110,12 +113,18 @@ class BilingualContentLoader {
                         baseFilename: baseFilename
                     };
                     
+                    console.log(`✅ Successfully loaded project: ${baseFilename} with icon: ${config.icon}`);
                     this.projects.push(project);
+                } else {
+                    console.log(`❌ Failed to load files for ${baseFilename}`);
                 }
             } catch (error) {
                 console.error(`Error cargando ${baseFilename}:`, error);
             }
         }
+        
+        console.log(`🎯 Total projects loaded: ${this.projects.length}`);
+        console.log('📋 Projects list:', this.projects.map(p => p.baseFilename));
     }
 
     async loadArticlesFromFiles() {
