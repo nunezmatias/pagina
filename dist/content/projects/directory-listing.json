@@ -1,0 +1,30 @@
+{
+  "directory": "src/content/projects",
+  "timestamp": "2025-07-17T04:48:23.994Z",
+  "totalFiles": 16,
+  "bilingualFiles": [
+    "chatbot-ela-static",
+    "chatbot-ela",
+    "linguistic-reconstruction",
+    "remote-sensing",
+    "un-data-clustering"
+  ],
+  "allFiles": [
+    "ai-epistemological-lens_EN.md",
+    "chatbot-ela-static_EN.md",
+    "chatbot-ela-static_ES.md",
+    "chatbot-ela_EN.md",
+    "chatbot-ela_ES.md",
+    "directory-listing.json",
+    "felix_EN.md",
+    "language-cognitive-tech_EN.md",
+    "linguistic-reconstruction_EN.md",
+    "linguistic-reconstruction_ES.md",
+    "remote-sensing-bilingual.md",
+    "remote-sensing_EN.md",
+    "remote-sensing_ES.md",
+    "rivers-complex-systems_EN.md",
+    "un-data-clustering_EN.md",
+    "un-data-clustering_ES.md"
+  ]
+}

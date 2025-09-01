@@ -63,18 +63,32 @@ class SimpleContentLoader {
 
     async loadProjectsFromFiles() {
         const projectFiles = [
-            { file: 'chatbot-ela-static.md', icon: 'chat', category: 'AI' },
-            { file: 'linguistic-reconstruction.md', icon: 'language', category: 'Linguistics' },
-            { file: 'un-data-clustering.md', icon: 'chart', category: 'Data Science' },
-            { file: 'remote-sensing.md', icon: 'satellite', category: 'Physics' },
-            { file: 'chatbot-ela.md', icon: 'accessibility', category: 'AI' }
+            { file: 'chatbot-ela-static', icon: 'chat', category: 'AI' },
+            { file: 'linguistic-reconstruction', icon: 'language', category: 'Linguistics' },
+            { file: 'un-data-clustering', icon: 'chart', category: 'Data Science' },
+            { file: 'remote-sensing', icon: 'satellite', category: 'Physics' },
+            { file: 'chatbot-ela', icon: 'accessibility', category: 'AI' }
         ];
 
         for (const projectInfo of projectFiles) {
             try {
-                const response = await fetch(`./content/projects/${projectInfo.file}`);
-                if (response.ok) {
-                    const content = await response.text();
+                // Cargar ambos idiomas
+                const esResponse = await fetch(`./content/projects/${projectInfo.file}_ES.md`);
+                const enResponse = await fetch(`./content/projects/${projectInfo.file}_EN.md`);
+                
+                if (esResponse.ok && enResponse.ok) {
+                    const esContent = await esResponse.text();
+                    const enContent = await enResponse.text();
+                    
+                    const project = this.parseBilingualMarkdown(esContent, enContent);
+                    project.type = 'project';
+                    project.icon = projectInfo.icon;
+                    project.category = projectInfo.category;
+                    project.filename = projectInfo.file;
+                    this.projects.push(project);
+                } else if (esResponse.ok) {
+                    // Fallback solo español
+                    const content = await esResponse.text();
                     const project = this.parseMarkdown(content);
                     project.type = 'project';
                     project.icon = projectInfo.icon;
@@ -90,17 +104,31 @@ class SimpleContentLoader {
 
     async loadArticlesFromFiles() {
         const articleFiles = [
-            { file: 'ai-epistemological-lens.md', icon: 'brain', category: 'Philosophy' },
-            { file: 'felix.md', icon: 'water', category: 'Adventure' },
-            { file: 'rivers-complex-systems.md', icon: 'flow', category: 'Science' },
-            { file: 'language-cognitive-tech.md', icon: 'mind', category: 'Technology' }
+            { file: 'ai-epistemological-lens', icon: 'brain', category: 'Philosophy' },
+            { file: 'felix', icon: 'water', category: 'Adventure' },
+            { file: 'rivers-complex-systems', icon: 'flow', category: 'Science' },
+            { file: 'language-cognitive-tech', icon: 'mind', category: 'Technology' }
         ];
 
         for (const articleInfo of articleFiles) {
             try {
-                const response = await fetch(`./content/writing/${articleInfo.file}`);
-                if (response.ok) {
-                    const content = await response.text();
+                // Cargar ambos idiomas
+                const esResponse = await fetch(`./content/${articleInfo.file}_ES.md`);
+                const enResponse = await fetch(`./content/${articleInfo.file}_EN.md`);
+                
+                if (esResponse.ok && enResponse.ok) {
+                    const esContent = await esResponse.text();
+                    const enContent = await enResponse.text();
+                    
+                    const article = this.parseBilingualMarkdown(esContent, enContent);
+                    article.type = 'article';
+                    article.icon = articleInfo.icon;
+                    article.category = articleInfo.category;
+                    article.filename = articleInfo.file;
+                    this.articles.push(article);
+                } else if (esResponse.ok) {
+                    // Fallback solo español
+                    const content = await esResponse.text();
                     const article = this.parseMarkdown(content);
                     article.type = 'article';
                     article.icon = articleInfo.icon;
@@ -146,6 +174,31 @@ class SimpleContentLoader {
             ...translatedContent,
             content: this.markdownToHtml(markdownContent),
             rawContent: markdownContent
+        };
+    }
+
+    parseBilingualMarkdown(esContent, enContent) {
+        // Parsear contenido español
+        const esParsed = this.parseMarkdown(esContent);
+        const enParsed = this.parseMarkdown(enContent);
+
+        return {
+            title: {
+                es: esParsed.title?.es || esParsed.title || 'Título',
+                en: enParsed.title?.en || enParsed.title || 'Title'
+            },
+            excerpt: {
+                es: esParsed.excerpt?.es || esParsed.excerpt || this.extractExcerpt(esContent),
+                en: enParsed.excerpt?.en || enParsed.excerpt || this.extractExcerpt(enContent)
+            },
+            content: {
+                es: esParsed.content,
+                en: enParsed.content
+            },
+            rawContent: {
+                es: esParsed.rawContent,
+                en: enParsed.rawContent
+            }
         };
     }
 
@@ -351,12 +404,21 @@ class SimpleContentLoader {
 // Función global para abrir contenido completo en página nueva
 async function openFullContent(filename, type, language) {
     try {
-        // Cargar el contenido completo del archivo
-        const folder = type === 'project' ? 'projects' : 'writing';
-        const response = await fetch(`./content/${folder}/${filename}`);
+        // Determinar la ruta correcta según el tipo
+        const folder = type === 'project' ? 'projects' : '';
+        const languageSuffix = language.toUpperCase();
+        
+        let filePath;
+        if (type === 'project') {
+            filePath = `./content/${folder}/${filename}_${languageSuffix}.md`;
+        } else {
+            filePath = `./content/${filename}_${languageSuffix}.md`;
+        }
+        
+        const response = await fetch(filePath);
         
         if (!response.ok) {
-            throw new Error(`Error loading ${filename}`);
+            throw new Error(`Error loading ${filePath}`);
         }
         
         const content = await response.text();
