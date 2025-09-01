@@ -884,8 +884,9 @@ function translateMarkdownContent(markdownContent) {
     }
     
     return translatedContent;
-}/
-/ Function to format paragraphs with uniform length and proper indentation
+}
+
+// Function to format paragraphs with uniform length and proper indentation
 function formatParagraphs(htmlContent) {
     // Enhanced paragraph formatting with better typography
     return htmlContent.replace(/<p class="mb-4 text-gray-700 leading-relaxed">(.*?)<\/p>/g, (match, content) => {
