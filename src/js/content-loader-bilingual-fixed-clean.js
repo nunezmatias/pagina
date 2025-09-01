@@ -73,14 +73,18 @@ class BilingualContentLoader {
     }
 
     async loadProjectsFromFiles() {
-        const availableProjects = await this.detectBilingualFiles('./content/projects/');
+        // 🚀 AUTO-DISCOVERY: Usar API de GitHub para encontrar archivos automáticamente
+        const availableProjects = await this.autoDiscoverProjects();
         
+        // Configuración híbrida: auto-detectar + casos especiales
         const projectConfig = {
+            // Casos especiales con configuración manual
             'remote-sensing': { icon: 'satellite', category: 'Physics' },
             'chatbot-ela-static': { icon: 'chat', category: 'AI' },
             'chatbot-ela': { icon: 'chat', category: 'AI' },
             'linguistic-reconstruction': { icon: 'language', category: 'Linguistics' },
-            'un-data-clustering': { icon: 'chart', category: 'Data Science' }
+            'un-data-clustering': { icon: 'chart', category: 'Data Science' },
+            // Los nuevos archivos se auto-detectarán con configuración inteligente
         };
 
         for (const baseFilename of availableProjects) {
@@ -94,7 +98,8 @@ class BilingualContentLoader {
                     const esContent = await esResponse.text();
                     const enContent = await enResponse.text();
                     
-                    const config = projectConfig[baseFilename] || { icon: 'default', category: 'General' };
+                    // 🧠 Auto-detectar configuración si no está definida manualmente
+                    const config = projectConfig[baseFilename] || this.autoDetectProjectConfig(baseFilename, esContent);
                     
                     const project = {
                         es: this.parseMarkdown(esContent, esFilePath),
@@ -154,6 +159,77 @@ class BilingualContentLoader {
         }
     }
 
+    // 🚀 AUTO-DISCOVERY: Descubrir proyectos automáticamente
+    async autoDiscoverProjects() {
+        // En local, usar fallback directo. En GitHub Pages, intentar API
+        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        
+        if (isLocal) {
+            console.log('🔍 Local environment detected, using fallback detection...');
+            return await this.detectBilingualFilesFallback('./content/projects/');
+        }
+        
+        console.log('🔍 Auto-discovering projects using GitHub API...');
+        
+        try {
+            // Usar GitHub API para obtener lista de archivos
+            const apiUrl = 'https://api.github.com/repos/nunezmatias/pagina/contents/src/content/projects';
+            const response = await fetch(apiUrl);
+            
+            if (response.ok) {
+                const files = await response.json();
+                
+                // Filtrar archivos _ES.md y extraer nombres base
+                const projectFiles = files
+                    .filter(f => f.name.endsWith('_ES.md'))
+                    .map(f => f.name.replace('_ES.md', ''));
+                
+                console.log(`✅ Auto-discovered ${projectFiles.length} projects:`, projectFiles);
+                return projectFiles;
+            }
+        } catch (error) {
+            console.log('⚠️ GitHub API failed, using fallback detection');
+        }
+        
+        // Fallback a detección manual si falla la API
+        return await this.detectBilingualFilesFallback('./content/projects/');
+    }
+
+    async detectBilingualFilesFallback(folderPath) {
+        console.log(`🔍 Using fallback detection for: ${folderPath}`);
+        
+        // Lista actualizada de archivos conocidos
+        const knownFiles = [
+            'remote-sensing', 'chatbot-ela-static', 'chatbot-ela', 
+            'linguistic-reconstruction', 'un-data-clustering',
+            'quantum-computing', 'blockchain-analytics'
+        ];
+        
+        const discoveredFiles = [];
+        
+        for (const basename of knownFiles) {
+            try {
+                const esUrl = this.buildContentUrl(`${folderPath.replace('./', '')}${basename}_ES.md`);
+                const enUrl = this.buildContentUrl(`${folderPath.replace('./', '')}${basename}_EN.md`);
+                
+                const esResponse = await fetch(esUrl);
+                const enResponse = await fetch(enUrl);
+                
+                if (esResponse.ok && enResponse.ok) {
+                    discoveredFiles.push(basename);
+                    console.log(`✅ Verified bilingual content: ${basename}`);
+                } else {
+                    console.log(`⚠️ Missing files for: ${basename} (ES: ${esResponse.status}, EN: ${enResponse.status})`);
+                }
+            } catch (error) {
+                console.log(`❌ Error checking: ${basename}`, error);
+            }
+        }
+        
+        console.log(`🎯 Fallback discovered ${discoveredFiles.length} projects:`, discoveredFiles);
+        return discoveredFiles;
+    }
+
     async detectBilingualFiles(folderPath) {
         console.log(`Scanning for bilingual files in: ${folderPath}`);
         
@@ -174,7 +250,8 @@ class BilingualContentLoader {
         const knownFiles = {
             './content/projects/': [
                 'remote-sensing', 'chatbot-ela-static', 'chatbot-ela', 
-                'linguistic-reconstruction', 'un-data-clustering'
+                'linguistic-reconstruction', 'un-data-clustering',
+                'quantum-computing', 'blockchain-analytics'
             ],
             './content/writing/': [
                 'felix', 'ai-epistemological-lens', 
@@ -200,6 +277,44 @@ class BilingualContentLoader {
         }
         
         return Array.from(discoveredFiles);
+    }
+
+    // 🧠 Auto-detectar configuración de proyecto basado en contenido
+    autoDetectProjectConfig(filename, content) {
+        console.log(`🔍 Auto-detecting config for: ${filename}`);
+        
+        const contentLower = content.toLowerCase();
+        
+        // Auto-detectar icono basado en palabras clave
+        let icon = 'default';
+        let category = 'General';
+        
+        // Detección de iconos
+        if (contentLower.includes('quantum') || contentLower.includes('qiskit')) {
+            icon = 'quantum';
+            category = 'Quantum Computing';
+        } else if (contentLower.includes('blockchain') || contentLower.includes('crypto')) {
+            icon = 'blockchain';
+            category = 'Blockchain';
+        } else if (contentLower.includes('chat') || contentLower.includes('bot') || contentLower.includes('ai') || contentLower.includes('machine learning')) {
+            icon = 'chat';
+            category = 'AI';
+        } else if (contentLower.includes('language') || contentLower.includes('linguistic') || contentLower.includes('nlp')) {
+            icon = 'language';
+            category = 'Linguistics';
+        } else if (contentLower.includes('data') || contentLower.includes('clustering') || contentLower.includes('analytics')) {
+            icon = 'chart';
+            category = 'Data Science';
+        } else if (contentLower.includes('satellite') || contentLower.includes('remote sensing') || contentLower.includes('physics')) {
+            icon = 'satellite';
+            category = 'Physics';
+        } else if (contentLower.includes('brain') || contentLower.includes('neural') || contentLower.includes('cognitive')) {
+            icon = 'brain';
+            category = 'Neuroscience';
+        }
+        
+        console.log(`✅ Auto-detected: ${filename} → icon: ${icon}, category: ${category}`);
+        return { icon, category };
     }
 
     parseMarkdown(content, filePath) {
@@ -540,6 +655,13 @@ class BilingualContentLoader {
             </svg>`,
             'brain': `<svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+            </svg>`,
+            'quantum': `<svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            </svg>`,
+            'blockchain': `<svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
             </svg>`,
             'default': `<svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
