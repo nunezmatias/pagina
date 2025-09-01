@@ -30,6 +30,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Copy Content to Dist
+        run: cp -R src/content dist/content
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
