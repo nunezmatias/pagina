@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matías Núñez | Investigador y Explorador</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js para interactividad -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap">
+    
+    <!-- AOS para animaciones de scroll -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <!-- Configuración de Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#0a1921',
+                        light: '#f5f5f5',
+                        accent: '#047857', // emerald-600
+                        'accent-light': '#059669', // emerald-700
+                        secondary: '#1f2937', // gray-800
+                        tertiary: '#4b5563', // gray-600
+                    },
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
+                    },
+                    animation: {
+                        'gradient': 'gradient 8s ease infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%, 100%': {
+                                'background-position': '0% 50%'
+                            },
+                            '50%': {
+                                'background-position': '100% 50%'
+                            },
+                        }
+                    },
+                },
+            },
+        }
+    </script>
+    
+    <!-- Estilos personalizados -->
+    <style>
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease-in-out;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #1a5a7a, #3a8bb2);
+            color: #f5f5f5;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 10px 15px -3px rgba(26, 90, 122, 0.3);
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #f5f5f5;
+            border: 2px solid #f5f5f5;
+            backdrop-filter: blur(4px);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 15px -3px rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+        }
+
+        
+
+        .card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+            z-index: 1;
+        }
+
+        .card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 0.75rem;
+        }
+
+        .section-title {
+            font-family: "Playfair Display", Georgia, serif;
+            font-size: 2.25rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 0.25rem;
+            width: 33.333333%;
+            background: #3a8bb2;
+            border-radius: 9999px;
+        }
+
+        .bg-size-200 {
+            background-size: 200% 200%;
+        }
+
+        .line-clamp-4 {
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        #projects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 0 1rem;
+        }
+
+        #writing-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 0 1rem;
+        }
+
+        .pinterest-card {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform-origin: center;
+            position: relative;
+        }
+
+        .pinterest-card:hover {
+            transform: scale(1.05) translateY(-12px); /* 🎛️ HOVER: Sin rotación, escalado suave */
+            z-index: 10;
+            box-shadow: 0 35px 70px -12px rgba(0, 0, 0, 0.4); /* 🎛️ HOVER: Sombra MÁS marcada */
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* 🎛️ HOVER: Transición suave */
+        }
+
+        /* Efecto en tarjetas vecinas - más sutil y legible */
+        #projects-container:hover .pinterest-card:not(:hover),
+        #writing-container:hover .pinterest-card:not(:hover) {
+            transform: scale(0.95); /* 🎛️ VECINAS: Solo encogimiento suave */
+            opacity: 0.7; /* 🎛️ VECINAS: Menos transparencia para mantener legibilidad */
+            transition: all 0.3s ease;
+        }
+
+        /* Diferentes alturas basadas en contenido */
+        .pinterest-card.size-small { min-height: 280px; }
+        .pinterest-card.size-medium { min-height: 360px; }
+        .pinterest-card.size-large { min-height: 440px; }
+        .pinterest-card.size-xlarge { min-height: 520px; }
+
+        /* Asegurar que el contenido se distribuya bien */
+        .pinterest-card {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Mejoras para el texto siempre visible */
+        .pinterest-card .line-clamp-4 {
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Efecto de hover mejorado para el overlay adicional */
+        .pinterest-card .hover-overlay {
+            transition: opacity 0.3s ease;
+        }
+
+        .pinterest-card:hover .hover-overlay {
+            opacity: 1 !important;
+        }
+
+        /* Mobile-specific improvements */
+        @media (max-width: 640px) {
+            #projects-container {
+                column-count: 1;
+                column-width: auto;
+                padding: 0 0.5rem;
+            }
+
+            #writing-container {
+                column-count: 1;
+                column-width: auto;
+                padding: 0 0.5rem;
+            }
+
+            .pinterest-card {
+                margin-bottom: 1rem;
+            }
+
+            .section-title {
+                font-size: 1.875rem;
+                text-align: center;
+            }
+
+            .section-title::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            /* Efectos más sutiles en móvil */
+            .pinterest-card:hover {
+                transform: scale(1.02) translateY(-5px);
+            }
+
+            #projects-container:hover .pinterest-card:not(:hover),
+            #writing-container:hover .pinterest-card:not(:hover) {
+                transform: scale(0.98);
+                opacity: 0.8;
+                filter: none;
+            }
+        }
+
+        /* Tablet improvements */
+        @media (min-width: 641px) and (max-width: 1024px) {
+            #projects-container {
+                column-count: 2;
+                column-width: auto;
+            }
+
+            #writing-container {
+                column-count: 2;
+                column-width: auto;
+            }
+        }
+
+        /* Desktop improvements */
+        @media (min-width: 1025px) {
+            #projects-container {
+                column-count: 3;
+            }
+
+            #writing-container {
+                column-count: 3;
+            }
+        }
+
+        /* Extra large screens */
+        @media (min-width: 1400px) {
+            #projects-container {
+                column-count: 4;
+            }
+
+            #writing-container {
+                column-count: 4;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+        .card:nth-child(5) { animation-delay: 0.5s; }
+
+        /* Pulse effect for new content */
+        .new-content {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Tablet improvements */
+        @media (min-width: 641px) and (max-width: 1024px) {
+            #projects-container {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+
+            #writing-container {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        /* Animación sutil para las ondas del separador */
+        @keyframes wave-flow {
+            0%, 100% { 
+                transform: translateX(0) scaleY(1); 
+            }
+            50% { 
+                transform: translateX(-10px) scaleY(1.05); 
+            }
+        }
+
+        .wave-separator svg path:first-child {
+            animation: wave-flow 8s ease-in-out infinite;
+        }
+
+        .wave-separator svg path:last-child {
+            animation: wave-flow 10s ease-in-out infinite reverse;
+        }
+
+        /* Fade-out del scroll indicator */
+        .scroll-indicator {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Subrayado animado para títulos */
+        .section-title-animated {
+            position: relative;
+            font-family: 'Playfair Display', serif;
+            font-weight: bold;
+        }
+
+        .underline-animated {
+            display: block;
+            height: 5px;
+            width: 34%;
+            background: #5FF4C2;
+            border-radius: 6px;
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            transition: width 0.35s cubic-bezier(.4,0,.2,1);
+        }
+
+        .section-title-animated:hover .underline-animated {
+            width: 60%;
+        }
+    </style>
+</head>
+<body class="font-sans text-dark bg-light leading-relaxed" x-data="{ language: 'es' }">
+    <!-- Header -->
+    <header class="fixed inset-x-0 top-0 z-50 backdrop-blur-md bg-dark/10 text-[#F1F6F8] shadow-sm ring-1 ring-dark/20 transition-all duration-300" id="header" x-data="{ mobileMenuOpen: false }">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <nav class="flex justify-between items-center py-4">
+                <a href="#" class="font-serif text-xl sm:text-2xl font-bold text-[#F1F6F8]">Matías Núñez</a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden lg:flex items-center gap-8">
+                    <!-- Navigation Links -->
+                    <div class="flex gap-8">
+                        <template x-if="language === 'es'">
+                            <div class="flex gap-8">
+                                <a href="#about" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Sobre Mí</a>
+                                <button onclick="openCV('es')" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors cursor-pointer bg-transparent border-none">CV</button>
+                                <a href="#projects" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Proyectos</a>
+                                <a href="#writing" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Escritos</a>
+                                <a href="#contact" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Contacto</a>
+                            </div>
+                        </template>
+                        
+                        <template x-if="language === 'en'">
+                            <div class="flex gap-8">
+                                <a href="#about" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">About Me</a>
+                                <button onclick="openCV('en')" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors cursor-pointer bg-transparent border-none">CV</button>
+                                <a href="#projects" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Projects</a>
+                                <a href="#writing" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Writing</a>
+                                <a href="#contact" class="font-medium text-[#F1F6F8] hover:text-[#5FF4C2] transition-colors">Contact</a>
+                            </div>
+                        </template>
+                    </div>
+                    
+                    <!-- Language Selector -->
+                    <div class="flex items-center gap-2 border border-gray-200 rounded-full p-1">
+                        <button @click="language = 'es'" :class="language === 'es' ? 'bg-accent text-white' : 'hover:bg-gray-100'" class="px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
+                            ES
+                        </button>
+                        <button @click="language = 'en'" :class="language === 'en' ? 'bg-accent text-white' : 'hover:bg-gray-100'" class="px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
+                            EN
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Mobile Navigation -->
+                <div class="lg:hidden flex items-center gap-4">
+                    <!-- Language Selector Mobile -->
+                    <div class="flex items-center gap-1 border border-gray-200 rounded-full p-1">
+                        <button @click="language = 'es'" :class="language === 'es' ? 'bg-accent text-white' : 'hover:bg-gray-100'" class="px-2 py-1 rounded-full transition-colors duration-300 text-xs font-medium">
+                            ES
+                        </button>
+                        <button @click="language = 'en'" :class="language === 'en' ? 'bg-accent text-white' : 'hover:bg-gray-100'" class="px-2 py-1 rounded-full transition-colors duration-300 text-xs font-medium">
+                            EN
+                        </button>
+                    </div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="p-2 rounded-md hover:bg-gray-100 transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path x-show="!mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path x-show="mobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Mobile Menu -->
+            <div x-show="mobileMenuOpen" 
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 transform -translate-y-2"
+                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="opacity-100 transform translate-y-0"
+                 x-transition:leave-end="opacity-0 transform -translate-y-2"
+                 class="lg:hidden border-t border-gray-200 bg-white/95 backdrop-blur">
+                <div class="px-4 py-6 space-y-4">
+                    <template x-if="language === 'es'">
+                        <div class="space-y-4">
+                            <a href="#about" @click="mobileMenuOpen = false" class="block font-medium hover:text-accent transition-colors py-2">Sobre Mí</a>
+                            <a href="#projects" @click="mobileMenuOpen = false" class="block font-medium hover:text-accent transition-colors py-2">Proyectos</a>
+                            <a href="#writing" @click="mobileMenuOpen = false" class="block font-medium hover:text-accent transition-colors py-2">Escritos</a>
+                            <a href="#contact" @click="mobileMenuOpen = false" class="block font-medium hover:text-accent transition-colors py-2">Contacto</a>
+                        </div>
+                    </template>
+                    
+                    <template x-if="language === 'en'">
+                        <div class="space-y-4">
+                            <a href="#about" @click="mobileMenuOpen = false" class="block font-medium hover:text-accent transition-colors py-2">About Me</a>
+                            <a href="#projects" @click="mobileMenuOpen = false" class="block font-medium hover:text-accent transition-colors py-2">Projects</a>
+                            <a href="#writing" @click="mobileMenuOpen = false" class="block font-medium hover:text-accent transition-colors py-2">Writing</a>
+                            <a href="#contact" @click="mobileMenuOpen = false" class="block font-medium hover:text-accent transition-colors py-2">Contact</a>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen overflow-hidden lg:grid lg:grid-cols-12 items-center">
+        <!-- Background Image with Gradient Overlay -->
+        <div class="absolute inset-0 bg-dark filter contrast-125 opacity-80 z-0">
+            <picture>
+                <source media="(max-width: 767px)" srcset="./assets/front_imagen-mobile-bELs0xAT.png">
+                <source media="(min-width: 768px) and (max-width: 1023px)" srcset="./assets/front_imagen-tablet-CWOFgxMF.png">
+                <img src="./assets/front_imagen-CoqKFYJZ.jpg" alt="Vista aérea de paisaje" class="w-full h-full object-cover">
+            </picture>
+            <div
+                class="w-full h-full bg-gradient-to-br from-dark/80 via-accent/30 to-dark/70 animate-gradient bg-size-200">
+            </div>
+        </div>
+        
+
+        
+        <!-- Texto (col 8-12) -->
+        <div class="relative z-20 col-span-4 col-start-8 lg:pl-8 xl:pl-12 px-4 lg:px-0 text-[#F1F6F8] pt-24 lg:pt-0" data-aos="fade-left" data-aos-delay="100">
+            <div class="max-w-lg">
+                <template x-if="language === 'es'">
+                    <div class="space-y-4 lg:space-y-6">
+                        <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                            Navegando la complejidad
+                        </h1>
+                        <p class="font-sans text-base sm:text-lg md:text-xl tracking-tight text-[#F1F6F8]">
+                            — a través de la ciencia, la IA y el flujo de la naturaleza.
+                        </p>
+                    </div>
+                </template>
+                
+                <template x-if="language === 'en'">
+                    <div class="space-y-4 lg:space-y-6">
+                        <h1 class="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
+                            Navigating complexity
+                        </h1>
+                        <p class="font-sans text-base sm:text-lg md:text-xl tracking-tight text-[#F1F6F8]">
+                            — through science, AI, and the flow of nature.
+                        </p>
+                    </div>
+                </template>
+            </div>
+        </div>
+        
+        <!-- Animated Scroll Indicator -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center text-white/70 scroll-indicator">
+            <span class="text-sm mb-2">Scroll</span>
+            <div class="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
+                <div class="w-1.5 h-3 bg-white/70 rounded-full mt-2 animate-bounce"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Separador ondulado para transición suave -->
+    <div class="relative h-32 lg:h-40 -mt-1 overflow-hidden wave-separator">
+        <!-- Gradiente principal mejorado -->
+        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-[#eaf2f7] to-white"></div>
+        
+        <!-- Gradiente adicional con más presencia oceánica -->
+        <div class="absolute inset-0 bg-gradient-to-b from-accent/15 via-white/70 to-white"></div>
+        
+        <!-- SVG ondulado con curva suave simulando ola -->
+        <div class="absolute bottom-0 left-0 right-0 h-12">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="w-full h-full">
+                <path d="M0,60 C300,120 900,0 1200,60 L1200,120 L0,120 Z" 
+                      fill="white" 
+                      fill-opacity="0.8"/>
+                <path d="M0,80 C400,140 800,20 1200,80 L1200,120 L0,120 Z" 
+                      fill="white" 
+                      fill-opacity="0.6"/>
+            </svg>
+        </div>
+    </div>
+    
+    <!-- About Section -->
+    <section id="about" class="bg-gradient-to-b from-[#e9f2f7] via-[#f5fafd] to-[#f8fafb] pt-20 sm:pt-24 lg:pt-32 pb-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+                <div class="lg:pr-8 bg-white rounded-xl shadow-lg p-8" data-aos="fade-up" data-aos-delay="100">
+                    <template x-if="language === 'es'">
+                        <div>
+                            <h2 class="section-title-animated font-serif text-4xl lg:text-5xl mb-4">
+                                Sobre Mí
+                                <span class="underline-animated"></span>
+                            </h2>
+                            <p class="mb-4 text-[17px] leading-relaxed">
+                                Soy un físico e investigador interdisciplinario que trabaja en la intersección de la IA aplicada, el aprendizaje automático, el lenguaje y los sistemas complejos. Mi trabajo abarca una amplia gama de dominios, desde la física del estado sólido y la ciencia de materiales hasta el procesamiento del lenguaje natural, las tecnologías de accesibilidad y la analítica de sostenibilidad.
+                            </p>
+                            
+                            <p class="mb-4 text-[17px] leading-relaxed">
+                                Desarrollo y aplico sistemas inteligentes basados en modelos generativos, embeddings y arquitecturas multiagente. Mi objetivo no es solo construir sistemas que funcionen, sino crear herramientas que nos ayuden a comprender los patrones subyacentes de la naturaleza, el lenguaje y la sociedad. Estoy particularmente interesado en proyectos que involucren interfaces cognitivas, predicción de series temporales, reconstrucción lingüística y el uso de IA en escenarios que requieren tanto matices como fundamento en el mundo real.
+                            </p>
+                            
+                            <p class="mb-4 text-[17px] leading-relaxed">
+                                Mi pensamiento está moldeado tanto por el rigor científico como por la profundidad conceptual. Disfruto navegando entre la abstracción y la aplicación, entre la lógica matemática de una red neuronal y la complejidad incorporada de la comunicación humana.
+                            </p>
+                            
+                            <p class="mb-4 text-[17px] leading-relaxed">
+                                Cuando no estoy trabajando en estos problemas o inmerso en la lectura, practico deportes extremos como kayak en aguas bravas (clase V), kitesurf y snowboard. En kayak, he participado en expediciones a ríos remotos donde la exploración se convierte en un diálogo con lo desconocido. Estas experiencias me han enseñado a leer sistemas dinámicos en movimiento, actuar bajo incertidumbre y moverme con claridad a través de entornos caóticos. Abordo los desafíos intelectuales con el mismo espíritu.
+                            </p>
+                        </div>
+                    </template>
+                    
+                    <template x-if="language === 'en'">
+                        <div>
+                            <h2 class="section-title-animated font-serif text-4xl lg:text-5xl mb-4">
+                                About Me
+                                <span class="underline-animated"></span>
+                            </h2>
+                            <p class="mb-4 text-[17px] leading-relaxed">
+                                I'm a physicist and interdisciplinary researcher working at the intersection of applied AI, machine learning, language, and complex systems. My work spans a range of domains--from solid-state physics and materials science to natural language processing, accessibility technologies, and sustainability analytics.
+                            </p>
+                            
+                            <p class="mb-4 text-[17px] leading-relaxed">
+                                I develop and apply intelligent systems based on generative models, embeddings, and multi-agent architectures. My goal is not just to build systems that work, but to create tools that help us understand the underlying patterns of nature, language, and society. I'm particularly interested in projects that involve cognitive interfaces, time-series prediction, linguistic reconstruction (including historical corpora like Old English), and the use of AI in scenarios that require both nuance and real-world grounding--such as communication systems for people with ALS.
+                            </p>
+                            
+                            <p class="mb-4 text-[17px] leading-relaxed">
+                                My thinking is shaped by both scientific rigor and conceptual depth. I enjoy navigating between abstraction and application, between the mathematical logic of a neural network and the embodied complexity of human communication. This dual lens informs the way I explore knowledge and design technology--with an emphasis on precision, context-awareness, and ethical alignment.
+                            </p>
+                            
+                            <p class="mb-4 text-[17px] leading-relaxed">
+                                When I'm not working on these problems or immersed in reading, I practice extreme sports like whitewater kayaking (class V), kitesurfing, and snowboarding. In kayaking, I've taken part in expeditions to remote rivers--some of them previously unpaddled--where exploration becomes a dialogue with the unknown. These experiences have taught me how to read dynamic systems in motion, act under uncertainty, and move with clarity through chaotic environments. I approach intellectual challenges in the same spirit.
+                            </p>
+                        </div>
+                    </template>
+                </div>
+                <div class="relative rounded-xl overflow-hidden shadow-xl h-auto" data-aos="fade-left"
+                    data-aos-delay="200">
+                    <img src="./assets/kayak-waterfall-CjX1SZR0.jpg" alt="Kayaking waterfall"
+                        class="w-full h-auto object-contain shadow-lg">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark/50 to-transparent"></div>
+                    <div class="absolute bottom-0 left-0 right-0 glass p-4 text-white"
+                        x-text="language === 'es' ? 'Expedición en kayak - Cascada de clase V' : 'Kayak expedition - Class V waterfall'">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 bg-gradient-to-b from-dark/10 via-white to-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <template x-if="language === 'es'">
+                <div>
+                    <h2 class="section-title" data-aos="fade-up">Proyectos</h2>
+                    <p class="mb-12 max-w-2xl text-gray-600" data-aos="fade-up" data-aos-delay="100">
+                        Una selección de mis trabajos en la intersección de ciencia, tecnología y exploración.
+                    </p>
+                </div>
+            </template>
+            
+            <template x-if="language === 'en'">
+                <div>
+                    <h2 class="section-title" data-aos="fade-up">Projects</h2>
+                    <p class="mb-12 max-w-2xl text-gray-600" data-aos="fade-up" data-aos-delay="100">
+                        A selection of my work at the intersection of science, technology, and exploration.
+                    </p>
+                </div>
+            </template>
+            
+            <div id="projects-container">
+                <!-- Los proyectos se cargan dinámicamente desde Markdown -->
+            </div>
+            
+            <!-- View All Projects Button -->
+            <div class="mt-12 text-center" data-aos="fade-up" data-aos-delay="350">
+                <a href="#" class="btn btn-primary" onclick="showAllProjects()">
+                    <span x-text="language === 'es' ? 'Ver todos los proyectos' : 'View all projects'"></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Writing Section -->
+    <section id="writing" class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <template x-if="language === 'es'">
+                <div>
+                    <h2 class="section-title" data-aos="fade-up">Escritos</h2>
+                    <p class="mb-12 max-w-2xl text-gray-600" data-aos="fade-up" data-aos-delay="100">
+                        Ensayos, reflexiones y notas de campo sobre ciencia, exploración y la intersección entre ambas.
+                    </p>
+                </div>
+            </template>
+            
+            <template x-if="language === 'en'">
+                <div>
+                    <h2 class="section-title" data-aos="fade-up">Writing</h2>
+                    <p class="mb-12 max-w-2xl text-gray-600" data-aos="fade-up" data-aos-delay="100">
+                        Essays, reflections, and field notes on science, exploration, and the intersection between both.
+                    </p>
+                </div>
+            </template>
+            
+            <div id="writing-container">
+                <!-- Los artículos se cargan dinámicamente desde Markdown -->
+            </div>
+            
+            <!-- View All Writing Button -->
+            <div class="mt-12 text-center" data-aos="fade-up" data-aos-delay="300">
+                <a href="#" class="btn btn-primary">
+                    <span x-text="language === 'es' ? 'Ver todos los escritos' : 'View all writing'"></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 bg-gradient-to-b from-gray-50 to-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <template x-if="language === 'es'">
+                <h2 class="section-title" data-aos="fade-up">Contacto</h2>
+            </template>
+            <template x-if="language === 'en'">
+                <h2 class="section-title" data-aos="fade-up">Contact</h2>
+            </template>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 mt-12">
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <template x-if="language === 'es'">
+                        <p class="mb-10 text-gray-600">
+                            Si estás trabajando en proyectos en la frontera de la inteligencia artificial, análisis de sistemas complejos, o exploración—me encantaría conversar.
+                        </p>
+                    </template>
+
+                    <template x-if="language === 'en'">
+                        <p class="mb-10 text-gray-600">
+                            If you're working on projects at the frontier of artificial intelligence, complex systems analysis, or exploration—I'd love to talk.
+                        </p>
+                    </template>
+
+                    <div class="mt-10">
+                        <h3 class="font-serif text-2xl mb-6" x-text="language === 'es' ? 'Conéctate' : 'Connect'"></h3>
+                        <ul class="flex gap-6">
+                            <li>
+                                <a href="https://www.linkedin.com/in/matias-nu%C3%B1ez-6b53544/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-dark hover:text-accent transition-colors p-3 bg-white rounded-lg shadow-sm hover:shadow-md">
+                                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
+                                    </svg>
+                                    <span>LinkedIn</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+
+                <form class="flex flex-col gap-6 bg-white p-8 rounded-xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex flex-col gap-2">
+                        <label for="name" class="font-medium" x-text="language === 'es' ? 'Nombre' : 'Name'"></label>
+                        <input type="text" id="name" name="name" required class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="email" class="font-medium" x-text="language === 'es' ? 'Email' : 'Email'"></label>
+                        <input type="email" id="email" name="email" required class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="message" class="font-medium" x-text="language === 'es' ? 'Mensaje' : 'Message'"></label>
+                        <textarea id="message" name="message" required class="p-3 border border-gray-300 rounded-lg min-h-[150px] resize-y focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary self-start" onclick="handleContactForm(event)">
+                        <span x-text="language === 'es' ? 'Enviar mensaje' : 'Send message'"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-dark text-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <p>© 2025 Matías Núñez. <span x-text="language === 'es' ? 'Todos los derechos reservados.' : 'All rights reserved.'"></span></p>
+                <p class="mt-4 md:mt-0 text-gray-400"><span x-text="language === 'es' ? 'Sitio desarrollado con' : 'Site developed with'"></span> Vite & Tailwind CSS</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Dark mode eliminado -->
+    
+    <!-- Content Loader -->
+    <script src="./js/content-loader-bilingual-fixed-clean.js?v=3"></script>
+    
+    <!-- Content Page Fix -->
+    <script src="./js/content-page-fix.js"></script>
+
+    <!-- JavaScript para inicializar AOS -->
+    <script>
+        // Inicializar AOS cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 100
+            });
+        });
+
+        // Fade-out del scroll indicator al hacer scroll
+        window.addEventListener('scroll', function() {
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            const heroTagline = document.querySelector('.hero-tagline');
+            const header = document.querySelector('#header');
+            
+            if (scrollIndicator) {
+                const scrollY = window.scrollY;
+                const opacity = Math.max(0, 1 - scrollY / 250);
+                scrollIndicator.style.opacity = opacity;
+            }
+            
+            // Ocultar tagline del hero al hacer scroll >= 200px
+            if (heroTagline) {
+                const scrollY = window.scrollY;
+                if (scrollY >= 200) {
+                    heroTagline.style.opacity = '0';
+                } else {
+                    heroTagline.style.opacity = '1';
+                }
+            }
+            
+            // Cambiar navbar según scroll position
+            if (header) {
+                const scrollY = window.scrollY;
+                const heroHeight = window.innerHeight;
+                const navLinks = header.querySelectorAll('a, button');
+                const logo = header.querySelector('a[href="#"]');
+                
+                if (scrollY > heroHeight * 0.8) {
+                    // Fondo más oscuro para marcar separación sobre fondo claro
+                    header.classList.remove('bg-dark/10', 'text-[#F1F6F8]');
+                    header.classList.add('bg-dark/50', 'shadow-sm', 'text-[#F1F6F8]');
+                    
+                    // Mantener colores claros
+                    navLinks.forEach(link => {
+                        link.classList.add('text-[#F1F6F8]');
+                        link.classList.remove('text-dark');
+                    });
+                    
+                    if (logo) {
+                        logo.classList.add('text-[#F1F6F8]');
+                        logo.classList.remove('text-dark');
+                    }
+                } else {
+                    // Volver a fondo original del hero
+                    header.classList.add('bg-dark/10', 'text-[#F1F6F8]');
+                    header.classList.remove('bg-dark/50', 'shadow-sm', 'text-dark');
+                    
+                    // Volver a colores originales
+                    navLinks.forEach(link => {
+                        link.classList.add('text-[#F1F6F8]');
+                        link.classList.remove('text-dark');
+                    });
+                    
+                    if (logo) {
+                        logo.classList.add('text-[#F1F6F8]');
+                        logo.classList.remove('text-dark');
+                    }
+                }
+            }
+        });
+
+        // Smooth scroll para los enlaces de navegación
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar smooth scroll para todos los enlaces internos
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        // Calcular offset para el header fijo
+                        const headerHeight = document.querySelector('#header').offsetHeight;
+                        const targetPosition = target.offsetTop - headerHeight - 20;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Función global para mostrar todos los proyectos
+            window.showAllProjects = function() {
+                const projectsSection = document.querySelector('#projects');
+                if (projectsSection) {
+                    const headerHeight = document.querySelector('#header').offsetHeight;
+                    const targetPosition = projectsSection.offsetTop - headerHeight - 20;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            };
+        });
+    </script>
+</body>
+</html>    
+<!-- JavaScript para funcionalidades adicionales -->
+    <script>
+        // 📧 FORMULARIO DE CONTACTO FUNCIONAL
+        function handleContactForm(event) {
+            event.preventDefault();
+            
+            const form = event.target.closest('form');
+            const formData = new FormData(form);
+            
+            const contactData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                message: formData.get('message'),
+                timestamp: new Date().toISOString(),
+                language: document.querySelector('[x-data]').__x.$data.language
+            };
+            
+            // Guardar en localStorage (opción 1 - más simple)
+            saveContactMessage(contactData);
+            
+            // Mostrar confirmación
+            showContactConfirmation(contactData.language);
+            
+            // Limpiar formulario
+            form.reset();
+        }
+        
+        function saveContactMessage(data) {
+            // Obtener mensajes existentes
+            const existingMessages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+            
+            // Agregar nuevo mensaje
+            existingMessages.push(data);
+            
+            // Guardar de vuelta
+            localStorage.setItem('contactMessages', JSON.stringify(existingMessages));
+            
+            console.log('💾 Mensaje guardado:', data);
+            console.log('📊 Total mensajes:', existingMessages.length);
+        }
+        
+        function showContactConfirmation(language) {
+            const message = language === 'es' 
+                ? '✅ ¡Mensaje enviado correctamente! Te contactaré pronto.'
+                : '✅ Message sent successfully! I will contact you soon.';
+            
+            // Crear notificación
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Mostrar notificación
+            setTimeout(() => {
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+            
+            // Ocultar después de 4 segundos
+            setTimeout(() => {
+                notification.style.transform = 'translateX(full)';
+                setTimeout(() => notification.remove(), 300);
+            }, 4000);
+        }
+        
+        // Dark mode eliminado completamente
+        
+        // 🔗 FUNCIÓN PARA VER MENSAJES (ADMIN)
+        function viewContactMessages() {
+            const messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+            console.table(messages);
+            return messages;
+        }
+        
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dark mode eliminado
+            
+            // Comando de consola para ver mensajes
+            window.viewMessages = viewContactMessages;
+            console.log('💡 Tip: Usa viewMessages() en la consola para ver todos los mensajes de contacto');
+        });
+    </script>    
+
+    <!-- Dark mode eliminado completamente -->
