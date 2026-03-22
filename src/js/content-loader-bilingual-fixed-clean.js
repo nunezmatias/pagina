@@ -80,7 +80,6 @@ class BilingualContentLoader {
         const projectConfig = {
             // Casos especiales con configuración manual
             'remote-sensing': { icon: 'satellite', category: 'Physics' },
-            'chatbot-ela-static': { icon: 'chat', category: 'AI' },
             'chatbot-ela': { icon: 'chat', category: 'AI' },
             'linguistic-reconstruction': { icon: 'language', category: 'Linguistics' },
             'un-data-clustering': { icon: 'chart', category: 'Data Science' },
@@ -134,8 +133,7 @@ class BilingualContentLoader {
             'felix': { icon: 'water', category: 'Adventure' },
             'ai-epistemological-lens': { icon: 'brain', category: 'Philosophy' },
             'language-cognitive-tech': { icon: 'brain', category: 'Technology' },
-            'rivers-complex-systems': { icon: 'water', category: 'Science' },
-            'rivers2-complex-systems': { icon: 'water', category: 'Science' }
+            'rivers-complex-systems': { icon: 'water', category: 'Science' }
         };
 
         for (const baseFilename of availableArticles) {
@@ -209,7 +207,7 @@ class BilingualContentLoader {
         
         // Lista actualizada de archivos conocidos
         const knownFiles = [
-            'blockchain-analytics', 'chatbot-ela-static', 'chatbot-ela', 
+            'blockchain-analytics', 'chatbot-ela', 
             'linguistic-reconstruction', 'quantum-computing', 'remote-sensing', 
             'un-data-clustering'
         ];
@@ -258,13 +256,13 @@ class BilingualContentLoader {
 
         const knownFiles = {
             './content/projects/': [
-                'blockchain-analytics', 'chatbot-ela-static', 'chatbot-ela', 
+                'blockchain-analytics', 'chatbot-ela', 
                 'linguistic-reconstruction', 'quantum-computing', 'remote-sensing', 
                 'un-data-clustering'
             ],
             './content/writing/': [
                 'felix', 'ai-epistemological-lens', 
-                'language-cognitive-tech', 'rivers-complex-systems', 'rivers2-complex-systems'
+                'language-cognitive-tech', 'rivers-complex-systems'
             ]
         };
         
@@ -358,13 +356,13 @@ class BilingualContentLoader {
 
     markdownToHtml(markdown, basePath) {
         return markdown
-            .replace(/^# (.*$)/gm, '<h1 class="text-4xl font-serif font-bold mb-6 mt-8 text-gray-900">$1</h1>')
-            .replace(/^## (.*$)/gm, '<h2 class="text-3xl font-serif font-semibold mb-4 mt-8 text-gray-800">$1</h2>')
-            .replace(/^### (.*$)/gm, '<h3 class="text-2xl font-semibold mb-3 mt-6 text-gray-800">$1</h3>')
-            .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
-            .replace(/\*(.*?)\*/g, '<em class="italic text-gray-700">$1</em>')
-            .replace(/`(.*?)`/g, '<code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono">$1</code>')
-            .replace(/^[-*+] (.*$)/gm, '<li class="mb-2 text-gray-700 ml-4">$1</li>')
+            .replace(/^# (.*$)/gm, '<h1 class="text-4xl font-serif font-bold mb-6 mt-8 text-gray-900 dark:text-white">$1</h1>')
+            .replace(/^## (.*$)/gm, '<h2 class="text-3xl font-serif font-semibold mb-4 mt-8 text-gray-800 dark:text-gray-100">$1</h2>')
+            .replace(/^### (.*$)/gm, '<h3 class="text-2xl font-semibold mb-3 mt-6 text-gray-800 dark:text-gray-200">$1</h3>')
+            .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900 dark:text-white">$1</strong>')
+            .replace(/\*(.*?)\*/g, '<em class="italic text-gray-700 dark:text-gray-300">$1</em>')
+            .replace(/`(.*?)`/g, '<code class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm font-mono dark:text-gray-200">$1</code>')
+            .replace(/^[-*+] (.*$)/gm, '<li class="mb-2 text-gray-700 dark:text-gray-300 ml-4">$1</li>')
             .replace(/\[embed:([^\]]+)\]/g, (match, content) => {
                 const parts = content.split(',').map(part => part.trim());
                 const url = parts[0];
@@ -394,11 +392,11 @@ class BilingualContentLoader {
                 
                 if (trimmed.includes('<h') || trimmed.includes('<li') || trimmed.includes('<iframe')) {
                     return trimmed.includes('<li') ? 
-                        `<ul class="list-disc list-inside mb-6 space-y-2">${trimmed}</ul>` : 
+                        `<ul class="list-disc list-inside mb-6 space-y-2 text-gray-700 dark:text-gray-300">${trimmed}</ul>` : 
                         trimmed;
                 }
                 
-                return `<p class="mb-6 text-gray-700 leading-relaxed text-lg text-justify" style="text-indent: 1.5em; line-height: 1.8;">${trimmed}</p>`;
+                return `<p class="mb-6 text-gray-700 dark:text-gray-300 leading-relaxed text-lg text-justify" style="text-indent: 1.5em; line-height: 1.8;">${trimmed}</p>`;
             })
             .join('\n');
     }
@@ -550,7 +548,7 @@ class BilingualContentLoader {
             ? (this.currentLanguage === 'es' ? 'Ver proyecto' : 'View project')
             : (this.currentLanguage === 'es' ? 'Leer más' : 'Read more');
 
-        card.className = `pinterest-card ${cardSize} bg-white rounded-xl overflow-hidden shadow-lg relative`;
+        card.className = `pinterest-card ${cardSize} bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg relative`;
 
         card.innerHTML = `
             <!-- Sección superior: Gradiente + Icono + Categoría -->
@@ -571,14 +569,14 @@ class BilingualContentLoader {
             </div>
 
             <!-- Sección inferior: Contenido en fondo gris metálico elegante -->
-            <div class="bg-gradient-to-br from-gray-100 via-slate-50 to-gray-200 p-5 flex-1 flex flex-col">
+            <div class="bg-gradient-to-br from-gray-100 via-slate-50 to-gray-200 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 p-5 flex-1 flex flex-col">
                 <!-- Título -->
-                <h3 class="font-serif text-xl font-bold text-gray-900 mb-3 leading-tight">
+                <h3 class="font-serif text-xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">
                     ${title}
                 </h3>
                 
                 <!-- Descripción -->
-                <p class="text-gray-600 text-sm leading-relaxed mb-4 flex-grow">
+                <p class="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-4 flex-grow">
                     ${excerpt}
                 </p>
                 
@@ -718,18 +716,8 @@ async function openCV(language) {
 
 // Function to create CV page
 function createCVPage(parsedContent, language) {
-    // Forzar modo claro eliminando cualquier clase dark del documento
-    document.documentElement.classList.remove('dark');
-    document.body.classList.remove('dark');
-    
-    // Limpiar localStorage de cualquier tema oscuro guardado
-    localStorage.removeItem('theme');
-    localStorage.removeItem('simpleNightMode');
-    
     const fullPage = document.createElement('div');
-    fullPage.className = 'fixed inset-0 bg-white z-50 overflow-y-auto';
-    fullPage.style.backgroundColor = "#ffffff";
-    fullPage.style.color = "#000000";    
+    fullPage.className = 'fixed inset-0 bg-white dark:bg-gray-900 z-50 overflow-y-auto';
     const backText = language === 'es' ? 'Volver' : 'Back';
     const aboutText = language === 'es' ? 'Sobre Mi' : 'About Me';
     const projectsText = language === 'es' ? 'Proyectos' : 'Projects';
@@ -737,40 +725,45 @@ function createCVPage(parsedContent, language) {
     const contactText = language === 'es' ? 'Contacto' : 'Contact';
     
     fullPage.innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-            <header class="sticky top-0 bg-white/90 backdrop-blur-sm border-b border-gray-200 z-10">
+        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-dark transition-colors duration-300">
+            <header class="sticky top-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 z-10">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6">
                     <nav class="flex justify-between items-center py-4">
-                        <a href="#" onclick="this.closest('.fixed').remove()" class="font-serif text-xl sm:text-2xl font-bold text-gray-900 hover:text-accent transition-colors">
+                        <a href="#" onclick="this.closest('.fixed').remove()" class="font-serif text-xl sm:text-2xl font-bold text-gray-900 dark:text-white hover:text-accent transition-colors">
                             Matías Núñez
                         </a>
                         
                         <div class="hidden md:flex items-center gap-6">
                             <div class="flex gap-6">
-                                <button onclick="closeBilingualPageAndGoTo('#about')" class="font-medium hover:text-accent transition-colors text-gray-700">
+                                <button onclick="closeBilingualPageAndGoTo('#about')" class="font-medium hover:text-accent transition-colors text-gray-700 dark:text-gray-300">
                                     ${aboutText}
                                 </button>
-                                <button onclick="closeBilingualPageAndGoTo('#projects')" class="font-medium hover:text-accent transition-colors text-gray-700">
+                                <button onclick="closeBilingualPageAndGoTo('#projects')" class="font-medium hover:text-accent transition-colors text-gray-700 dark:text-gray-300">
                                     ${projectsText}
                                 </button>
-                                <button onclick="closeBilingualPageAndGoTo('#writing')" class="font-medium hover:text-accent transition-colors text-gray-700">
+                                <button onclick="closeBilingualPageAndGoTo('#writing')" class="font-medium hover:text-accent transition-colors text-gray-700 dark:text-gray-300">
                                     ${writingText}
                                 </button>
-                                <button onclick="closeBilingualPageAndGoTo('#contact')" class="font-medium hover:text-accent transition-colors text-gray-700">
+                                <button onclick="closeBilingualPageAndGoTo('#contact')" class="font-medium hover:text-accent transition-colors text-gray-700 dark:text-gray-300">
                                     ${contactText}
                                 </button>
                             </div>
                             
-                            <div class="flex items-center gap-2 border border-gray-200 rounded-full p-1">
-                                <button onclick="changeCVLanguage('es')" class="${language === 'es' ? 'bg-accent text-white' : 'hover:bg-gray-100'} px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
+                            <div class="flex items-center gap-2 border border-gray-200 dark:border-gray-700 rounded-full p-1">
+                                <button onclick="changeCVLanguage('es')" class="${language === 'es' ? 'bg-accent text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-200'} px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
                                     ES
                                 </button>
-                                <button onclick="changeCVLanguage('en')" class="${language === 'en' ? 'bg-accent text-white' : 'hover:bg-gray-100'} px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
+                                <button onclick="changeCVLanguage('en')" class="${language === 'en' ? 'bg-accent text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-200'} px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
                                     EN
                                 </button>
                             </div>
                             
-                            <button onclick="this.closest('.fixed').remove()" class="inline-flex items-center text-accent hover:text-accent-light font-medium transition-colors">
+                            <button onclick="window.dispatchEvent(new CustomEvent('toggle-dark-mode'))" class="p-2 ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-[#F1F6F8] transition-colors">
+                                <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                                <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            </button>
+                            
+                            <button onclick="this.closest('.fixed').remove()" class="inline-flex items-center text-accent hover:text-accent-light font-medium transition-colors ml-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                                 </svg>
@@ -778,22 +771,28 @@ function createCVPage(parsedContent, language) {
                             </button>
                         </div>
                         
-                        <button onclick="this.closest('.fixed').remove()" class="md:hidden inline-flex items-center text-accent hover:text-accent-light font-medium transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                            </svg>
-                            ${backText}
-                        </button>
+                        <div class="md:hidden flex items-center">
+                            <button onclick="window.dispatchEvent(new CustomEvent('toggle-dark-mode'))" class="p-2 mr-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-[#F1F6F8] transition-colors">
+                                <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                                <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            </button>
+                            <button onclick="this.closest('.fixed').remove()" class="inline-flex items-center text-accent hover:text-accent-light font-medium transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                                </svg>
+                                ${backText}
+                            </button>
+                        </div>
                     </nav>
                 </div>
             </header>
             
-            <article class="max-w-4xl mx-auto px-6 py-12">
-                <div class="prose prose-lg prose-gray max-w-none cv-content">
+            <article class="max-w-4xl mx-auto px-6 py-12 dark:bg-gray-900 dark:text-white">
+                <div class="prose prose-lg prose-gray dark:prose-invert max-w-none cv-content">
                     ${parsedContent.content}
                 </div>
                 
-                <footer class="mt-16 pt-8 border-t border-gray-200 text-center">
+                <footer class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700 text-center">
                     <button onclick="this.closest('.fixed').remove()" class="btn btn-primary">
                         ${backText}
                     </button>
@@ -804,27 +803,7 @@ function createCVPage(parsedContent, language) {
     
     document.body.appendChild(fullPage);
     
-    // Forzar estilos blancos con CSS inline
-    const forceWhiteStyle = document.createElement("style");
-    forceWhiteStyle.innerHTML = `
-        .fixed.inset-0 {
-            background-color: #ffffff !important;
-            color: #000000 !important;
-        }
-        .fixed.inset-0 .bg-gradient-to-br {
-            background: linear-gradient(to bottom right, #f9fafb, #ffffff) !important;
-        }
-        .fixed.inset-0 .bg-white {
-            background-color: #ffffff !important;
-        }
-        .fixed.inset-0 .text-gray-900 {
-            color: #111827 !important;
-        }
-        .fixed.inset-0 .text-gray-700 {
-            color: #374151 !important;
-        }
-    `;
-    document.head.appendChild(forceWhiteStyle);    fullPage.scrollTop = 0;
+    fullPage.scrollTop = 0;
 }
 
 // Function to change CV language
@@ -833,7 +812,7 @@ function changeCVLanguage(newLanguage) {
         bilingualLoader.currentLanguage = newLanguage;
     }
     
-    const fullPage = document.querySelector('.fixed.inset-0.bg-white.z-50');
+    const fullPage = document.querySelector('.fixed.inset-0.z-50');
     if (fullPage && fullPage.querySelector('.cv-content')) {
         const article = fullPage.querySelector('article');
         if (article) {
@@ -914,13 +893,13 @@ function parseBilingualMarkdown(content) {
     const markdownContent = content.replace(/^---\n[\s\S]*?\n---\n/, '');
     
     const htmlContent = markdownContent
-        .replace(/^# (.*$)/gm, '<h1 class="text-4xl font-serif font-bold mb-6 mt-8 text-gray-900">$1</h1>')
-        .replace(/^## (.*$)/gm, '<h2 class="text-3xl font-serif font-semibold mb-4 mt-8 text-gray-800">$1</h2>')
-        .replace(/^### (.*$)/gm, '<h3 class="text-2xl font-semibold mb-3 mt-6 text-gray-800">$1</h3>')
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900">$1</strong>')
-        .replace(/\*(.*?)\*/g, '<em class="italic text-gray-700">$1</em>')
-        .replace(/`(.*?)`/g, '<code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono">$1</code>')
-        .replace(/^[-*+] (.*$)/gm, '<li class="mb-2 text-gray-700 ml-4">$1</li>')
+        .replace(/^# (.*$)/gm, '<h1 class="text-4xl font-serif font-bold mb-6 mt-8 text-gray-900 dark:text-white">$1</h1>')
+        .replace(/^## (.*$)/gm, '<h2 class="text-3xl font-serif font-semibold mb-4 mt-8 text-gray-800 dark:text-gray-100">$1</h2>')
+        .replace(/^### (.*$)/gm, '<h3 class="text-2xl font-semibold mb-3 mt-6 text-gray-800 dark:text-gray-200">$1</h3>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-gray-900 dark:text-white">$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em class="italic text-gray-700 dark:text-gray-300">$1</em>')
+        .replace(/`(.*?)`/g, '<code class="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded text-sm font-mono dark:text-gray-200">$1</code>')
+        .replace(/^[-*+] (.*$)/gm, '<li class="mb-2 text-gray-700 dark:text-gray-300 ml-4">$1</li>')
         .split('\n\n')
         .map(paragraph => {
             const trimmed = paragraph.trim();
@@ -928,11 +907,11 @@ function parseBilingualMarkdown(content) {
             
             if (trimmed.includes('<h') || trimmed.includes('<li')) {
                 return trimmed.includes('<li') ? 
-                    `<ul class="list-disc list-inside mb-6 space-y-2">${trimmed}</ul>` : 
+                    `<ul class="list-disc list-inside mb-6 space-y-2 text-gray-700 dark:text-gray-300">${trimmed}</ul>` : 
                     trimmed;
             }
             
-            return `<p class="mb-6 text-gray-700 leading-relaxed text-lg text-justify" style="text-indent: 1.5em; line-height: 1.8; hyphens: auto;">${trimmed}</p>`;
+            return `<p class="mb-6 text-gray-700 dark:text-gray-300 leading-relaxed text-lg text-justify" style="text-indent: 1.5em; line-height: 1.8; hyphens: auto;">${trimmed}</p>`;
         })
         .join('\n');
 
@@ -944,18 +923,8 @@ function parseBilingualMarkdown(content) {
 }
 
 function createBilingualContentPage(parsedContent, language, baseFilename, type) {
-    // Forzar modo claro eliminando cualquier clase dark del documento
-    document.documentElement.classList.remove('dark');
-    document.body.classList.remove('dark');
-    
-    // Limpiar localStorage de cualquier tema oscuro guardado
-    localStorage.removeItem('theme');
-    localStorage.removeItem('simpleNightMode');
-    
     const fullPage = document.createElement('div');
-    fullPage.className = 'fixed inset-0 bg-white z-50 overflow-y-auto';
-    fullPage.style.backgroundColor = "#ffffff";
-    fullPage.style.color = "#000000";    
+    fullPage.className = 'fixed inset-0 bg-white dark:bg-gray-900 z-50 overflow-y-auto';
     const backText = language === 'es' ? 'Volver' : 'Back';
     const aboutText = language === 'es' ? 'Sobre Mi' : 'About Me';
     const projectsText = language === 'es' ? 'Proyectos' : 'Projects';
@@ -963,40 +932,45 @@ function createBilingualContentPage(parsedContent, language, baseFilename, type)
     const contactText = language === 'es' ? 'Contacto' : 'Contact';
     
     fullPage.innerHTML = `
-        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white">
-            <header class="sticky top-0 bg-white/90 backdrop-blur-sm border-b border-gray-200 z-10">
+        <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-dark transition-colors duration-300">
+            <header class="sticky top-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700 z-10">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6">
                     <nav class="flex justify-between items-center py-4">
-                        <a href="#" onclick="this.closest('.fixed').remove()" class="font-serif text-xl sm:text-2xl font-bold text-gray-900 hover:text-accent transition-colors">
+                        <a href="#" onclick="this.closest('.fixed').remove()" class="font-serif text-xl sm:text-2xl font-bold text-gray-900 dark:text-white hover:text-accent transition-colors">
                             Matías Núñez
                         </a>
                         
                         <div class="hidden md:flex items-center gap-6">
                             <div class="flex gap-6">
-                                <button onclick="closeBilingualPageAndGoTo('#about')" class="font-medium hover:text-accent transition-colors text-gray-700">
+                                <button onclick="closeBilingualPageAndGoTo('#about')" class="font-medium hover:text-accent transition-colors text-gray-700 dark:text-gray-300">
                                     ${aboutText}
                                 </button>
-                                <button onclick="closeBilingualPageAndGoTo('#projects')" class="font-medium hover:text-accent transition-colors text-gray-700">
+                                <button onclick="closeBilingualPageAndGoTo('#projects')" class="font-medium hover:text-accent transition-colors text-gray-700 dark:text-gray-300">
                                     ${projectsText}
                                 </button>
-                                <button onclick="closeBilingualPageAndGoTo('#writing')" class="font-medium hover:text-accent transition-colors text-gray-700">
+                                <button onclick="closeBilingualPageAndGoTo('#writing')" class="font-medium hover:text-accent transition-colors text-gray-700 dark:text-gray-300">
                                     ${writingText}
                                 </button>
-                                <button onclick="closeBilingualPageAndGoTo('#contact')" class="font-medium hover:text-accent transition-colors text-gray-700">
+                                <button onclick="closeBilingualPageAndGoTo('#contact')" class="font-medium hover:text-accent transition-colors text-gray-700 dark:text-gray-300">
                                     ${contactText}
                                 </button>
                             </div>
                             
-                            <div class="flex items-center gap-2 border border-gray-200 rounded-full p-1">
-                                <button onclick="changeBilingualLanguage('es', '${baseFilename}', '${type}')" class="${language === 'es' ? 'bg-accent text-white' : 'hover:bg-gray-100'} px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
+                            <div class="flex items-center gap-2 border border-gray-200 dark:border-gray-700 rounded-full p-1">
+                                <button onclick="changeBilingualLanguage('es', '${baseFilename}', '${type}')" class="${language === 'es' ? 'bg-accent text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-200'} px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
                                     ES
                                 </button>
-                                <button onclick="changeBilingualLanguage('en', '${baseFilename}', '${type}')" class="${language === 'en' ? 'bg-accent text-white' : 'hover:bg-gray-100'} px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
+                                <button onclick="changeBilingualLanguage('en', '${baseFilename}', '${type}')" class="${language === 'en' ? 'bg-accent text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-200'} px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
                                     EN
                                 </button>
                             </div>
                             
-                            <button onclick="this.closest('.fixed').remove()" class="inline-flex items-center text-accent hover:text-accent-light font-medium transition-colors">
+                            <button onclick="window.dispatchEvent(new CustomEvent('toggle-dark-mode'))" class="p-2 ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-[#F1F6F8] transition-colors">
+                                <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                                <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            </button>
+                            
+                            <button onclick="this.closest('.fixed').remove()" class="inline-flex items-center text-accent hover:text-accent-light font-medium transition-colors ml-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                                 </svg>
@@ -1004,27 +978,33 @@ function createBilingualContentPage(parsedContent, language, baseFilename, type)
                             </button>
                         </div>
                         
-                        <button onclick="this.closest('.fixed').remove()" class="md:hidden inline-flex items-center text-accent hover:text-accent-light font-medium transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                            </svg>
-                            ${backText}
-                        </button>
+                        <div class="md:hidden flex items-center">
+                            <button onclick="window.dispatchEvent(new CustomEvent('toggle-dark-mode'))" class="p-2 mr-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900 dark:text-[#F1F6F8] transition-colors">
+                                <svg class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                                <svg class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            </button>
+                            <button onclick="this.closest('.fixed').remove()" class="inline-flex items-center text-accent hover:text-accent-light font-medium transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                                </svg>
+                                ${backText}
+                            </button>
+                        </div>
                     </nav>
                 </div>
             </header>
             
-            <article class="max-w-4xl mx-auto px-6 py-12">
+            <article class="max-w-4xl mx-auto px-6 py-12 dark:bg-gray-900 dark:text-white">
                 <header class="mb-12 text-center">
-                    <h1 class="text-5xl font-serif font-bold text-gray-900 mb-4">${parsedContent.title}</h1>
+                    <h1 class="text-5xl font-serif font-bold text-gray-900 dark:text-white mb-4">${parsedContent.title}</h1>
                     <div class="w-24 h-1 bg-accent mx-auto rounded-full"></div>
                 </header>
                 
-                <div class="prose prose-lg prose-gray max-w-none">
+                <div class="prose prose-lg prose-gray dark:prose-invert max-w-none">
                     ${parsedContent.content}
                 </div>
                 
-                <footer class="mt-16 pt-8 border-t border-gray-200 text-center">
+                <footer class="mt-16 pt-8 border-t border-gray-200 dark:border-gray-700 text-center">
                     <button onclick="this.closest('.fixed').remove()" class="btn btn-primary">
                         ${backText}
                     </button>
@@ -1035,31 +1015,11 @@ function createBilingualContentPage(parsedContent, language, baseFilename, type)
     
     document.body.appendChild(fullPage);
     
-    // Forzar estilos blancos con CSS inline
-    const forceWhiteStyle = document.createElement("style");
-    forceWhiteStyle.innerHTML = `
-        .fixed.inset-0 {
-            background-color: #ffffff !important;
-            color: #000000 !important;
-        }
-        .fixed.inset-0 .bg-gradient-to-br {
-            background: linear-gradient(to bottom right, #f9fafb, #ffffff) !important;
-        }
-        .fixed.inset-0 .bg-white {
-            background-color: #ffffff !important;
-        }
-        .fixed.inset-0 .text-gray-900 {
-            color: #111827 !important;
-        }
-        .fixed.inset-0 .text-gray-700 {
-            color: #374151 !important;
-        }
-    `;
-    document.head.appendChild(forceWhiteStyle);    fullPage.scrollTop = 0;
+    fullPage.scrollTop = 0;
 }
 
 function closeBilingualPageAndGoTo(targetId) {
-    const fullPage = document.querySelector('.fixed.inset-0.bg-white.z-50');
+    const fullPage = document.querySelector('.fixed.inset-0.z-50');
     if (fullPage) fullPage.remove();
     
     setTimeout(() => {
@@ -1077,7 +1037,7 @@ function changeBilingualLanguage(newLanguage, baseFilename, type) {
         bilingualLoader.currentLanguage = newLanguage;
     }
     
-    const fullPage = document.querySelector('.fixed.inset-0.bg-white.z-50');
+    const fullPage = document.querySelector('.fixed.inset-0.z-50');
     if (fullPage) {
         const article = fullPage.querySelector('article');
         if (article) {

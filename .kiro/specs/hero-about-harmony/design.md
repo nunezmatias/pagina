@@ -112,7 +112,8 @@ tagline.style.opacity = opacity;
     </article>
     
     <!-- Imagen optimizada -->
-    <figure class="rounded-2xl overflow-hidden shadow-xl">
+    <figure clas
+    ="rounded-2xl overflow-hidden shadow-xl">
       <img src="/images/kayak-waterfall@2x.webp"
            alt="Kayak en catarata clase V"
            class="object-cover h-full w-full"

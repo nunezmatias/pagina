@@ -1,10 +1,9 @@
 {
   "directory": "src/content/projects",
-  "timestamp": "2025-01-09T12:00:00.000Z",
-  "totalFiles": 20,
+  "timestamp": "2026-03-21T23:44:29.112Z",
+  "totalFiles": 18,
   "bilingualFiles": [
     "blockchain-analytics",
-    "chatbot-ela-static",
     "chatbot-ela",
     "linguistic-reconstruction",
     "quantum-computing",
@@ -15,8 +14,6 @@
     "ai-epistemological-lens_EN.md",
     "blockchain-analytics_EN.md",
     "blockchain-analytics_ES.md",
-    "chatbot-ela-static_EN.md",
-    "chatbot-ela-static_ES.md",
     "chatbot-ela_EN.md",
     "chatbot-ela_ES.md",
     "directory-listing.json",

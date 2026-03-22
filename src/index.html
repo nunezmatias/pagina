@@ -22,6 +22,7 @@
     <!-- Configuración de Tailwind -->
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -151,6 +152,7 @@
         .line-clamp-4 {
             display: -webkit-box;
             -webkit-line-clamp: 4;
+            line-clamp: 4;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -208,6 +210,7 @@
         .pinterest-card .line-clamp-4 {
             display: -webkit-box;
             -webkit-line-clamp: 4;
+            line-clamp: 4;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -387,7 +390,7 @@
         }
     </style>
 </head>
-<body class="font-sans text-dark bg-light leading-relaxed" x-data="{ language: 'es' }">
+<body class="font-sans text-dark bg-light dark:bg-dark dark:text-light leading-relaxed transition-colors duration-300" @toggle-dark-mode.window="darkMode = !darkMode" x-data="{ language: 'es', darkMode: localStorage.getItem('theme') === 'dark' }" x-init="$watch('darkMode', val => { localStorage.setItem('theme', val ? 'dark' : 'light'); if(val) document.documentElement.classList.add('dark'); else document.documentElement.classList.remove('dark'); }); if(darkMode) document.documentElement.classList.add('dark')">
     <!-- Header -->
     <header class="fixed inset-x-0 top-0 z-50 backdrop-blur-md bg-dark/10 text-[#F1F6F8] shadow-sm ring-1 ring-dark/20 transition-all duration-300" id="header" x-data="{ mobileMenuOpen: false }">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
@@ -424,10 +427,16 @@
                         <button @click="language = 'es'" :class="language === 'es' ? 'bg-accent text-white' : 'hover:bg-gray-100'" class="px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
                             ES
                         </button>
-                        <button @click="language = 'en'" :class="language === 'en' ? 'bg-accent text-white' : 'hover:bg-gray-100'" class="px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
+                        <button @click="language = 'en'" :class="language === 'en' ? 'bg-accent text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-700'" class="px-3 py-1 rounded-full transition-colors duration-300 text-sm font-medium">
                             EN
                         </button>
                     </div>
+                    
+                    <!-- Dark Mode Toggle Desktop -->
+                    <button @click="darkMode = !darkMode" class="p-2 rounded-full hover:bg-gray-100/20 text-[#F1F6F8] transition-colors">
+                        <svg x-show="!darkMode" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                        <svg x-show="darkMode" class="w-5 h-5" style="display: none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </button>
                 </div>
 
                 <!-- Mobile Navigation -->
@@ -437,8 +446,14 @@
                         <button @click="language = 'es'" :class="language === 'es' ? 'bg-accent text-white' : 'hover:bg-gray-100'" class="px-2 py-1 rounded-full transition-colors duration-300 text-xs font-medium">
                             ES
                         </button>
-                        <button @click="language = 'en'" :class="language === 'en' ? 'bg-accent text-white' : 'hover:bg-gray-100'" class="px-2 py-1 rounded-full transition-colors duration-300 text-xs font-medium">
+                        <button @click="language = 'en'" :class="language === 'en' ? 'bg-accent text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-700'" class="px-2 py-1 rounded-full transition-colors duration-300 text-xs font-medium">
                             EN
+                        </button>
+                        
+                        <!-- Dark Mode Toggle Mobile -->
+                        <button @click="darkMode = !darkMode" class="ml-1 p-1 rounded-full hover:bg-gray-100/20 text-[#F1F6F8] transition-colors">
+                            <svg x-show="!darkMode" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                            <svg x-show="darkMode" class="w-4 h-4" style="display: none;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
                         </button>
                     </div>
                     
@@ -460,7 +475,7 @@
                  x-transition:leave="transition ease-in duration-150"
                  x-transition:leave-start="opacity-100 transform translate-y-0"
                  x-transition:leave-end="opacity-0 transform -translate-y-2"
-                 class="lg:hidden border-t border-gray-200 bg-white/95 backdrop-blur">
+                 class="lg:hidden border-t border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur text-gray-900 dark:text-gray-100">
                 <div class="px-4 py-6 space-y-4">
                     <template x-if="language === 'es'">
                         <div class="space-y-4">
@@ -561,7 +576,7 @@
     <section id="about" class="bg-gradient-to-b from-[#e9f2f7] via-[#f5fafd] to-[#f8fafb] pt-20 sm:pt-24 lg:pt-32 pb-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
-                <div class="lg:pr-8 bg-white rounded-xl shadow-lg p-8" data-aos="fade-up" data-aos-delay="100">
+                <div class="lg:pr-8 bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8" data-aos="fade-up" data-aos-delay="100">
                     <template x-if="language === 'es'">
                         <div>
                             <h2 class="section-title-animated font-serif text-4xl lg:text-5xl mb-4">
@@ -624,7 +639,7 @@
     </section>
 
     <!-- Projects Section -->
-    <section id="projects" class="py-24 bg-gradient-to-b from-dark/10 via-white to-white">
+    <section id="projects" class="py-24 bg-gradient-to-b from-dark/10 via-white to-white dark:from-dark dark:via-gray-900 dark:to-gray-900 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <template x-if="language === 'es'">
                 <div>
@@ -648,12 +663,7 @@
                 <!-- Los proyectos se cargan dinámicamente desde Markdown -->
             </div>
             
-            <!-- View All Projects Button -->
-            <div class="mt-12 text-center" data-aos="fade-up" data-aos-delay="350">
-                <a href="#" class="btn btn-primary" onclick="showAllProjects()">
-                    <span x-text="language === 'es' ? 'Ver todos los proyectos' : 'View all projects'"></span>
-                </a>
-            </div>
+
         </div>
     </section>
 
@@ -682,17 +692,12 @@
                 <!-- Los artículos se cargan dinámicamente desde Markdown -->
             </div>
             
-            <!-- View All Writing Button -->
-            <div class="mt-12 text-center" data-aos="fade-up" data-aos-delay="300">
-                <a href="#" class="btn btn-primary">
-                    <span x-text="language === 'es' ? 'Ver todos los escritos' : 'View all writing'"></span>
-                </a>
-            </div>
+
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="py-24 bg-gradient-to-b from-gray-50 to-white">
+    <section id="contact" class="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-dark transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6">
             <template x-if="language === 'es'">
                 <h2 class="section-title" data-aos="fade-up">Contacto</h2>
@@ -719,7 +724,7 @@
                         <h3 class="font-serif text-2xl mb-6" x-text="language === 'es' ? 'Conéctate' : 'Connect'"></h3>
                         <ul class="flex gap-6">
                             <li>
-                                <a href="https://www.linkedin.com/in/matias-nu%C3%B1ez-6b53544/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-dark hover:text-accent transition-colors p-3 bg-white rounded-lg shadow-sm hover:shadow-md">
+                                <a href="https://www.linkedin.com/in/matias-nu%C3%B1ez-6b53544/" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-dark dark:text-light hover:text-accent dark:hover:text-accent transition-colors p-3 bg-white dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md">
                                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                         <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"></path>
                                     </svg>
@@ -731,20 +736,20 @@
                     </div>
                 </div>
 
-                <form class="flex flex-col gap-6 bg-white p-8 rounded-xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
+                <form class="flex flex-col gap-6 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex flex-col gap-2">
-                        <label for="name" class="font-medium" x-text="language === 'es' ? 'Nombre' : 'Name'"></label>
-                        <input type="text" id="name" name="name" required class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300">
+                        <label for="name" class="font-medium dark:text-gray-200" x-text="language === 'es' ? 'Nombre' : 'Name'"></label>
+                        <input type="text" id="name" name="name" required class="p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300">
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label for="email" class="font-medium" x-text="language === 'es' ? 'Email' : 'Email'"></label>
-                        <input type="email" id="email" name="email" required class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300">
+                        <label for="email" class="font-medium dark:text-gray-200" x-text="language === 'es' ? 'Email' : 'Email'"></label>
+                        <input type="email" id="email" name="email" required class="p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300">
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <label for="message" class="font-medium" x-text="language === 'es' ? 'Mensaje' : 'Message'"></label>
-                        <textarea id="message" name="message" required class="p-3 border border-gray-300 rounded-lg min-h-[150px] resize-y focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300"></textarea>
+                        <label for="message" class="font-medium dark:text-gray-200" x-text="language === 'es' ? 'Mensaje' : 'Message'"></label>
+                        <textarea id="message" name="message" required class="p-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg min-h-[150px] resize-y focus:ring-2 focus:ring-accent focus:border-accent focus:outline-none transition-all duration-300"></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-primary self-start" onclick="handleContactForm(event)">
@@ -769,11 +774,6 @@
     
     <!-- Content Loader -->
     <script src="./js/content-loader-bilingual-fixed-clean.js?v=5"></script>
-    
-    <!-- Content Page Fix -->
-    <script src="./js/content-page-fix.js"></script>
-
-    <!-- JavaScript para inicializar AOS -->
     <script>
         // Inicializar AOS cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {
